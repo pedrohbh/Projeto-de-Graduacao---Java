@@ -36,6 +36,7 @@ public class Grafo
     {
         int []antecessor = new int[ numeroVertices ];
         boolean []isDeterminado = new boolean[ numeroVertices ];
+        int []distancias = new int[ numeroVertices ];
         int verticesASeremVisitados = numeroVertices;
         HeapBinario heap = new HeapBinario( numeroVertices );
         
@@ -44,6 +45,7 @@ public class Grafo
             heap.insert( i, Integer.MAX_VALUE );
             isDeterminado[ i ] = false;
             antecessor[ i ] = i;
+            distancias[ i ] = Integer.MAX_VALUE;
         }
         
         heap.decreaseKey(idOrigem, 0);
@@ -59,6 +61,12 @@ public class Grafo
                 int verticeDestino = a.idVerticeDestino;
                 if ( isDeterminado[ verticeDestino ] )
                     continue;
+                
+                if ( distancias[ verticeDestino ] > distancias[ atualVertice ] + a.peso )
+                {
+                    distancias[ verticeDestino ] = distancias[ atualVertice ] + a.peso;
+                    heap.decreaseKey( verticeDestino , distancias[ atualVertice ] + a.peso );
+                }
                 
                 //if ( )
             }
