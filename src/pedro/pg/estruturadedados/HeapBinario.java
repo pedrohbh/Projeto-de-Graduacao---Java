@@ -13,11 +13,28 @@ public class HeapBinario
 {
     private NodoHeapBinario []heap;
     private int tamanhoHeap;
+    private int []rastreador;
     
     public HeapBinario( int tamanho )
     {
         heap = new NodoHeapBinario[tamanho];
+        this.rastreador = null;
         tamanhoHeap = 0;
+    }
+    
+    public void setRastreador( int []rastreador )
+    {
+        this.rastreador = rastreador;
+    }
+    
+    public int getPosicaoRastreador( int id)
+    {
+        return rastreador[ id ];
+    }
+    
+    public int getDistanciaNodo( int id )
+    {
+        return heap[ id ].peso;
     }
     
     // Parent(i) return [i/2]
@@ -37,11 +54,15 @@ public class HeapBinario
         return ( 2*i + 2 );
     }
     
-    private void swap( NodoHeapBinario n1, NodoHeapBinario n2 )
+    private void swap( NodoHeapBinario n1, NodoHeapBinario n2, int p1, int p2 )
     {
-        NodoHeapBinario temp = n1;
+        rastreador[ n1.idVertice ] = p2;
+        rastreador[ n2.idVertice ] = p1;
+        this.heap[ p1 ] = n2;
+        this.heap[ p2 ] = n1;
+        /*NodoHeapBinario temp = n1;
         n1 = n2;
-        n2 = temp;
+        n2 = temp;*/
     }
     
     public void minHeapify( int i )
@@ -59,7 +80,7 @@ public class HeapBinario
         
         if ( menor != i )
         {
-            swap( heap[ i ], heap[ menor ] );
+            swap( heap[ i ], heap[ menor ], i, menor );
             minHeapify(menor);
         }
     }
@@ -76,7 +97,7 @@ public class HeapBinario
         heap[ id ].peso = novoPeso;
         while ( id > 0 && heap[ getParent(id) ].peso > heap[ id ].peso )
         {
-            swap( heap[ id ], heap[ getParent(id) ] );
+            swap( heap[ id ], heap[ getParent(id) ], id, getParent(id) );
             id = getParent( id );
         }        
     }
@@ -92,7 +113,8 @@ public class HeapBinario
         minHeapify( 0 );
         
         
-        return min.idVertice;
+        //return min.idVertice;
+        return heap[ 0 ].idVertice;
     }
     
     

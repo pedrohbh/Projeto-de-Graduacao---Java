@@ -36,7 +36,7 @@ public class Grafo
     {
         int []antecessor = new int[ numeroVertices ];
         boolean []isDeterminado = new boolean[ numeroVertices ];
-        int []distancias = new int[ numeroVertices ];
+        int []rastreador = new int[ numeroVertices ];
         int verticesASeremVisitados = numeroVertices;
         HeapBinario heap = new HeapBinario( numeroVertices );
         
@@ -45,32 +45,40 @@ public class Grafo
             heap.insert( i, Integer.MAX_VALUE );
             isDeterminado[ i ] = false;
             antecessor[ i ] = i;
-            distancias[ i ] = Integer.MAX_VALUE;
+            rastreador[ i ] = i;
         }
         
+        heap.setRastreador(rastreador);
         heap.decreaseKey(idOrigem, 0);
         int atualVertice = idOrigem;
         
         while ( verticesASeremVisitados > 0 )
         {
+            //atualVertice
             isDeterminado[ atualVertice ] = true;
             verticesASeremVisitados--;
             
             for ( Aresta a: verticesGrafo[ atualVertice ].arestasAdjacentes )
             {
-                int verticeDestino = a.idVerticeDestino;
-                if ( isDeterminado[ verticeDestino ] )
+                int verticeDestino = heap.getPosicaoRastreador( a.idVerticeDestino );
+                if ( isDeterminado[ a.idVerticeDestino ] )
                     continue;
                 
-                if ( distancias[ verticeDestino ] > distancias[ atualVertice ] + a.peso )
+                if ( heap.getDistanciaNodo( verticeDestino ) > heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.peso )
                 {
-                    distancias[ verticeDestino ] = distancias[ atualVertice ] + a.peso;
-                    heap.decreaseKey( verticeDestino , distancias[ atualVertice ] + a.peso );
+                    heap.decreaseKey( verticeDestino ,  heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.peso );
+                    antecessor[ a.idVerticeDestino ] = atualVertice;
                 }
-                
-                //if ( )
             }
+            atualVertice = heap.extractMin();
         }
+        
+        /*System.out.println("Imprimindo menores distancias");
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            System.out.printf("%d = %d%n", i, antecessor[ i ] );
+        }*/
+        
     }
     
     public void dijkstraCanonico( int idOrigem )
@@ -123,8 +131,8 @@ public class Grafo
             
         }
         
-        System.out.println("Imprimindo menores distancias");
-        /*for ( int i = 0; i < numeroVertices; i++ )
+        /*System.out.println("Imprimindo menores distancias Dijkstra Canônico");
+        for ( int i = 0; i < numeroVertices; i++ )
         {
             System.out.printf("%d = %d%n", i, antecessor[ i ] );
         }*/

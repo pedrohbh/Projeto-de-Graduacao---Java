@@ -24,11 +24,21 @@ public class Principal
         
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
+        
         Instant antes = Instant.now();
-        novoGrafo.dijkstraCanonico(2);
+        novoGrafo.dijkstraCanonico(0);
         Instant depois = Instant.now();
         long tempoTotal = Duration.between(antes, depois).toMillis();
-        System.out.println("Tempo total: " + tempoTotal + " ms");
+        System.out.println("Canônico: " + tempoTotal + " ms");
+        
+        antes = Instant.now();
+        novoGrafo.dijkstraHeapBinario( 0 );
+        depois = Instant.now();
+        tempoTotal = Duration.between(antes, depois).toMillis();
+        System.out.println("Heap: " + tempoTotal + " ms");
+        
+        
+        //System.out.println("Tempo total: " + tempoTotal + " ms");
         //novoGrafo.imprimeGrafo();
         System.out.println("SUCESS");
         
