@@ -58,26 +58,29 @@ public class Grafo
             isDeterminado[ atualVertice ] = true;
             verticesASeremVisitados--;
             
-            for ( Aresta a: verticesGrafo[ atualVertice ].arestasAdjacentes )
+            for ( Aresta a: getVerticesGrafo()[ atualVertice ].getArestasAdjacentes() )
             {
-                int verticeDestino = heap.getPosicaoRastreador( a.idVerticeDestino );
-                if ( isDeterminado[ a.idVerticeDestino ] )
+                int verticeDestino = heap.getPosicaoRastreador(a.getIdVerticeDestino());
+                if ( isDeterminado[ a.getIdVerticeDestino() ] )
                     continue;
                 
-                if ( heap.getDistanciaNodo( verticeDestino ) > heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.peso )
+                if ( heap.getDistanciaNodo( verticeDestino ) > heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.getPeso() )
                 {
-                    heap.decreaseKey( verticeDestino ,  heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.peso );
-                    antecessor[ a.idVerticeDestino ] = atualVertice;
+                    if ( heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.getPeso() >= 0  )
+                    {
+                        heap.decreaseKey( verticeDestino ,  heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.getPeso() );
+                        antecessor[ a.getIdVerticeDestino() ] = atualVertice;
+                    }
                 }
             }
             atualVertice = heap.extractMin();
         }
         
-        /*System.out.println("Imprimindo menores distancias");
+        System.out.println("Imprimindo menores distancias Heap Binário");
         for ( int i = 0; i < numeroVertices; i++ )
         {
             System.out.printf("%d = %d%n", i, antecessor[ i ] );
-        }*/
+        }
         
     }
     
@@ -103,15 +106,15 @@ public class Grafo
             isDeterminado[ atualVertice ] = true;
             verticesASeremVisitados--;
             
-            for ( Aresta a: verticesGrafo[ atualVertice ].arestasAdjacentes )
+            for ( Aresta a: getVerticesGrafo()[ atualVertice ].getArestasAdjacentes() )
             {
-                int verticeDestino = a.idVerticeDestino;
+                int verticeDestino = a.getIdVerticeDestino();
                 if ( isDeterminado[ verticeDestino ] )
                     continue;
                 
-                if ( distancias[ verticeDestino ] > distancias[ atualVertice ] + a.peso  )
+                if ( distancias[ verticeDestino ] > distancias[ atualVertice ] + a.getPeso()  )
                 {
-                    distancias[ verticeDestino ] = distancias[ atualVertice ] + a.peso;
+                    distancias[ verticeDestino ] = distancias[ atualVertice ] + a.getPeso();
                     antecessor[ verticeDestino ] = atualVertice;
                 }               
                 
@@ -131,11 +134,11 @@ public class Grafo
             
         }
         
-        /*System.out.println("Imprimindo menores distancias Dijkstra Canônico");
+        System.out.println("Imprimindo menores distancias Dijkstra Canônico");
         for ( int i = 0; i < numeroVertices; i++ )
         {
             System.out.printf("%d = %d%n", i, antecessor[ i ] );
-        }*/
+        }
         
         
         
@@ -192,10 +195,10 @@ public class Grafo
                         int id2 = input.nextInt() - 1;
                         int peso = input.nextInt();
                         Aresta novaAresta = new Aresta( id1, id2, peso );
-                        if ( verticesGrafo[ id1 ] == null )
+                        if ( getVerticesGrafo()[ id1 ] == null )
                             verticesGrafo[ id1 ] = new Vertice( id1 );
                         
-                        verticesGrafo[ id1 ].arestasAdjacentes.add(novaAresta);
+                        getVerticesGrafo()[ id1 ].getArestasAdjacentes().add(novaAresta);
                         
                     }
                     else if ( entradaDecodificadora.equals( "c" ) )
@@ -232,10 +235,10 @@ public class Grafo
                     int peso = input.nextInt();
                     Aresta novaAresta = new Aresta(id1, id2, peso);
                     
-                    if ( verticesGrafo[ id1 ] == null )
+                    if ( getVerticesGrafo()[ id1 ] == null )
                         verticesGrafo[ id1 ] = new Vertice( id1 );
                     
-                    verticesGrafo[ id1 ].arestasAdjacentes.add(novaAresta);
+                    getVerticesGrafo()[ id1 ].getArestasAdjacentes().add(novaAresta);
                 }
             }
             
@@ -273,10 +276,10 @@ public class Grafo
     public void imprimeGrafo()
     {
         System.out.println("Imprimido Grafo:");
-        for (Vertice verticesGrafo1 : verticesGrafo) 
+        for (Vertice verticesGrafo1 : getVerticesGrafo()) 
         {
-            for (Aresta a : verticesGrafo1.arestasAdjacentes) {
-                System.out.printf("%d ---> %d w: %d%n", a.idVeticeOrigem, a.idVerticeDestino, a.peso );
+            for (Aresta a : verticesGrafo1.getArestasAdjacentes()) {
+                System.out.printf("%d ---> %d w: %d%n", a.getIdVeticeOrigem(), a.getIdVerticeDestino(), a.getPeso());
             }
         }
     }
@@ -297,6 +300,13 @@ public class Grafo
         {
             this.idVertice = idVertice;
         }
+
+        /**
+         * @return the arestasAdjacentes
+         */
+        public List<Aresta> getArestasAdjacentes() {
+            return arestasAdjacentes;
+        }
     }
     
     
@@ -313,5 +323,33 @@ public class Grafo
             this.idVeticeOrigem = origem;
             this.peso = peso;
         }
+
+        /**
+         * @return the idVeticeOrigem
+         */
+        public int getIdVeticeOrigem() {
+            return idVeticeOrigem;
+        }
+
+        /**
+         * @return the idVerticeDestino
+         */
+        public int getIdVerticeDestino() {
+            return idVerticeDestino;
+        }
+
+        /**
+         * @return the peso
+         */
+        public int getPeso() {
+            return peso;
+        }
+    }
+
+    /**
+     * @return the verticesGrafo
+     */
+    public Vertice[] getVerticesGrafo() {
+        return verticesGrafo;
     }
 }

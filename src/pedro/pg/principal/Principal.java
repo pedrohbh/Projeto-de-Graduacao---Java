@@ -8,6 +8,7 @@ package pedro.pg.principal;
 import java.time.Duration;
 import java.time.Instant;
 import pedro.pg.grafo.Grafo;
+import pedro.pg.utilitario.GraphViz;
 
 /**
  *
@@ -18,21 +19,23 @@ public class Principal
     public static void main(String[] args) 
     {
         String caminho = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/";
-        String nomeEntrada = "USA-road-d.NY.gr";
+        String nomeEntrada = "teste2.txt";
         caminho = caminho + nomeEntrada;
+        
         
         
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
+        //GraphViz.desenhaGrafo("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/teste2.dot", novoGrafo);
         
         Instant antes = Instant.now();
-        novoGrafo.dijkstraCanonico(0);
+        novoGrafo.dijkstraCanonico( 4 );
         Instant depois = Instant.now();
         long tempoTotal = Duration.between(antes, depois).toMillis();
         System.out.println("Canônico: " + tempoTotal + " ms");
         
         antes = Instant.now();
-        novoGrafo.dijkstraHeapBinario( 0 );
+        novoGrafo.dijkstraHeapBinario( 4 );
         depois = Instant.now();
         tempoTotal = Duration.between(antes, depois).toMillis();
         System.out.println("Heap: " + tempoTotal + " ms");

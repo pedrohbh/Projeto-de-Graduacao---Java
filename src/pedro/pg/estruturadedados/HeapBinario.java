@@ -40,17 +40,26 @@ public class HeapBinario
     // Parent(i) return [i/2]
     public int getParent( int i )
     {
-        return Math.floorDiv(i, 2);
+        int pai;
+        if ( i % 2 == 0 )
+            pai = Math.floorDiv(i, 2) - 1;
+        else
+            pai = Math.floorDiv(i, 2);
+        
+        //System.out.printf("Filho: %d. Pai %d%n", i, pai);
+        return pai;
         //return i / 2;
     }
     
     public int getLeft( int i )
     {
+        //System.out.printf("Pai: %d. Filho Esq: %d%n", i, (2*i + 1));
         return ( 2*i + 1 );
     }
     
     public int getRight( int i )
     {
+        //System.out.printf("Pai: %d. Filho Dir: %d%n", i, (2*i + 2));
         return ( 2*i + 2 );
     }
     
