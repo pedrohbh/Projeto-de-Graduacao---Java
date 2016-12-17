@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import pedro.pg.estruturadedados.HeapBinario;
 
 /**
  *
@@ -29,6 +30,39 @@ public class Grafo
         numeroArestas = 0;
         numeroVertices = 0;
         verticesGrafo = null;
+    }
+    
+    public void dijkstraHeapBinario( int idOrigem )
+    {
+        int []antecessor = new int[ numeroVertices ];
+        boolean []isDeterminado = new boolean[ numeroVertices ];
+        int verticesASeremVisitados = numeroVertices;
+        HeapBinario heap = new HeapBinario( numeroVertices );
+        
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            heap.insert( i, Integer.MAX_VALUE );
+            isDeterminado[ i ] = false;
+            antecessor[ i ] = i;
+        }
+        
+        heap.decreaseKey(idOrigem, 0);
+        int atualVertice = idOrigem;
+        
+        while ( verticesASeremVisitados > 0 )
+        {
+            isDeterminado[ atualVertice ] = true;
+            verticesASeremVisitados--;
+            
+            for ( Aresta a: verticesGrafo[ atualVertice ].arestasAdjacentes )
+            {
+                int verticeDestino = a.idVerticeDestino;
+                if ( isDeterminado[ verticeDestino ] )
+                    continue;
+                
+                //if ( )
+            }
+        }
     }
     
     public void dijkstraCanonico( int idOrigem )

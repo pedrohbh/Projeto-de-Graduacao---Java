@@ -81,7 +81,7 @@ public class HeapBinario
         }        
     }
     
-    public NodoHeapBinario extractMin()
+    public int extractMin()
     {
         if ( tamanhoHeap < 1 )
             System.err.println("Heap undeflow");
@@ -92,7 +92,7 @@ public class HeapBinario
         minHeapify( 0 );
         
         
-        return min;
+        return min.idVertice;
     }
     
     
