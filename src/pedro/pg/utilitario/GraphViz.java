@@ -48,15 +48,33 @@ public class GraphViz
     
     public static void desenhaGrafo( String nomeArquivo, Grafo g )
     {
-        openFile(nomeArquivo);
+        String []split = null;
+        String caminho = "";
+        if ( nomeArquivo.contains("/") )
+        {
+            split = nomeArquivo.split("/");
+            nomeArquivo = split[ split.length - 1 ];
+            for ( int i = 0; i < split.length - 1; i++ )
+                caminho += split[ i ] + "/";
+            
+        }
+        split = nomeArquivo.split("\\.");
+        String novoNome = split[ 0 ];
+        novoNome += ".dot";
+        novoNome = caminho + novoNome;
+        openFile(novoNome);
         try
         {
             output.format("digraph {%n" );
+            output.format("  rankdir=LR%n");
+            output.format("  size=\"4,3\"%n");
+            output.format("  ratio=\"fill\"%n");
+            output.format("  edge[style=\"bold\"]%n" + "  node[shape=\"circle\"]%n");
             for ( Grafo.Vertice v : g.getVerticesGrafo() )
             {
                 for ( Grafo.Aresta a : v.getArestasAdjacentes() )
                 {
-                    output.format("%d -> %d[label=\"%d\",weight=\"%d\"];%n", a.getIdVeticeOrigem(), a.getIdVerticeDestino(), a.getPeso(), a.getPeso());
+                    output.format("%d -> %d[label=\"%d\"];%n", a.getIdVeticeOrigem(), a.getIdVerticeDestino(), a.getPeso(), a.getPeso());
                 }
             }
             
@@ -69,6 +87,9 @@ public class GraphViz
         }
         
         closeFile();
+        
+        
+        
         
     }
     
