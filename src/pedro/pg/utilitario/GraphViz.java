@@ -74,7 +74,7 @@ public class GraphViz
             {
                 for ( Grafo.Aresta a : v.getArestasAdjacentes() )
                 {
-                    output.format("%d -> %d[label=\"%d\"];%n", a.getIdVeticeOrigem(), a.getIdVerticeDestino(), a.getPeso(), a.getPeso());
+                    output.format("%d -> %d[label=\"%d\"];%n", a.getIdVeticeOrigem(), a.getIdVerticeDestino(), a.getPeso() );
                 }
             }
             
@@ -88,9 +88,21 @@ public class GraphViz
         
         closeFile();
         
+        /*System.out.println("Gerando arquivo pdf");
+        Process p;
         
-        
-        
+        try
+        {
+            p = Runtime.getRuntime().exec("dot -Tpdf " + novoNome + " -o " + novoNome + ".pdf" );
+            p.waitFor();
+            System.out.println("Arquivo pdf gerado com sucesso");
+        }
+        catch ( Exception e )
+        {
+            System.err.println("Erro ao executar linha de comando para geração de pdf. Encerrando programa");
+            e.printStackTrace();
+            System.exit(1);
+        }*/       
     }
     
 }
