@@ -114,18 +114,27 @@ public class Grafo
                 
                 if ( distancias[ verticeDestino ] > distancias[ atualVertice ] + a.getPeso()  )
                 {
-                    distancias[ verticeDestino ] = distancias[ atualVertice ] + a.getPeso();
-                    antecessor[ verticeDestino ] = atualVertice;
+                    if (  (distancias[ atualVertice ] + a.getPeso()) >= 0 )
+                    {
+                        distancias[ verticeDestino ] = distancias[ atualVertice ] + a.getPeso();
+                        antecessor[ verticeDestino ] = atualVertice;
+                    }
                 }               
                 
             }
             int minimaDistancia = Integer.MAX_VALUE;
+            boolean jaSelecionado = false;
             for ( int i = 0; i < numeroVertices; i++ )
             {
                 if ( isDeterminado[ i ] )
                     continue;
-                
-                if ( distancias[ i ] <  minimaDistancia )
+                if ( jaSelecionado == false )
+                {
+                    minimaDistancia = distancias[ i ];
+                    atualVertice = i;
+                    jaSelecionado = true;
+                }                
+                else if ( distancias[ i ] <  minimaDistancia )
                 {
                     atualVertice = i;
                     minimaDistancia = distancias[ i ];
