@@ -292,12 +292,61 @@ public class FibonacciHeap<T extends Comparable<T>>
 
     public void cut(FibNode<T> x, FibNode<T> y) 
     {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // 1
+        if ( x.right == x )
+        {
+            y.child = null;
+        }
+        else
+        {
+            x.right.left = x.left;
+            x.left.right = x.right;
+            if ( y.child == x )
+            {
+                y.child = x.right;
+            }
+        }
+        y.degree--;
+        // 2
+        min.right.left = x;
+        x.right = min.right;
+        min.right = x;
+        x.left = x;
+        // 3
+        x.p = null;
+        // 4
+        x.mark = false;
     }
 
     public void cascading_cut(FibNode<T> y) 
     {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FibNode<T> z;
+        
+        // 1
+        z = y.p;
+        // 2
+        if ( z != null )
+        {
+            // 3
+            if ( y.mark == false )
+            {
+                // 4
+                y.mark = true;
+            }
+            else
+            {
+                // 5
+                cut(y, z);
+                // 6
+                cascading_cut( z );
+                
+            }
+        }
+    }
+    
+    FibNode<T> retornaMinimo()
+    {
+        return min;
     }
     
 }
