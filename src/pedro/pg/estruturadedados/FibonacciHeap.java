@@ -6,37 +6,7 @@
 
 package pedro.pg.estruturadedados;
 
-class FibNode<T extends Comparable<T>>
-{
-    int idVertice;
-    T peso;
-    boolean mark;
-    FibNode<T> p;
-    FibNode<T> left;
-    FibNode<T> right;
-    FibNode<T> child;
-    int degree;
-    int payload;
 
-    FibNode(int idVertice, T k, int p1 )
-    {
-        this.idVertice = idVertice;
-        this.peso = k;
-        this.mark = false;
-        this.p = null;
-        this.left = null;
-        this.right = null;
-        this.child = null;
-        this.degree = -1;
-        this.payload = p1;
-    }
-    
-    
-    
-    
-    
-    
-}
 
 
 /**
@@ -90,8 +60,14 @@ public class FibonacciHeap<T extends Comparable<T>>
         ++n;
     }
     
+    public FibNode<T> criaNovoNodo( int id, T peso )
+    {
+        FibNode<T> nodo = new FibNode<>( id, peso );
+        return nodo;
+    }
     
-    FibNode<T> extractMin()
+    
+    public FibNode<T> extractMin()
     {
         FibNode<T> z, x, next;
         FibNode<T> []childList;
@@ -174,6 +150,11 @@ public class FibonacciHeap<T extends Comparable<T>>
         } while ( next != w );
         
         rootList = new FibNode[rootSize];
+        for ( int i = 0; i < rootSize; i++ )
+        {
+            rootList[ i ] = next;
+            next = next.right;
+        }
         for ( int i = 0; i < rootSize; i++ )
         {
             w = rootList[ i ];
@@ -347,6 +328,32 @@ public class FibonacciHeap<T extends Comparable<T>>
     FibNode<T> retornaMinimo()
     {
         return min;
+    }
+    
+    public class FibNode<T extends Comparable<T>>
+    {
+        int idVertice;
+        T peso;
+        boolean mark;
+        FibNode<T> p;
+        FibNode<T> left;
+        FibNode<T> right;
+        FibNode<T> child;
+        int degree;
+        int payload;
+
+        public FibNode(int idVertice, T k )
+        {
+            this.idVertice = idVertice;
+            this.peso = k;
+            this.mark = false;
+            this.p = null;
+            this.left = null;
+            this.right = null;
+            this.child = null;
+            this.degree = -1;
+            this.payload =0;
+        }    
     }
     
 }
