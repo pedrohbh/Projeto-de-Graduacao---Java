@@ -42,6 +42,7 @@ class FibNode<T extends Comparable<T>>
 /**
  *
  * @author administrador
+ * @param <T>
  */
 public class FibonacciHeap<T extends Comparable<T>>
 {
@@ -236,6 +237,65 @@ public class FibonacciHeap<T extends Comparable<T>>
     }
 
     public void fib_heap_link(FibNode<T> y, FibNode<T> x)
+    {
+        // 1
+        y.left.right = y.right;
+        y.right.left = y.left;
+        // 2
+        if ( x.child != null )
+        {
+            x.child.left.right = y;
+            y.left = x.child.left;
+            x.child.left = y;
+            y.right = x.child;
+        }
+        else
+        {
+            x.child = y;
+            y.right = y;
+            y.left = y;
+        }
+        y.p = x;
+        x.degree++;
+    }
+    
+    public void decrease_key( FibNode<T> x, T k )
+    {
+        FibNode<T> y;
+        
+        // 1
+        if ( k.compareTo(x.peso) > 0  )
+        {
+            // 2
+            System.err.println("A chave inserida \"" + k + "\". Cujo ID é \"" + x.idVertice + "\" é maior que valor atual contido nesta mesma posição (" + x.peso + "). Encerrando o programa");
+            System.exit( 1 );
+        }
+        // 3
+        x.peso = k;
+        // 4
+        y = x.p;
+        // 5
+        if (  y != null && x.peso.compareTo(y.peso) < 0 )
+        {
+            // 6
+            cut( x, y );
+            // 7
+            cascading_cut( y );
+        }
+        // 8
+        if ( x.peso.compareTo(min.peso) < 0 )
+        {
+            // 9
+            min = x;
+        }
+    }
+
+    public void cut(FibNode<T> x, FibNode<T> y) 
+    {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void cascading_cut(FibNode<T> y) 
     {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
