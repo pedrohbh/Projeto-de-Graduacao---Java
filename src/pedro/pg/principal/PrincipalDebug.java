@@ -25,6 +25,8 @@ public class PrincipalDebug
         heap.insert(nodo1);
         heap.insert(nodo2);
         heap.insert(nodo3);
+        heap.decrease_key(nodo2, 1);
+        heap.decrease_key( nodo1, 0);
         FibNode minimo = heap.extractMin();
         minimo = heap.extractMin();
         minimo = heap.extractMin();

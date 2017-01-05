@@ -50,7 +50,7 @@ public class FibonacciHeap<T extends Comparable<T>>
             min.left = x;
             x.right = min;
             // 9
-            if ( x.peso.compareTo(min.peso) < 0 )
+            if ( x.getPeso().compareTo(min.getPeso()) < 0 )
             {
                 // 10
                 min = x;
@@ -168,7 +168,7 @@ public class FibonacciHeap<T extends Comparable<T>>
                 // 8
                 y = A[ d ];
                 // 9 
-                if ( x.peso.compareTo(y.peso) > 0 )
+                if ( x.getPeso().compareTo(y.getPeso()) > 0 )
                 {
                     // 10
                     temp = x;
@@ -207,7 +207,7 @@ public class FibonacciHeap<T extends Comparable<T>>
                     min.left = A[ i ];
                     A[ i ].right = min;
                     // 22
-                    if ( A[ i ].peso.compareTo(min.peso) < 0 )
+                    if ( A[ i ].getPeso().compareTo(min.getPeso()) < 0 )
                     {
                         // 23
                         min = A[ i ];
@@ -245,10 +245,10 @@ public class FibonacciHeap<T extends Comparable<T>>
         FibNode<T> y;
         
         // 1
-        if ( k.compareTo(x.peso) > 0  )
+        if ( k.compareTo(x.getPeso()) > 0  )
         {
             // 2
-            System.err.println("A chave inserida \"" + k + "\". Cujo ID é \"" + x.idVertice + "\" é maior que valor atual contido nesta mesma posição (" + x.peso + "). Encerrando o programa");
+            System.err.println("A chave inserida \"" + k + "\". Cujo ID é \"" + x.getIdVertice() + "\" é maior que valor atual contido nesta mesma posição (" + x.getPeso() + "). Encerrando o programa");
             System.exit( 1 );
         }
         // 3
@@ -256,7 +256,7 @@ public class FibonacciHeap<T extends Comparable<T>>
         // 4
         y = x.p;
         // 5
-        if (  y != null && x.peso.compareTo(y.peso) < 0 )
+        if (  y != null && x.getPeso().compareTo(y.getPeso()) < 0 )
         {
             // 6
             cut( x, y );
@@ -264,7 +264,7 @@ public class FibonacciHeap<T extends Comparable<T>>
             cascading_cut( y );
         }
         // 8
-        if ( x.peso.compareTo(min.peso) < 0 )
+        if ( x.getPeso().compareTo(min.getPeso()) < 0 )
         {
             // 9
             min = x;
@@ -332,8 +332,8 @@ public class FibonacciHeap<T extends Comparable<T>>
     
     public class FibNode<T extends Comparable<T>>
     {
-        int idVertice;
-        T peso;
+        private int idVertice;
+        private T peso;
         boolean mark;
         FibNode<T> p;
         FibNode<T> left;
@@ -354,6 +354,20 @@ public class FibonacciHeap<T extends Comparable<T>>
             this.degree = -1;
             this.payload =0;
         }    
+
+        /**
+         * @return the idVertice
+         */
+        public int getIdVertice() {
+            return idVertice;
+        }
+
+        /**
+         * @return the peso
+         */
+        public T getPeso() {
+            return peso;
+        }
     }
     
 }

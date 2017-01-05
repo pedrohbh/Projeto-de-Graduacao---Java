@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.HeapBinario;
 
 /**
@@ -30,6 +31,63 @@ public class Grafo
         numeroArestas = 0;
         numeroVertices = 0;
         verticesGrafo = null;
+    }
+    
+    public void dijkstraHeapFibonacci( int idOrigem )
+    {
+        int verticesVisitados = numeroVertices;
+        int []antecessor = new int[ numeroVertices ];
+        boolean []isDeterminado = new boolean[ numeroVertices ];
+        FibonacciHeap.FibNode []rastreador = new FibonacciHeap.FibNode[ numeroVertices ];
+        
+        
+        FibonacciHeap<Integer> heap = new FibonacciHeap<>();
+        
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            FibonacciHeap.FibNode novoNodo = heap.criaNovoNodo(i, Integer.MAX_VALUE );
+            isDeterminado[ i ] = false;
+            antecessor[ i ] = i;
+            rastreador[ i ] = novoNodo;
+            heap.insert(novoNodo);
+        }
+        
+        FibonacciHeap.FibNode nodoAtual = rastreador[ idOrigem ];
+        heap.decrease_key(nodoAtual, 0 );
+        isDeterminado[ idOrigem ] = true;
+        
+        while ( verticesVisitados > 0 )
+        {
+            nodoAtual = heap.extractMin();
+            int idNodoAtual = nodoAtual.getIdVertice();
+            isDeterminado[ idNodoAtual ] = true;
+            
+            for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
+            {
+                if ( isDeterminado[ a.idVerticeDestino ] )
+                    continue;
+                
+                FibonacciHeap.FibNode nodoDestino = rastreador[ a.idVerticeDestino ];
+                
+                if ( nodoDestino.getPeso().compareTo(((int)nodoAtual.getPeso()) + a.peso ) > 0 )
+                {
+                    if ( (((int)nodoAtual.getPeso()) + a.peso ) >= 0 )
+                    {
+                        heap.decrease_key(nodoDestino, (((int)nodoAtual.getPeso()) + a.peso ) );
+                        antecessor[ a.idVerticeDestino ] = a.idVeticeOrigem;
+                    }
+                }
+            }
+            
+            verticesVisitados--;
+        }
+        
+        System.out.println("Iniciando impressão de rota");
+        for ( int i = 0; i < verticesGrafo.length; i++ )
+        {
+            System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
+        }
+        
     }
     
     public void dijkstraHeapBinario( int idOrigem )
