@@ -59,6 +59,11 @@ public class Grafo
         while ( verticesVisitados > 0 )
         {
             nodoAtual = heap.extractMin();
+            if ( nodoAtual == null )
+            {
+                verticesVisitados--;
+                break;               
+            }
             int idNodoAtual = nodoAtual.getIdVertice();
             isDeterminado[ idNodoAtual ] = true;
             
@@ -82,11 +87,11 @@ public class Grafo
             verticesVisitados--;
         }
         
-        System.out.println("Iniciando impressão de rota");
+        /*System.out.println("Iniciando impressão de rota");
         for ( int i = 0; i < verticesGrafo.length; i++ )
         {
             System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }
+        }*/
         
     }
     

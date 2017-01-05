@@ -19,14 +19,14 @@ public class Principal
     public static void main(String[] args) 
     {
         String caminho = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/";
-        String nomeEntrada = "teste2.txt";
+        String nomeEntrada = "USA-road-d.NY.gr";
         caminho = caminho + nomeEntrada;
         
         
         
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
-        novoGrafo.dijkstraHeapFibonacci( 2 );
+        novoGrafo.dijkstraHeapFibonacci( 0 );
         //GraphViz.desenhaGrafo(caminho, novoGrafo);
                 
         System.out.println("SUCESS");
