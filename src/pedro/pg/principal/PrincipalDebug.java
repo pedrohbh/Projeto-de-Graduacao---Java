@@ -5,8 +5,8 @@
  */
 package pedro.pg.principal;
 
-import pedro.pg.estruturadedados.FibonacciHeap;
-import pedro.pg.estruturadedados.FibonacciHeap.FibNode;
+import pedro.pg.estruturadedados.FibonacciHeapPrototipo;
+import pedro.pg.estruturadedados.FibonacciHeapPrototipo.FibNode;
 
 /**
  *
@@ -16,8 +16,8 @@ public class PrincipalDebug
 {
     public static void main(String[] args) 
     {
-        FibonacciHeap<Integer> heap;
-        heap = new FibonacciHeap<>();
+        FibonacciHeapPrototipo<Integer> heap;
+        heap = new FibonacciHeapPrototipo<>();
         FibNode nodo1 = heap.criaNovoNodo( 1, 2);
         FibNode nodo2 = heap.criaNovoNodo( 2, 4);
         FibNode nodo3 = heap.criaNovoNodo( 3, 1);

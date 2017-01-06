@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
-import pedro.pg.estruturadedados.FibonacciHeap;
+import pedro.pg.estruturadedados.FibonacciHeapPrototipo;
 import pedro.pg.estruturadedados.HeapBinario;
 
 /**
@@ -147,37 +147,37 @@ public class Grafo
         
     }*/
     
-    public void dijkstraHeapFibonacci( int idOrigem )
+    public void dijkstraHeapFibonacciPrototipo( int idOrigem )
     {
         int verticesVisitados = numeroVertices;
         int []antecessor = new int[ numeroVertices ];
         boolean []isDeterminado = new boolean[ numeroVertices ];
-        FibonacciHeap.FibNode []rastreador = new FibonacciHeap.FibNode[ numeroVertices ];
+        FibonacciHeapPrototipo.FibNode []rastreador = new FibonacciHeapPrototipo.FibNode[ numeroVertices ];
         
         
-        FibonacciHeap<Integer> heap = new FibonacciHeap<>();
+        FibonacciHeapPrototipo<Integer> heap = new FibonacciHeapPrototipo<>();
         
         for ( int i = 0; i < numeroVertices; i++ )
         {
-            FibonacciHeap.FibNode novoNodo = heap.criaNovoNodo(i, Integer.MAX_VALUE );
+            FibonacciHeapPrototipo.FibNode novoNodo = heap.criaNovoNodo(i, Integer.MAX_VALUE );
             isDeterminado[ i ] = false;
             antecessor[ i ] = i;
             rastreador[ i ] = novoNodo;
             heap.insert(novoNodo);
         }
         
-        FibonacciHeap.FibNode nodoAtual = rastreador[ idOrigem ];
+        FibonacciHeapPrototipo.FibNode nodoAtual = rastreador[ idOrigem ];
         heap.decrease_key(nodoAtual, 0 );
         isDeterminado[ idOrigem ] = true;
         
         while ( verticesVisitados > 0 )
         {
             nodoAtual = heap.extractMin();
-            if ( nodoAtual == null )
+            /*if ( nodoAtual == null )
             {
                 verticesVisitados--;
-                break;               
-            }
+                continue;               
+            }*/
             int idNodoAtual = nodoAtual.getIdVertice();
             isDeterminado[ idNodoAtual ] = true;
             
@@ -186,7 +186,7 @@ public class Grafo
                 if ( isDeterminado[ a.idVerticeDestino ] )
                     continue;
                 
-                FibonacciHeap.FibNode nodoDestino = rastreador[ a.idVerticeDestino ];
+                FibonacciHeapPrototipo.FibNode nodoDestino = rastreador[ a.idVerticeDestino ];
                 
                 if ( nodoDestino.getPeso().compareTo(((int)nodoAtual.getPeso()) + a.peso ) > 0 )
                 {
