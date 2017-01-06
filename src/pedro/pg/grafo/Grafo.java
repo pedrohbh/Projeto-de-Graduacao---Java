@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.Scanner;
 import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.HeapBinario;
@@ -32,6 +33,119 @@ public class Grafo
         numeroVertices = 0;
         verticesGrafo = null;
     }
+    
+    public void buscaEmLargutaPorVertice( int idVertice )
+    {
+        List<Integer> verticesChegaveis = new LinkedList<>();
+        Queue<Integer> fila = new LinkedList<>();
+        Cores []cor = new Cores[ numeroVertices ];
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            cor[ i ] = Cores.WHITE;
+        }
+        
+        cor[ idVertice ] = Cores.GRAY;
+        fila.add(idVertice);
+        while ( !fila.isEmpty() )
+        {
+            int verticeAtual = fila.remove();
+            for ( Aresta a: verticesGrafo[ verticeAtual ].arestasAdjacentes )
+            {
+                if ( cor[ a.idVerticeDestino ] == Cores.WHITE )
+                {
+                    cor[ a.idVerticeDestino ] = Cores.GRAY;
+                    fila.add(  a.idVerticeDestino );
+                }
+            }
+            
+            cor[ verticeAtual ] = Cores.BLACK;
+            verticesChegaveis.add( verticeAtual );
+        }
+        System.out.println("Tamanho Total: " + verticesChegaveis.size());
+        for ( int i = 0; i < verticesChegaveis.size(); i++ )
+        {
+            if ( (i+1) % 5 == 0 )
+                System.out.printf("%d%n", verticesChegaveis.get( i ));
+            else
+                System.out.printf("%d ", verticesChegaveis.get( i ) );
+        }
+        
+    }
+    
+    private void dsfVisit( int id, Cores []cor, List<Integer> verticesChegaveis )
+    {
+        cor[ id ] = Cores.GRAY;
+        //time = time + 1;
+        for ( Aresta a: verticesGrafo[ id ].arestasAdjacentes )
+        {
+            if ( cor[ a.idVerticeDestino ] == Cores.WHITE )
+            {
+                //pi[ a.idVerticeDestino ] = a.idVeticeOrigem;
+                //verticesChegaveis.add(id)
+                dsfVisit( a.idVerticeDestino, cor, verticesChegaveis);
+            }
+        }
+        //time = time + 1;
+        cor[ id ] = Cores.BLACK;
+        verticesChegaveis.add(id);
+        /*if ( time % 5 == 0 )
+        {
+            System.out.printf("%d%n", id);
+        }
+        else
+        {
+            System.out.printf("%d ", id );
+        }*/
+        
+        
+        
+    }
+    
+    public void buscaEmProfundidadePorVertice( int idVertice )
+    {
+        Cores []cor = new Cores[ numeroVertices ];
+        List<Integer> verticesChegaveis = new LinkedList<>();
+        int []pi = new int[ numeroVertices ];
+        int time;
+        
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            cor[ i ] = Cores.WHITE;
+            pi[ i ] = -1;            
+        }
+        
+        time = 0;
+        System.out.println("Vertices chegáveis partindo de " +  idVertice );
+        dsfVisit(idVertice, cor, verticesChegaveis);
+        for ( int i = 0; i < verticesChegaveis.size(); i++ )
+        {
+            if ( (i+1) % 5 == 0 )
+                System.out.printf("%d%n", verticesChegaveis.get( i ));
+            else
+                System.out.printf("%d ", verticesChegaveis.get( i ) );
+        }
+    }
+    
+    /*public void buscaEmProfundidade()
+    {
+        Cores []cor = new Cores[ numeroVertices ];
+        int []pi = new int[ numeroVertices ];
+        int time;
+        
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            cor[ i ] = Cores.WHITE;
+            pi[ i ] = -1;            
+        }
+        
+        time = 0;
+        for ( int i = 0; i < verticesGrafo.length; i++ )
+        {
+            if ( cor[ i ] == Cores.WHITE )
+                dsfVisit(i, cor, pi, time);
+        }
+        
+    }*/
     
     public void dijkstraHeapFibonacci( int idOrigem )
     {
@@ -87,11 +201,11 @@ public class Grafo
             verticesVisitados--;
         }
         
-        /*System.out.println("Iniciando impressão de rota");
+        System.out.println("Iniciando impressão de rota");
         for ( int i = 0; i < verticesGrafo.length; i++ )
         {
             System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }*/
+        }
         
     }
     
@@ -209,7 +323,7 @@ public class Grafo
         System.out.println("Imprimindo menores distancias Dijkstra Canônico");
         for ( int i = 0; i < numeroVertices; i++ )
         {
-            System.out.printf("%d = %d%n", i, antecessor[ i ] );
+            System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
         }
         
         
