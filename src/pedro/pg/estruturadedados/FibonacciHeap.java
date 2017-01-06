@@ -238,6 +238,8 @@ public class FibonacciHeap<T extends Comparable<T>>
         }
         y.p = x;
         x.degree++;
+        // 3 
+        y.mark = false;
     }
     
     public void decrease_key( FibNode<T> x, T k )
