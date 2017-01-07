@@ -26,7 +26,7 @@ public class Principal
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.dijkstraCanonico(2);
         
-        novoGrafo.dijkstraHeapFibonacci( 2 );
+        //novoGrafo.dijkstraHeapFibonacciPrototipo(2 );
         //GraphViz.desenhaGrafo(caminho, novoGrafo);
                 
         System.out.println("SUCESS");
