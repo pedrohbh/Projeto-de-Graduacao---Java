@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
+import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.FibonacciHeapPrototipo;
 import pedro.pg.estruturadedados.HeapBinario;
 
@@ -146,6 +147,63 @@ public class Grafo
         }
         
     }*/
+    
+    public void dijkstraHeapFibonacci( int idOrigem )
+    {
+        int verticesVisitados = numeroVertices;
+        int []antecessor = new int[ numeroVertices ];
+        boolean []isDeterminado = new boolean[ numeroVertices ];
+        FibonacciHeap.FibNode []rastreador = new FibonacciHeap.FibNode[ numeroVertices ];
+        FibonacciHeap heap = new FibonacciHeap();
+        
+        for ( int i = 0; i < numeroVertices; i++ )
+        {
+            FibonacciHeap.FibNode novoNodo = heap.criaNodo(i, Integer.MAX_VALUE );
+            isDeterminado[ i ] = false;
+            antecessor[ i ] = i;
+            rastreador[ i ] = novoNodo;
+            heap.insert(novoNodo);
+        }
+        
+        
+        FibonacciHeap.FibNode nodoAtual = rastreador[ idOrigem ];
+        heap.decreaseKey(nodoAtual, 0);
+        while ( verticesVisitados > 0 )
+        {
+            nodoAtual = heap.extractMin();
+            int verticeAtual = nodoAtual.getIdVertice();
+            isDeterminado[ verticeAtual ] = true;
+            for ( Aresta a: verticesGrafo[ verticeAtual ].getArestasAdjacentes() )
+            {
+                int verticeDestino = a.idVerticeDestino;
+                FibonacciHeap.FibNode nodoDestino = rastreador[ verticeDestino ];
+                if ( isDeterminado[ verticeDestino ] == true )
+                    continue;
+                
+                if ( nodoDestino.getKey() > ( a.peso + nodoAtual.getKey() ) )
+                {
+                    if ( ( a.peso + nodoAtual.getKey() ) >= 0 )
+                    {
+                        heap.decreaseKey(nodoDestino, (a.peso + nodoAtual.getKey() ) );
+                        antecessor[ verticeDestino ] = verticeAtual;
+                    }
+                }               
+            }
+            verticesVisitados--;
+            
+            
+        }
+        
+        
+        System.out.println("Imprimindo antecessores de Heao de Fibonacci");
+        for ( int i = 0; i < antecessor.length; i++ )
+        {
+            System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
+        }
+        
+        
+        
+    }
     
     public void dijkstraHeapFibonacciPrototipo( int idOrigem )
     {

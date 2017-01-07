@@ -44,7 +44,7 @@ public class FibonacciHeap
             min.left = x;
             x.right = min;
             // 8
-            if ( x.key < min.key )
+            if ( x.getKey() < min.getKey() )
             {
                 // 10
                 min = x;
@@ -154,7 +154,7 @@ public class FibonacciHeap
                 // 8
                 y = A[ d ];
                 // 9
-                if ( x.key > y.key )
+                if ( x.getKey() > y.getKey() )
                 {
                     // 10
                     temp = x;
@@ -193,7 +193,7 @@ public class FibonacciHeap
                     min.left = A[ i ];
                     A[ i ].right = min;
                     // 22
-                    if ( min == null ||  A[ i ].key < min.key )
+                    if ( min == null ||  A[ i ].getKey() < min.getKey() )
                     {
                         // 23
                         min = A[ i ];
@@ -236,10 +236,10 @@ public class FibonacciHeap
         FibNode y;
         
         // 1
-        if ( k > x.key )
+        if ( k > x.getKey() )
         {
             // 2
-            System.err.println("A chave inserida \"" + k + "\". Cujo ID é \"" + x.idVertice + "\" é maior que valor atual contido nesta mesma posição (" + x.key + "). Encerrando o programa");
+            System.err.println("A chave inserida \"" + k + "\". Cujo ID é \"" + x.getIdVertice() + "\" é maior que valor atual contido nesta mesma posição (" + x.getKey() + "). Encerrando o programa");
             System.exit( 1 );
         }
         // 3
@@ -247,7 +247,7 @@ public class FibonacciHeap
         // 4
         y = x.p;
         // 5
-        if ( y != null && x.key < y.key )
+        if ( y != null && x.getKey() < y.getKey() )
         {
             // 6
             cut( x, y );
@@ -255,7 +255,7 @@ public class FibonacciHeap
             cascading_cut( y );            
         }
         // 8
-        if ( x.key < min.key )
+        if ( x.getKey() < min.getKey() )
         {
             // 9
             min = x;
@@ -290,6 +290,12 @@ public class FibonacciHeap
         x.mark = false;
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public FibNode criaNodo( int id, int peso )
+    {
+        FibNode novoNodo = new FibNode(id, peso);
+        return novoNodo;
+    }
 
     public void cascading_cut(FibNode y) 
     {
@@ -319,8 +325,8 @@ public class FibonacciHeap
     
     public class FibNode
     {
-        int idVertice;
-        int key;
+        private int idVertice;
+        private int key;
         boolean mark;
         FibNode p;
         FibNode left;
@@ -339,5 +345,19 @@ public class FibonacciHeap
             this.child = null;
             this.degree = -1;
         }       
+
+        /**
+         * @return the idVertice
+         */
+        public int getIdVertice() {
+            return idVertice;
+        }
+
+        /**
+         * @return the key
+         */
+        public int getKey() {
+            return key;
+        }
     }
 }

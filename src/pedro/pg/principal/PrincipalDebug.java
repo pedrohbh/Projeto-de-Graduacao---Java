@@ -5,6 +5,7 @@
  */
 package pedro.pg.principal;
 
+import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.FibonacciHeapPrototipo;
 import pedro.pg.estruturadedados.FibonacciHeapPrototipo.FibNode;
 
@@ -16,7 +17,24 @@ public class PrincipalDebug
 {
     public static void main(String[] args) 
     {
-        FibonacciHeapPrototipo<Integer> heap;
+        FibonacciHeap heap = new FibonacciHeap();
+        FibonacciHeap.FibNode nodo1 = heap.criaNodo(0, 0);
+        FibonacciHeap.FibNode nodo2 = heap.criaNodo( 1,  1);
+        FibonacciHeap.FibNode nodo3 = heap.criaNodo( 3, 3 );
+        heap.insert(nodo1);
+        heap.insert(nodo2);
+        heap.insert(nodo3);
+        //heap.decreaseKey(nodo3, 0);
+        //heap.decreaseKey(nodo2, 0);
+        FibonacciHeap.FibNode atualNodo = heap.extractMin();
+        heap.decreaseKey(nodo3, 0);
+        atualNodo = heap.extractMin();
+        atualNodo = heap.extractMin();
+        atualNodo = heap.extractMin();
+        System.out.println("Sucess");
+        //nodo1 = new FibonacciHeap.FibNode(0, 0);
+        
+        /*FibonacciHeapPrototipo<Integer> heap;
         heap = new FibonacciHeapPrototipo<>();
         FibNode nodo1 = heap.criaNovoNodo( 1, 2);
         FibNode nodo2 = heap.criaNovoNodo( 2, 4);
@@ -32,7 +50,7 @@ public class PrincipalDebug
         minimo = heap.extractMin();
         System.out.println("SUCESS");
         
-        //FibNode<Integer> nodo1;
+        //FibNode<Integer> nodo1;*/
         
         
     }
