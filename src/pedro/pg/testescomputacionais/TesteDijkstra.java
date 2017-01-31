@@ -79,10 +79,10 @@ public class TesteDijkstra
                     long tempoDecorrido = 0;
                     for ( int i = 0; i < 3; i++ )
                     {
-                        Instant heapBinStrart = Instant.now();
+                        Instant heapBinStart = Instant.now();
                         g.dijkstraHeapBinario( 0 );
                         Instant heapBinEnd = Instant.now();
-                        tempoDecorrido += Duration.between(start, end).toMillis();                        
+                        tempoDecorrido += Duration.between(heapBinStart, heapBinEnd).toMillis();                        
                     }
                     
                     tempoDecorrido /= 3;
@@ -96,7 +96,7 @@ public class TesteDijkstra
                         Instant fibonacciStart = Instant.now();
                         g.dijkstraHeapFibonacci( 0 );
                         Instant fibonacciEnd = Instant.now();
-                        tempoDecorrido += Duration.between(start, end).toMillis();
+                        tempoDecorrido += Duration.between(fibonacciStart, fibonacciEnd).toMillis();
                     }
                     
                     tempoDecorrido /= 3;
