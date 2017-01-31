@@ -14,6 +14,8 @@ import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Formatter;
+import java.util.FormatterClosedException;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import pedro.pg.grafo.Grafo;
 
@@ -24,6 +26,7 @@ import pedro.pg.grafo.Grafo;
 public class TesteDijkstra 
 {
     private static Formatter output;
+    private static final int NUM_RODADAS = 3;
     
     public static void openFile()
     {
@@ -42,6 +45,34 @@ public class TesteDijkstra
             System.err.println("Error ao abrir o arquivo. Encerrando o programa.");
             System.exit( 1 );
         }
+    }
+    
+    public static void escreveDados( String nomeArquivo, int numeroVertices, int numeroArestas, long tempoCanonico, long tempoHeapBinario, long tempoFibonacci )
+    {
+        try
+        {
+            String porcentagemBinario = NumberFormat.getPercentInstance().format( (double) tempoCanonico / tempoHeapBinario );
+            String porcentagemFibonacci = NumberFormat.getPercentInstance().format( (double) tempoCanonico / tempoFibonacci );
+            output.format("%s;%d;%d;%d;%d;%s;%d;%s%n", nomeArquivo, numeroVertices, numeroArestas, tempoCanonico, tempoHeapBinario, porcentagemBinario, tempoFibonacci, porcentagemFibonacci );
+        }
+        catch ( FormatterClosedException e)
+        {
+            System.err.println("Erro ao escrever em arquivo de saida. Termianando programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+        catch ( NoSuchElementException e )
+        {
+            System.err.println("A varíavel não existe para ser escrita. Encerrando o programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+    }
+    
+    public static void closeFile()
+    {
+        if ( output != null )
+            output.close();
     }
     
     
@@ -66,46 +97,44 @@ public class TesteDijkstra
                     Grafo g = new Grafo();
                     g.leArquivoEntrada(filePath.toString());
                     
-                    output.format("%s;%d;%d;", filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas() );
-                    
                     Instant start = Instant.now();
                     g.dijkstraCanonico( 0 );
                     Instant end = Instant.now();
                     
                     long tempoDecorridoCanonico = Duration.between(start, end).toMillis();
-                    output.format("%d", tempoDecorridoCanonico );
                     
                     // Heap Binário
-                    long tempoDecorrido = 0;
-                    for ( int i = 0; i < 3; i++ )
+                    long tempoDecorridoBinario = 0;
+                    for ( int i = 0; i < NUM_RODADAS; i++ )
                     {
                         Instant heapBinStart = Instant.now();
                         g.dijkstraHeapBinario( 0 );
                         Instant heapBinEnd = Instant.now();
-                        tempoDecorrido += Duration.between(heapBinStart, heapBinEnd).toMillis();                        
+                        tempoDecorridoBinario += Duration.between(heapBinStart, heapBinEnd).toMillis();                        
                     }
                     
-                    tempoDecorrido /= 3;
-                    String porcetagem = NumberFormat.getPercentInstance().format((double) tempoDecorridoCanonico / tempoDecorrido );
-                    output.format("%d;%s;", tempoDecorrido, porcetagem );
+                    tempoDecorridoBinario /= NUM_RODADAS;
+                    //String porcetagem = NumberFormat.getPercentInstance().format((double) tempoDecorridoCanonico / tempoDecorrido );
+                    //output.format("%d;%s;", tempoDecorrido, porcetagem );
                     
                     // Heap FIbonacci
-                    tempoDecorrido = 0;
-                    for ( int i = 0; i < 3; i++ )
+                    long tempoDecorridoFibonacci = 0;
+                    for ( int i = 0; i < NUM_RODADAS; i++ )
                     {
                         Instant fibonacciStart = Instant.now();
                         g.dijkstraHeapFibonacci( 0 );
                         Instant fibonacciEnd = Instant.now();
-                        tempoDecorrido += Duration.between(fibonacciStart, fibonacciEnd).toMillis();
+                        tempoDecorridoFibonacci += Duration.between(fibonacciStart, fibonacciEnd).toMillis();
                     }
                     
-                    tempoDecorrido /= 3;
-                    NumberFormat.getPercentInstance().format((double) tempoDecorridoCanonico / tempoDecorrido );
-                    output.format("%d;%s;%n", tempoDecorrido, porcetagem );
+                    tempoDecorridoFibonacci /= NUM_RODADAS;
                     
+                    
+                    escreveDados( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDecorridoCanonico, tempoDecorridoBinario, tempoDecorridoFibonacci);
                 }
             });
         }
+        closeFile();
         
         
         
