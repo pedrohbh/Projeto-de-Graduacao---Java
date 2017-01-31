@@ -39,8 +39,8 @@ public class Grafo
     {
         List<Integer> verticesChegaveis = new LinkedList<>();
         Queue<Integer> fila = new LinkedList<>();
-        Cores []cor = new Cores[ numeroVertices ];
-        for ( int i = 0; i < numeroVertices; i++ )
+        Cores []cor = new Cores[ getNumeroVertices() ];
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             cor[ i ] = Cores.WHITE;
         }
@@ -104,12 +104,12 @@ public class Grafo
     
     public void buscaEmProfundidadePorVertice( int idVertice )
     {
-        Cores []cor = new Cores[ numeroVertices ];
+        Cores []cor = new Cores[ getNumeroVertices() ];
         List<Integer> verticesChegaveis = new LinkedList<>();
-        int []pi = new int[ numeroVertices ];
+        int []pi = new int[ getNumeroVertices() ];
         int time;
         
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             cor[ i ] = Cores.WHITE;
             pi[ i ] = -1;            
@@ -150,13 +150,13 @@ public class Grafo
     
     public void dijkstraHeapFibonacci( int idOrigem )
     {
-        int verticesVisitados = numeroVertices;
-        int []antecessor = new int[ numeroVertices ];
-        boolean []isDeterminado = new boolean[ numeroVertices ];
-        FibonacciHeap.FibNode []rastreador = new FibonacciHeap.FibNode[ numeroVertices ];
+        int verticesVisitados = getNumeroVertices();
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        FibonacciHeap.FibNode []rastreador = new FibonacciHeap.FibNode[ getNumeroVertices() ];
         FibonacciHeap heap = new FibonacciHeap();
         
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             FibonacciHeap.FibNode novoNodo = heap.criaNodo(i, Integer.MAX_VALUE );
             isDeterminado[ i ] = false;
@@ -207,15 +207,15 @@ public class Grafo
     
     public void dijkstraHeapFibonacciPrototipo( int idOrigem )
     {
-        int verticesVisitados = numeroVertices;
-        int []antecessor = new int[ numeroVertices ];
-        boolean []isDeterminado = new boolean[ numeroVertices ];
-        FibonacciHeapPrototipo.FibNode []rastreador = new FibonacciHeapPrototipo.FibNode[ numeroVertices ];
+        int verticesVisitados = getNumeroVertices();
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        FibonacciHeapPrototipo.FibNode []rastreador = new FibonacciHeapPrototipo.FibNode[ getNumeroVertices() ];
         
         
         FibonacciHeapPrototipo<Integer> heap = new FibonacciHeapPrototipo<>();
         
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             FibonacciHeapPrototipo.FibNode novoNodo = heap.criaNovoNodo(i, Integer.MAX_VALUE );
             isDeterminado[ i ] = false;
@@ -269,13 +269,13 @@ public class Grafo
     
     public void dijkstraHeapBinario( int idOrigem )
     {
-        int []antecessor = new int[ numeroVertices ];
-        boolean []isDeterminado = new boolean[ numeroVertices ];
-        int []rastreador = new int[ numeroVertices ];
-        int verticesASeremVisitados = numeroVertices;
-        HeapBinario heap = new HeapBinario( numeroVertices );
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        int []rastreador = new int[ getNumeroVertices() ];
+        int verticesASeremVisitados = getNumeroVertices();
+        HeapBinario heap = new HeapBinario( getNumeroVertices());
         
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             heap.insert( i, Integer.MAX_VALUE );
             isDeterminado[ i ] = false;
@@ -312,7 +312,7 @@ public class Grafo
         }
         
         System.out.println("Imprimindo menores distancias Heap Binário");
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             System.out.printf("%d = %d%n", i, antecessor[ i ] );
         }
@@ -321,12 +321,12 @@ public class Grafo
     
     public void dijkstraCanonico( int idOrigem )
     {
-        int []distancias = new int[ numeroVertices ];
-        int []antecessor = new int[ numeroVertices ];
-        boolean []isDeterminado = new boolean[ numeroVertices ];
-        int verticesASeremVisitados = numeroVertices;
+        int []distancias = new int[ getNumeroVertices() ];
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        int verticesASeremVisitados = getNumeroVertices();
         
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             distancias[ i ] = Integer.MAX_VALUE;
             antecessor[ i ] = i;
@@ -359,7 +359,7 @@ public class Grafo
             }
             int minimaDistancia = Integer.MAX_VALUE;
             boolean jaSelecionado = false;
-            for ( int i = 0; i < numeroVertices; i++ )
+            for ( int i = 0; i < getNumeroVertices(); i++ )
             {
                 if ( isDeterminado[ i ] )
                     continue;
@@ -379,7 +379,7 @@ public class Grafo
         }
         
         System.out.println("Imprimindo menores distancias Dijkstra Canônico");
-        for ( int i = 0; i < numeroVertices; i++ )
+        for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
         }
@@ -455,7 +455,7 @@ public class Grafo
                         numeroVertices = input.nextInt();
                         numeroArestas = input.nextInt();
                         
-                        verticesGrafo = new Vertice[numeroVertices];
+                        verticesGrafo = new Vertice[getNumeroVertices()];
                     }
                     else
                     {
@@ -470,7 +470,7 @@ public class Grafo
                 numeroVertices = input.nextInt();
                 numeroArestas = input.nextInt();
                 
-                verticesGrafo = new Vertice[numeroVertices];
+                verticesGrafo = new Vertice[getNumeroVertices()];
                 
                 while ( input.hasNext() )
                 {
@@ -595,5 +595,19 @@ public class Grafo
      */
     public Vertice[] getVerticesGrafo() {
         return verticesGrafo;
+    }
+
+    /**
+     * @return the numeroVertices
+     */
+    public int getNumeroVertices() {
+        return numeroVertices;
+    }
+
+    /**
+     * @return the numeroArestas
+     */
+    public int getNumeroArestas() {
+        return numeroArestas;
     }
 }
