@@ -195,11 +195,11 @@ public class Grafo
         }
         
         
-        System.out.println("Imprimindo antecessores de Heao de Fibonacci");
+        /*System.out.println("Imprimindo antecessores de Heap de Fibonacci");
         for ( int i = 0; i < antecessor.length; i++ )
         {
             System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }
+        }*/
         
         
         
@@ -311,11 +311,11 @@ public class Grafo
             atualVertice = heap.extractMin();
         }
         
-        System.out.println("Imprimindo menores distancias Heap Binário");
+        /*System.out.println("Imprimindo menores distancias Heap Binário");
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             System.out.printf("%d = %d%n", i, antecessor[ i ] );
-        }
+        }*/
         
     }
     
@@ -378,11 +378,11 @@ public class Grafo
             
         }
         
-        System.out.println("Imprimindo menores distancias Dijkstra Canônico");
+        /*System.out.println("Imprimindo menores distancias Dijkstra Canônico");
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }
+        }*/
         
         
         
