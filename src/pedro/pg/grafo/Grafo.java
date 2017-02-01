@@ -266,58 +266,7 @@ public class Grafo
         }
         
     }
-    
-    public void dijkstraHeapBinario( int idOrigem )
-    {
-        int []antecessor = new int[ getNumeroVertices() ];
-        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
-        int []rastreador = new int[ getNumeroVertices() ];
-        int verticesASeremVisitados = getNumeroVertices();
-        HeapBinario heap = new HeapBinario( getNumeroVertices());
-        
-        for ( int i = 0; i < getNumeroVertices(); i++ )
-        {
-            heap.insert( i, Integer.MAX_VALUE );
-            isDeterminado[ i ] = false;
-            antecessor[ i ] = i;
-            rastreador[ i ] = i;
-        }
-        
-        heap.setRastreador(rastreador);
-        heap.decreaseKey(idOrigem, 0);
-        int atualVertice = idOrigem;
-        
-        while ( verticesASeremVisitados > 0 )
-        {
-            //atualVertice
-            isDeterminado[ atualVertice ] = true;
-            verticesASeremVisitados--;
-            
-            for ( Aresta a: getVerticesGrafo()[ atualVertice ].getArestasAdjacentes() )
-            {
-                int verticeDestino = heap.getPosicaoRastreador(a.getIdVerticeDestino());
-                if ( isDeterminado[ a.getIdVerticeDestino() ] )
-                    continue;
-                
-                if ( heap.getDistanciaNodo( verticeDestino ) > heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.getPeso() )
-                {
-                    if ( heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.getPeso() >= 0  )
-                    {
-                        heap.decreaseKey( verticeDestino ,  heap.getDistanciaNodo(heap.getPosicaoRastreador(atualVertice)) + a.getPeso() );
-                        antecessor[ a.getIdVerticeDestino() ] = atualVertice;
-                    }
-                }
-            }
-            atualVertice = heap.extractMin();
-        }
-        
-        /*System.out.println("Imprimindo menores distancias Heap Binário");
-        for ( int i = 0; i < getNumeroVertices(); i++ )
-        {
-            System.out.printf("%d = %d%n", i, antecessor[ i ] );
-        }*/
-        
-    }
+     
     
     public void dijkstraCanonico( int idOrigem )
     {
