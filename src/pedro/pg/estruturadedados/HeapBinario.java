@@ -42,9 +42,16 @@ public class HeapBinario
             System.err.println("Heap Underflow");
             System.exit( 1 );
         }
+        // Inicio Swap
         HeapNode min = heap[ 0 ];
         heap[ 0 ] = heap[ heapSize ];
         heap[ heapSize ] = min;
+        
+        int tempNum = heap[ 0 ].getIndiceAtual();
+        heap[ 0 ].setIndiceAtual( heap[ heapSize ].getIndiceAtual() );
+        heap[ heapSize ].setIndiceAtual(tempNum);
+        // Fim Swap
+        
         heapSize = heapSize-1;
         minHeapify( 0 );
         return min;
@@ -55,7 +62,7 @@ public class HeapBinario
     public void decreaseKey(int i, long key)
     {
         // 1
-        if ( key > heap[ i ].key )
+        if ( key > heap[ i ].getKey() )
         {
             // 2
             System.err.println("Error: A chave inserida é maior do que a já existente");
@@ -64,11 +71,18 @@ public class HeapBinario
         // 3
         heap[ i ].key = key;
         // 4
-        while ( i > 0 && heap[ parent(i) ].key > heap[ i ].key )
+        while ( i > 0 && heap[ parent(i) ].getKey() > heap[ i ].getKey() )
         {
+            // Início Swap
             HeapNode temp = heap[ parent(i) ];
             heap[ parent(i) ] = heap[ i ];
             heap[ i ] = temp;
+            
+            int tempNum = heap[ parent(i) ].getIndiceAtual();
+            heap[ parent( i ) ].setIndiceAtual( heap[ i ].getIndiceAtual() );
+            heap[ i ].setIndiceAtual(tempNum);
+            // Fim swap
+            
             i = parent(i);            
         }       
         
@@ -77,12 +91,14 @@ public class HeapBinario
     
     
     
-    public void insertHeap( HeapNode novoNodo, long key )
+    public HeapNode insertHeap( int id, long key )
     {
+        HeapNode novoNodo = new HeapNode(id, key);
         heapSize = heapSize + 1;
         novoNodo.key = Long.MAX_VALUE;
         heap[ heapSize ] = novoNodo;
         decreaseKey( heapSize, key);
+        return novoNodo;
     }
 
     private void minHeapify(int i)
@@ -90,36 +106,75 @@ public class HeapBinario
         int l = left(i);
         int r = right(i);
         int menor;
-        if ( l <= heapSize && heap[ l ].key < heap[ i ].key )
+        if ( l <= heapSize && heap[ l ].getKey() < heap[ i ].getKey() )
         {
             menor = l;
         }
         else
             menor = i;
         
-        if ( r <= heapSize && heap[ r ].key < heap[ menor ].key )
+        if ( r <= heapSize && heap[ r ].getKey() < heap[ menor ].getKey() )
             menor = r;
         
         if ( menor != i )
         {
+            // Início Swap
             HeapNode temp = heap[ i ];
             heap[ i ] = heap[ menor ];
             heap[ menor ] = temp;
+            
+            int tempNum = heap[ i ].getIndiceAtual();
+            heap[ i ].setIndiceAtual( heap[ menor ].getIndiceAtual() );
+            heap[ menor ].setIndiceAtual(tempNum);
+            // Fim Swap
+            
             minHeapify( menor );
         }       
     }
     
     
     
+    
+    
     public class HeapNode
     {
-        private int idVertice;
+        private final int idVertice;
         private long key;
+        private int indiceAtual;
         
         public HeapNode( int id, long key )
         {
             this.idVertice = id;
             this.key = key;
+            this.indiceAtual = id;
+        }
+
+        /**
+         * @return the idVertice
+         */
+        public int getIdVertice() {
+            return idVertice;
+        }
+
+        /**
+         * @return the key
+         */
+        public long getKey() {
+            return key;
+        }
+
+        /**
+         * @return the indiceAtual
+         */
+        public int getIndiceAtual() {
+            return indiceAtual;
+        }
+
+        /**
+         * @param indiceAtual the indiceAtual to set
+         */
+        public void setIndiceAtual(int indiceAtual) {
+            this.indiceAtual = indiceAtual;
         }
     }
     

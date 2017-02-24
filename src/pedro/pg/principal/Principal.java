@@ -19,15 +19,17 @@ public class Principal
     public static void main(String[] args) 
     {
         String caminho = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/";
-        String nomeEntrada = "teste2.txt";
+        String nomeEntrada = "USA-road-d.NY.gr";
         caminho = caminho + nomeEntrada;
         
         
         
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
-        novoGrafo.dijkstraCanonico(0);
-        novoGrafo.dijkstraHeapFibonacci( 0 );
+        novoGrafo.dijkstraCanonico( 0 );
+        
+        novoGrafo.dijkstraHeapBinario(0);
+        //novoGrafo.dijkstraHeapFibonacci( 0 );
         
         /*Grafo g = new Grafo();
         g.leArquivoEntrada(caminho);
@@ -37,20 +39,19 @@ public class Principal
         long tempoBin = Duration.between(strat, end ).toMillis();
         
         Instant fibStart = Instant.now();
-        g.dijkstraHeapFibonacci( 0  );
+        g.dijkstraHeapFibonacci( 0 );
         Instant fibEnd = Instant.now();
         long tempoFib = Duration.between( fibStart , fibEnd ).toMillis();
         
         System.out.println("Tempos totais");
         System.out.println("Heap binario: " + tempoBin + " ms." );
-        System.out.println("Fibonacci: " + tempoFib + " ms." );
+        System.out.println("Fibonacci: " + tempoFib + " ms." );*/
         
         
         //novoGrafo.dijkstraHeapFibonacciPrototipo(2 );
         //GraphViz.desenhaGrafo(caminho, novoGrafo);
                 
-        System.out.println("SUCESS");*/
-        
+        System.out.println("SUCESS");
     }
     
 }
