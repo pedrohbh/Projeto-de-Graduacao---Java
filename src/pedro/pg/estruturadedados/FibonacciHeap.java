@@ -296,6 +296,13 @@ public class FibonacciHeap
         FibNode novoNodo = new FibNode(id, peso);
         return novoNodo;
     }
+    
+    public FibNode push( int id, int peso )
+    {
+        FibNode novoNodo = new FibNode(id, peso);
+        insert(novoNodo);
+        return novoNodo;
+    }
 
     public void cascading_cut(FibNode y) 
     {
