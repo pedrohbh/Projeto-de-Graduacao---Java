@@ -6,8 +6,6 @@
 package pedro.pg.principal;
 
 import pedro.pg.estruturadedados.FibonacciHeap;
-import pedro.pg.estruturadedados.FibonacciHeapPrototipo;
-import pedro.pg.estruturadedados.FibonacciHeapPrototipo.FibNode;
 
 /**
  *
