@@ -8,6 +8,7 @@ package pedro.pg.beta;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import pedro.pg.estruturadedados.HeapBinario;
 import pedro.pg.grafo.Grafo;
 
 /**
@@ -81,6 +82,34 @@ public class AEstrela
         
     }
     
+    public static void algoritmoAEstrela( int indiceOrigem, int indiceDestino )
+    {
+        HeapBinario heap = new HeapBinario( grafo.getNumeroVertices());
+        int []antecessor = new int[ grafo.getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ grafo.getNumeroVertices() ];
+        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ grafo.getNumeroVertices() ];
+        
+        for ( int i = 0; i < grafo.getNumeroVertices(); i++ )
+        {
+            antecessor[ i ] = i;
+            isDeterminado[ i ] = false;
+            rastreador[ i ] = heap.insertHeap(i, Long.MAX_VALUE );
+        }
+        
+        heap.decreaseKey(indiceOrigem, 0);
+        while ( isDeterminado[ rastreador[ indiceDestino ].getIdVertice() ] != true )
+        {
+            HeapBinario.HeapNode nodoAtual = heap.extractMin();
+            int idAtual = nodoAtual.getIdVertice();
+            isDeterminado[ idAtual ] = true;
+            
+            for ( Grafo.Aresta a: grafo.getVerticesGrafo()[ idAtual ].getArestasAdjacentes() )
+            {
+                
+            }
+            
+        }
+    }
     
     public static void main(String[] args) 
     {
