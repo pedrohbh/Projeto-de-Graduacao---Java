@@ -105,7 +105,18 @@ public class AEstrela
             
             for ( Grafo.Aresta a: grafo.getVerticesGrafo()[ idAtual ].getArestasAdjacentes() )
             {
+                int idDestino = a.getIdVerticeDestino();
+                if ( isDeterminado[ idDestino ] )
+                    continue;
                 
+                HeapBinario.HeapNode nodoDestino = rastreador[ idDestino ];
+                
+                long distanciaHeuristica = (long) Math.sqrt(Math.pow( (xCordenadas[ idAtual ] - xCordenadas[ idDestino ] ), 2) + Math.pow( (yCordenadas[ idAtual ] - yCordenadas[ idDestino ] ), 2));
+                if ( nodoDestino.getKey() > ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ) && ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ) >= 0 )
+                {
+                    heap.decreaseKey( nodoDestino.getIndiceAtual(), ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ));
+                    antecessor[ idDestino ] = idAtual;
+                }
             }
             
         }
