@@ -7,6 +7,8 @@ package pedro.pg.beta;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
@@ -161,9 +163,18 @@ public class AEstrela
         caminho = caminho + nomeEntrada;
         
         grafo.leArquivoEntrada( caminho );
+        Instant antes = Instant.now();
+        grafo.dijkstraHeapBinario(0);
+        Instant depois = Instant.now();
+        long tempoHeap = Duration.between(antes, depois).toMillis();
+        
         leArquivoDeCordenadas( nomeCordenadas );
+        Instant aAntes = Instant.now();
         int []antecessores = algoritmoAEstrela(0, 180);
-        publicaCaminho(antecessores, 0, 180);
+        Instant aDepois = Instant.now();
+        long tempoA = Duration.between(aAntes, aDepois).toMillis();
+        System.out.printf("Tempo Dijkstra: %d%nTempo A*: %d%n", tempoHeap, tempoA );
+        //publicaCaminho(antecessores, 0, 180);
         
         
         System.out.println("OK");

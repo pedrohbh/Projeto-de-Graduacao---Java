@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
+import pedro.pg.beta.AEstrela;
 import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.HeapBinario;
 
@@ -254,6 +255,10 @@ public class Grafo
                 
             
         }
+        
+        /*System.out.println("Mostrando para Dijkstra");
+        AEstrela.publicaCaminho(antecessor, idOrigem, 180 );
+        System.out.printf("Fim Dijkstra%n%n");*/
         
         
         /*System.out.println("Imprimindo menores distancias Dijkstra Heap Binário");
