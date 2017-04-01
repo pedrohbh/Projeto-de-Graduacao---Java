@@ -256,12 +256,12 @@ public class Grafo
         }
         
         
-        System.out.println("Imprimindo menores distancias Dijkstra Heap Binário");
+        /*System.out.println("Imprimindo menores distancias Dijkstra Heap Binário");
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             System.out.printf("Distância( %d ): %d%n", i, distancias[ i ] );
             //System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }
+        }*/
         
     }
      
@@ -325,12 +325,12 @@ public class Grafo
             
         }
         
-        System.out.println("Imprimindo menores distancias Dijkstra Canônico");
+        /*System.out.println("Imprimindo menores distancias Dijkstra Canônico");
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             System.out.printf("Distância( %d ): %d%n", i, distancias[ i ] );
             //System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }
+        }*/
         
         
         
