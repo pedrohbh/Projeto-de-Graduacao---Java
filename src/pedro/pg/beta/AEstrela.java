@@ -7,7 +7,9 @@ package pedro.pg.beta;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 import pedro.pg.estruturadedados.HeapBinario;
 import pedro.pg.grafo.Grafo;
 
@@ -82,7 +84,7 @@ public class AEstrela
         
     }
     
-    public static void algoritmoAEstrela( int indiceOrigem, int indiceDestino )
+    public static int []algoritmoAEstrela( int indiceOrigem, int indiceDestino )
     {
         HeapBinario heap = new HeapBinario( grafo.getNumeroVertices());
         int []antecessor = new int[ grafo.getNumeroVertices() ];
@@ -120,6 +122,35 @@ public class AEstrela
             }
             
         }
+        
+        return antecessor;
+    }
+    
+    public static void publicaCaminho( int []antecessores, int origem, int destino )
+    {
+        List<Integer> listaDeAntecessores = new Stack<>();
+        //listaDeAntecessores.add(destino);
+        int ultimo = destino;
+        //listaDeAntecessores.add(ultimo);
+        
+        while ( true )
+        {            
+            listaDeAntecessores.add( ultimo );
+            
+            
+            if ( ultimo == origem )
+                break;
+            
+            ultimo = antecessores[ ultimo ];
+        }
+        
+        System.out.println("Caminho partindo de " + origem + " até " + destino );
+        while ( !listaDeAntecessores.isEmpty() )
+        {
+            int caminho = listaDeAntecessores.remove( listaDeAntecessores.size() - 1 );
+            System.out.print( caminho + " -> ");
+        }
+        System.out.println("");
     }
     
     public static void main(String[] args) 
@@ -131,6 +162,10 @@ public class AEstrela
         
         grafo.leArquivoEntrada( caminho );
         leArquivoDeCordenadas( nomeCordenadas );
+        int []antecessores = algoritmoAEstrela(0, 180);
+        publicaCaminho(antecessores, 0, 180);
+        
+        
         System.out.println("OK");
         
     }
