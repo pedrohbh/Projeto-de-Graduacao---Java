@@ -121,6 +121,7 @@ public class AEstrela
                 {
                     heap.decreaseKey( nodoDestino.getIndiceAtual(), ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ));
                     antecessor[ idDestino ] = idAtual;
+                    //distancias[ idDestino ] = a.getPeso() + nodoAtual.getKey();
                 }
             }
             
@@ -129,11 +130,15 @@ public class AEstrela
         return antecessor;
     }
     
-    public static void publicaCaminho( int []antecessores, int origem, int destino )
+    public static void publicaCaminho( int []antecessores, Grafo g, int origem, int destino )
     {
         List<Integer> listaDeAntecessores = new Stack<>();
+        long distanciaTotal = 0;
         //listaDeAntecessores.add(destino);
         int ultimo = destino;
+        Grafo.Vertice []v = g.getVerticesGrafo();
+        int primeiro = -1;
+        int segundo = -1;
         //listaDeAntecessores.add(ultimo);
         
         while ( true )
@@ -151,9 +156,27 @@ public class AEstrela
         while ( !listaDeAntecessores.isEmpty() )
         {
             int caminho = listaDeAntecessores.remove( listaDeAntecessores.size() - 1 );
+            if ( primeiro == -1 )
+                primeiro = caminho;
+            else
+            {
+                segundo = caminho;
+                for ( Grafo.Aresta a: v[ primeiro ].getArestasAdjacentes() )
+                {
+                    if ( a.getIdVerticeDestino() == segundo )
+                    {
+                        distanciaTotal += a.getPeso();
+                        break;
+                    }
+                }
+                primeiro = caminho;
+            }
+            
+            //distanciaTotal += distancias[ caminho ];
             System.out.print( caminho + " -> ");
         }
         System.out.println("");
+        System.out.println("Distância total: " + distanciaTotal );
     }
     
     public static void main(String[] args) 
@@ -165,6 +188,7 @@ public class AEstrela
         
         grafo.leArquivoEntrada( caminho );
         //Instant antes = Instant.now();
+        //grafo.dijkstraCanonico(0);
         grafo.dijkstraHeapBinario(0);
         //Instant depois = Instant.now();
         //long tempoHeap = Duration.between(antes, depois).toMillis();
@@ -175,9 +199,7 @@ public class AEstrela
         //Instant aDepois = Instant.now();
         //long tempoA = Duration.between(aAntes, aDepois).toMillis();
         //System.out.printf("Tempo Dijkstra: %d%nTempo A*: %d%n", tempoHeap, tempoA );
-        publicaCaminho(antecessores, 0, 180);
-        
-        
+        publicaCaminho(antecessores, grafo, 0, 180);
         System.out.println("OK");
         
     }

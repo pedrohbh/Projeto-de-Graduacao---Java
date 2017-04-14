@@ -226,7 +226,7 @@ public class Grafo
             
         }
         
-        if ( distancias != null )
+        if ( distancias != null && antecessor != null )
         {
             System.out.println("Imprimindo antecessores e distâncias");
             if ( antecessor.length != distancias.length )
@@ -244,7 +244,7 @@ public class Grafo
                 }
             }
         }
-        else
+        else if ( distancias == null )
         {
             for ( int i = 0; i < antecessor.length; i++ )
             {
@@ -252,6 +252,16 @@ public class Grafo
                     System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
                 else
                     saida.format("Antecessor( %d ): %d%n", i, antecessor[ i ] );                
+            }
+        }
+        else
+        {
+            for ( int i = 0; i < distancias.length; i++ )
+            {
+                if ( saida == null )
+                    System.out.printf("Distância( %d ): %d%n", i, distancias[ i ] );
+                else
+                    saida.format("Distância( %d ): %d%n", i, distancias[ i ] );
             }
         }
         
@@ -312,10 +322,12 @@ public class Grafo
             
         }
         
-        /*System.out.println("Mostrando para Dijkstra");
-        AEstrela.publicaCaminho(antecessor, 0, 180 );
+        imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
+        
+        System.out.println("Mostrando para Dijkstra");
+        AEstrela.publicaCaminho(antecessor, this, 0, 180 );
         System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
-        System.out.printf("Fim Dijkstra%n%n");*/
+        System.out.printf("Fim Dijkstra%n%n");
         
         
         /*System.out.println("Imprimindo menores distancias Dijkstra Heap Binário");
@@ -330,7 +342,7 @@ public class Grafo
     
     public void dijkstraCanonico( int idOrigem )
     {
-        int []distancias = new int[ getNumeroVertices() ];
+        long []distancias = new long[ getNumeroVertices() ];
         int []antecessor = new int[ getNumeroVertices() ];
         boolean []isDeterminado = new boolean[ getNumeroVertices() ];
         int verticesASeremVisitados = getNumeroVertices();
@@ -366,7 +378,7 @@ public class Grafo
                 }               
                 
             }
-            int minimaDistancia = Integer.MAX_VALUE;
+            long minimaDistancia = Integer.MAX_VALUE;
             boolean jaSelecionado = false;
             for ( int i = 0; i < getNumeroVertices(); i++ )
             {
@@ -387,16 +399,7 @@ public class Grafo
             
         }
         
-        /*System.out.println("Imprimindo menores distancias Dijkstra Canônico");
-        for ( int i = 0; i < getNumeroVertices(); i++ )
-        {
-            System.out.printf("Distância( %d ): %d%n", i, distancias[ i ] );
-            //System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
-        }*/
-        
-        
-        
-        
+        imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraCanonicoNovo.txt");
         
     }
     
