@@ -5,8 +5,10 @@
  */
 package pedro.pg.grafo;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -205,6 +207,59 @@ public class Grafo
         
     }
     
+    public static void imprimeDistanciaEAntecessor( int []antecessor, long []distancias, String nomeArquivoSaida )
+    {
+        Formatter saida = null;
+        
+        // Usado para verificar se a saida deve ser gravada em um arquivo
+        if ( nomeArquivoSaida != null )
+        {
+            try 
+            {
+                saida = new Formatter(nomeArquivoSaida);
+            } catch (FileNotFoundException ex) 
+            {
+                System.err.println("Erro ao escrever no arquivod e saida \"" + nomeArquivoSaida + "\".");
+                ex.printStackTrace();
+                System.exit( 1 );
+            }
+            
+        }
+        
+        if ( distancias != null )
+        {
+            System.out.println("Imprimindo antecessores e distâncias");
+            if ( antecessor.length != distancias.length )
+            {
+                System.err.printf("Error: O tamanho do vetor de distâncias é diferente do tamanho do vetor de antecessores.%nIsso não deveria acontecer. Verifique o que pode estar occorendo%n");
+                System.exit( 1 );
+            }
+            for ( int i = 0; i < antecessor.length; i++  )
+            {
+                if ( saida == null )
+                    System.out.printf( "Distância( %d ): %d\tAntecessor( %d ): %d%n", i, distancias[ i ], i, antecessor[ i ] );
+                else
+                {
+                    saida.format( "Distância( %d ): %d\tAntecessor( %d ): %d%n", i, distancias[ i ], i, antecessor[ i ] );
+                }
+            }
+        }
+        else
+        {
+            for ( int i = 0; i < antecessor.length; i++ )
+            {
+                if ( saida == null )
+                    System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
+                else
+                    saida.format("Antecessor( %d ): %d%n", i, antecessor[ i ] );                
+            }
+        }
+        
+        if ( saida != null )
+            saida.close();
+        
+    }
+    
     
     
     public void dijkstraHeapBinario( int idOrigem )
@@ -215,6 +270,7 @@ public class Grafo
         long []distancias = new long[ getNumeroVertices() ];
         int verticesASeremVisitados = getNumeroVertices();
         HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[verticesASeremVisitados];
+        
         
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
@@ -257,7 +313,8 @@ public class Grafo
         }
         
         /*System.out.println("Mostrando para Dijkstra");
-        AEstrela.publicaCaminho(antecessor, idOrigem, 180 );
+        AEstrela.publicaCaminho(antecessor, 0, 180 );
+        System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
         System.out.printf("Fim Dijkstra%n%n");*/
         
         

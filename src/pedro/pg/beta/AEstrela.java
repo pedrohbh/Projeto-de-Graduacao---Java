@@ -92,6 +92,7 @@ public class AEstrela
         int []antecessor = new int[ grafo.getNumeroVertices() ];
         boolean []isDeterminado = new boolean[ grafo.getNumeroVertices() ];
         HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ grafo.getNumeroVertices() ];
+        long []distancias = new long[ grafo.getNumeroVertices() ];
         
         for ( int i = 0; i < grafo.getNumeroVertices(); i++ )
         {
@@ -115,7 +116,7 @@ public class AEstrela
                 
                 HeapBinario.HeapNode nodoDestino = rastreador[ idDestino ];
                 
-                long distanciaHeuristica = (long) Math.sqrt(Math.pow( (xCordenadas[ idAtual ] - xCordenadas[ idDestino ] ), 2) + Math.pow( (yCordenadas[ idAtual ] - yCordenadas[ idDestino ] ), 2));
+                long distanciaHeuristica = (long) Math.sqrt(Math.pow( (xCordenadas[ indiceDestino ] - xCordenadas[ idDestino ] ), 2) + Math.pow( (yCordenadas[ indiceDestino ] - yCordenadas[ idDestino ] ), 2));
                 if ( nodoDestino.getKey() > ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ) && ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ) >= 0 )
                 {
                     heap.decreaseKey( nodoDestino.getIndiceAtual(), ( a.getPeso() + nodoAtual.getKey() + distanciaHeuristica ));
@@ -163,18 +164,18 @@ public class AEstrela
         caminho = caminho + nomeEntrada;
         
         grafo.leArquivoEntrada( caminho );
-        Instant antes = Instant.now();
+        //Instant antes = Instant.now();
         grafo.dijkstraHeapBinario(0);
-        Instant depois = Instant.now();
-        long tempoHeap = Duration.between(antes, depois).toMillis();
+        //Instant depois = Instant.now();
+        //long tempoHeap = Duration.between(antes, depois).toMillis();
         
         leArquivoDeCordenadas( nomeCordenadas );
-        Instant aAntes = Instant.now();
+        //Instant aAntes = Instant.now();
         int []antecessores = algoritmoAEstrela(0, 180);
-        Instant aDepois = Instant.now();
-        long tempoA = Duration.between(aAntes, aDepois).toMillis();
-        System.out.printf("Tempo Dijkstra: %d%nTempo A*: %d%n", tempoHeap, tempoA );
-        //publicaCaminho(antecessores, 0, 180);
+        //Instant aDepois = Instant.now();
+        //long tempoA = Duration.between(aAntes, aDepois).toMillis();
+        //System.out.printf("Tempo Dijkstra: %d%nTempo A*: %d%n", tempoHeap, tempoA );
+        publicaCaminho(antecessores, 0, 180);
         
         
         System.out.println("OK");
