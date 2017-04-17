@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Stack;
 import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.HeapBinario;
 
@@ -273,6 +274,30 @@ public class Grafo
         
     }
     
+    public void publicaCaminho( int []antecessores, int idOrigem, int idDestino )
+    {
+        Stack<Integer> pilha = new Stack<>();
+        int ultimoVisitado = idDestino;
+        
+        while ( ultimoVisitado != idOrigem )
+        {
+            pilha.push( ultimoVisitado );
+            ultimoVisitado = antecessores[ ultimoVisitado ];
+        }
+        
+        pilha.push( idOrigem );
+        
+        int ultimoElemento = pilha.firstElement();
+        while ( !pilha.isEmpty() )
+        {
+            int elemento = pilha.pop();
+            if ( elemento == ultimoElemento )
+                System.out.printf("%d%n", elemento );
+            else
+                System.out.printf("%d -> ", elemento );
+        }
+    }
+    
     public void algoritmoAEstrela( int idOrigem, int idDestino )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
@@ -318,6 +343,8 @@ public class Grafo
             }
         }
         
+        
+        publicaCaminho(antecessor, idOrigem, idDestino);
         
     }
     
@@ -448,7 +475,7 @@ public class Grafo
             
         }
         
-        imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraCanonicoNovo.txt");
+        //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraCanonicoNovo.txt");
         
     }
     
