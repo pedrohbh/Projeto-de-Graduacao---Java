@@ -305,13 +305,21 @@ public class Grafo
                     continue;
                 
                 if ( distanciaHeuristica[ idVerticeDestino ] == 0 )
-                {
-                    // PAREI AQUI
+                {                    
                     distanciaHeuristica[ idVerticeDestino ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeDestino ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeDestino ] - cordenadasY[ idDestino ] , 2 ) ) );
-                    // PAREI AQUI
+                }
+                
+                HeapBinario.HeapNode nodoDestino = rastreador[ idVerticeDestino ];
+                long distanciaPrevista = ( a.peso + nodoAtual.getKey() + distanciaHeuristica[ idVerticeDestino ] - distanciaHeuristica[ idNodoAtual ] );
+                if ( nodoDestino.getKey() > distanciaPrevista && distanciaPrevista >= 0  )
+                {
+                    heap.decreaseKey( nodoDestino.getIndiceAtual(), distanciaPrevista );
+                    antecessor[ idVerticeDestino ] = idNodoAtual;
                 }
             }
         }
+        
+        
     }
     
     public void dijkstraHeapBinario( int idOrigem )
@@ -364,7 +372,7 @@ public class Grafo
             
         }
         
-        imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
+        //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
         
         System.out.println("Mostrando para Dijkstra");
         AEstrela.publicaCaminho(antecessor, this, 0, 180 );
