@@ -287,14 +287,30 @@ public class Grafo
             antecessor[ i ] = i;
             isDeterminado[ i ] = false;
             rastreador[ i ] = heap.insertHeap(i, Long.MAX_VALUE );
-            distanciaHeuristica[ i ] = Long.MAX_VALUE;
+            distanciaHeuristica[ i ] = 0;
         }
         
         heap.decreaseKey(idOrigem, 0 );
         distanciaHeuristica[ idOrigem ] = 0;
         while ( isDeterminado[ idDestino ] == false )
         {
+            HeapBinario.HeapNode nodoAtual = heap.extractMin();
+            int idNodoAtual = nodoAtual.getIdVertice();
+            isDeterminado[ idNodoAtual ] = true;
             
+            for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
+            {
+                int idVerticeDestino = a.idVerticeDestino;
+                if ( isDeterminado[ idVerticeDestino ] == true )
+                    continue;
+                
+                if ( distanciaHeuristica[ idVerticeDestino ] == 0 )
+                {
+                    // PAREI AQUI
+                    distanciaHeuristica[ idVerticeDestino ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeDestino ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeDestino ] - cordenadasY[ idDestino ] , 2 ) ) );
+                    // PAREI AQUI
+                }
+            }
         }
     }
     
