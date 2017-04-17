@@ -20,15 +20,17 @@ public class Principal
     {
         String caminho = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/";
         String nomeEntrada = "USA-road-d.NY.gr";
+        String nomeCordenadas = caminho + "USA-road-d.NY.co";
         caminho = caminho + nomeEntrada;
         
         
         
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
-        novoGrafo.dijkstraCanonico( 0 );
+        novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
+        //novoGrafo.dijkstraCanonico( 0 );
         
-        novoGrafo.dijkstraHeapBinario(0);
+        //novoGrafo.dijkstraHeapBinario(0);
         //novoGrafo.dijkstraHeapFibonacci( 0 );
         
         /*Grafo g = new Grafo();

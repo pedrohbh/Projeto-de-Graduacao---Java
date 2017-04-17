@@ -27,6 +27,8 @@ public class Grafo
     private int numeroVertices;
     private int numeroArestas;
     private Vertice []verticesGrafo;
+    private long []cordenadasX;
+    private long []cordenadasY;
     private static Scanner input;
     
  
@@ -35,6 +37,8 @@ public class Grafo
         numeroArestas = 0;
         numeroVertices = 0;
         verticesGrafo = null;
+        cordenadasX = null;
+        cordenadasY = null;
     }
     
     public void buscaEmLargutaPorVertice( int idVertice )
@@ -520,6 +524,47 @@ public class Grafo
     {
         if ( input != null )
             input.close();
+    }
+    
+    public void leCordenadas( String nomeArquivoCordenads )
+    {
+        System.out.print("Iniciando leitura do arquivo de cordenadas... ");
+        cordenadasX = new long[numeroVertices];
+        cordenadasY = new long[numeroVertices];
+        while ( input.hasNext() )
+        {
+            String caracter = input.next();
+            if ( caracter.equals( "v" ) )
+            {
+                int vertice = input.nextInt() - 1;
+                cordenadasX[ vertice ] = input.nextLong();
+                cordenadasY[ vertice ] = input.nextLong();
+            }
+            else if ( caracter.equals( "p" ) )
+            {
+                input.next();
+                input.next();
+                input.next();
+                int vertificadordeQuantidade = input.nextInt();
+                if ( numeroVertices != vertificadordeQuantidade )
+                {
+                    System.err.println("[ERROR]: O número de vértices do grafo é diferente do número de vertices do arquivo de cordenadas \"" + nomeArquivoCordenads + "\". Encerrando o programa.");
+                    System.exit( 1 );
+                }
+            }
+            else
+                input.nextLine();
+        }
+        
+        System.out.println("Feito");
+    }
+    
+    public void leArquivoDeCordenadas( String nomeArquivoCordenadas )
+    {
+        abreArquivo(nomeArquivoCordenadas);
+        this.leCordenadas(nomeArquivoCordenadas);
+        fechaArquivo();
+        
     }
     
     
