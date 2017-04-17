@@ -274,7 +274,29 @@ public class Grafo
         
     }
     
-    
+    public void algoritmoAEstrela( int idOrigem, int idDestino )
+    {
+        HeapBinario heap = new HeapBinario( getNumeroVertices() );
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        long []distanciaHeuristica = new long[ getNumeroVertices() ];
+        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessor[ i ] = i;
+            isDeterminado[ i ] = false;
+            rastreador[ i ] = heap.insertHeap(i, Long.MAX_VALUE );
+            distanciaHeuristica[ i ] = Long.MAX_VALUE;
+        }
+        
+        heap.decreaseKey(idOrigem, 0 );
+        distanciaHeuristica[ idOrigem ] = 0;
+        while ( isDeterminado[ idDestino ] == false )
+        {
+            
+        }
+    }
     
     public void dijkstraHeapBinario( int idOrigem )
     {
@@ -334,10 +356,10 @@ public class Grafo
         System.out.printf("Fim Dijkstra%n%n");
         
         
-        /*System.out.println("Imprimindo menores distancias Dijkstra Heap Binário");
+        /*System.out.println("Imprimindo menores distanciaHeuristica Dijkstra Heap Binário");
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
-            System.out.printf("Distância( %d ): %d%n", i, distancias[ i ] );
+            System.out.printf("Distância( %d ): %d%n", i, distanciaHeuristica[ i ] );
             //System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
         }*/
         
