@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
-import pedro.pg.beta.AEstrela;
 import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.HeapBinario;
 
@@ -375,7 +374,7 @@ public class Grafo
         //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
         
         System.out.println("Mostrando para Dijkstra");
-        AEstrela.publicaCaminho(antecessor, this, 0, 180 );
+        //AEstrela.publicaCaminho(antecessor, this, 0, 180 );
         System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
         System.out.printf("Fim Dijkstra%n%n");
         
