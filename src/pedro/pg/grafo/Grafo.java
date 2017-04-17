@@ -404,7 +404,7 @@ public class Grafo
         {
             System.out.println("Mostrando para Dijkstra");
             publicaCaminho(antecessor, idOrigem, idObjetivo );
-            System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
+            System.out.println("Custo total para o vértice " + idObjetivo + ": " + distancias[ idObjetivo ] );
             System.out.printf("Fim Dijkstra%n%n");            
         }
         
