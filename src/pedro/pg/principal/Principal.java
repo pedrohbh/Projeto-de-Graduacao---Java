@@ -28,6 +28,7 @@ public class Principal
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
+        novoGrafo.dijkstraHeapBinario(0);
         novoGrafo.algoritmoAEstrela(0, 180);
         //novoGrafo.dijkstraCanonico( 0 );
         

@@ -401,7 +401,7 @@ public class Grafo
         //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
         
         System.out.println("Mostrando para Dijkstra");
-        //AEstrela.publicaCaminho(antecessor, this, 0, 180 );
+        publicaCaminho(antecessor, idOrigem, 180 );
         System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
         System.out.printf("Fim Dijkstra%n%n");
         
