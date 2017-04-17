@@ -348,7 +348,7 @@ public class Grafo
         
     }
     
-    public void dijkstraHeapBinario( int idOrigem )
+    public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
         int []antecessor = new int[ getNumeroVertices() ];
@@ -400,10 +400,14 @@ public class Grafo
         
         //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
         
-        System.out.println("Mostrando para Dijkstra");
-        publicaCaminho(antecessor, idOrigem, 180 );
-        System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
-        System.out.printf("Fim Dijkstra%n%n");
+        if ( idObjetivo >= 0 )
+        {
+            System.out.println("Mostrando para Dijkstra");
+            publicaCaminho(antecessor, idOrigem, idObjetivo );
+            System.out.println("Custo total para o vértice 180: " + distancias[ 180 ] );
+            System.out.printf("Fim Dijkstra%n%n");            
+        }
+        
         
         
         /*System.out.println("Imprimindo menores distanciaHeuristica Dijkstra Heap Binário");

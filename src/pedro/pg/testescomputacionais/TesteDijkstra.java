@@ -108,7 +108,7 @@ public class TesteDijkstra
                     for ( int i = 0; i < NUM_RODADAS; i++ )
                     {
                         Instant heapBinStart = Instant.now();
-                        g.dijkstraHeapBinario( 0 );
+                        g.dijkstraHeapBinario( 0, -1 );
                         Instant heapBinEnd = Instant.now();
                         tempoDecorridoBinario += Duration.between(heapBinStart, heapBinEnd).toMillis();                        
                     }
