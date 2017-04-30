@@ -20,7 +20,7 @@ public class Principal
     {
         String caminho = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/";
         String nomeEntrada = "USA-road-d.NY.gr";
-        String nomeCordenadas = caminho + "USA-road-d.NY.co";
+        String nomeCordenadas = caminho + "Cordenadas/" + "USA-road-d.NY.co";
         caminho = caminho + nomeEntrada;
         
         
@@ -29,7 +29,17 @@ public class Principal
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
         novoGrafo.dijkstraHeapBinario( 0, 180 );
+        //Instant start1 = Instant.now();
         novoGrafo.algoritmoAEstrela( 0, 180 );
+        //Instant end1 = Instant.now();
+        //long tempo1 = Duration.between(start1, end1).toMillis();
+        //Instant start2 = Instant.now();
+        novoGrafo.algoritmoAEstrelaBeta(0, 180);
+        //Instant end2 = Instant.now();
+        
+        
+        //long tempo2 = Duration.between(start2, end2).toMillis();
+        //System.out.printf("Tempo 1: %d ms%nTempo Beta: %d ms%n", tempo1, tempo2 );
         //novoGrafo.dijkstraCanonico( 0 );
         
         //novoGrafo.dijkstraHeapBinario(0);
