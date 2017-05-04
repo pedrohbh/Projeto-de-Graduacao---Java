@@ -78,6 +78,17 @@ public class TesteAEstrela
                     String arquivoDeCordenadas = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/Cordenadas/" + (filePath.getFileName().toString().replace(".gr", ".co"));
                     g.leArquivoDeCordenadas(arquivoDeCordenadas);
                     
+                    // Dijkstra Canônico
+                    for ( int j = 0; j < NUM_RODADAS; j++ )
+                    {
+                        Instant startDijkstra = Instant.now();
+                        g.dijkstraHeapBinario( 0 , -1 );
+                        Instant endDijkstra = Instant.now();
+                        
+                        tempoDijsktra += Duration.between(startDijkstra, endDijkstra).toMillis();
+                    }
+                    tempoDijsktra /= NUM_RODADAS;
+                    
                     for ( int i = 0; i < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; i++ )
                     {
                         int verticeEscolhido;
@@ -87,17 +98,6 @@ public class TesteAEstrela
                         } while ( verticesSorteados.contains( verticeEscolhido ) || verticeEscolhido == 0 );
                         
                         verticesSorteados.add(verticeEscolhido);
-                        
-                        // Dijkstra Canônico
-                        for ( int j = 0; j < NUM_RODADAS; j++ )
-                        {
-                            Instant startDijkstra = Instant.now();
-                            g.dijkstraHeapBinario( 0 , -1 );
-                            Instant endDijkstra = Instant.now();
-                        
-                            tempoDijsktra += Duration.between(startDijkstra, endDijkstra).toMillis();
-                        }
-                        tempoDijsktra /= NUM_RODADAS;
                         
                         // Dijkstra Adptado
                         for ( int j = 0; j < NUM_RODADAS; j++ )
