@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,10 +84,43 @@ public class TesteAEstrela
                         do
                         {
                             verticeEscolhido = randomNumbers.nextInt( g.getNumeroVertices() );
-                        } while ( verticesSorteados.contains( verticeEscolhido ) );
+                        } while ( verticesSorteados.contains( verticeEscolhido ) || verticeEscolhido == 0 );
                         
                         verticesSorteados.add(verticeEscolhido);
                         
+                        // Dijkstra Canônico
+                        for ( int j = 0; j < NUM_RODADAS; j++ )
+                        {
+                            Instant startDijkstra = Instant.now();
+                            g.dijkstraHeapBinario( 0 , -1 );
+                            Instant endDijkstra = Instant.now();
+                        
+                            tempoDijsktra += Duration.between(startDijkstra, endDijkstra).toMillis();
+                        }
+                        tempoDijsktra /= NUM_RODADAS;
+                        
+                        // Dijkstra Adptado
+                        for ( int j = 0; j < NUM_RODADAS; j++ )
+                        {
+                            // Dijkstra Adptado aqui
+                        }
+                        
+                        // Algortimo A*
+                        for ( int j = 0; j < NUM_RODADAS; j++ )
+                        {
+                            Instant startAEstrela = Instant.now();
+                            g.algoritmoAEstrela( 0 ,  verticeEscolhido );
+                            Instant endAEstrela = Instant.now();
+                            
+                            tempoAEstrela += Duration.between(startAEstrela, endAEstrela).toMillis();
+                        }
+                        tempoAEstrela /= NUM_RODADAS;
+                        
+                        // Algortimo A* não-admissíveil
+                        for ( int j = 0; j < NUM_RODADAS; j++ )
+                        {
+                            // Algoritmo A* não-admissível
+                        }
                     }
                     
                     //System.out.printf("Caminho Grafo: %s%nCaminho Cordenadas: %s%n%n", filePath.toString(), arquivoDeCordenadas );
