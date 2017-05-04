@@ -122,6 +122,7 @@ public class TesteAEstrela
                             // Algoritmo A* não-admissível
                         }
                     }
+                    verticesSorteados.clear();
                     
                     //System.out.printf("Caminho Grafo: %s%nCaminho Cordenadas: %s%n%n", filePath.toString(), arquivoDeCordenadas );
                     
