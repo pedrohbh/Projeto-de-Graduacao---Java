@@ -11,10 +11,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.Formatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
+import java.util.LinkedList;
+import java.util.List;
 import pedro.pg.grafo.Grafo;
 
 /**
@@ -25,6 +25,8 @@ public class TesteAEstrela
 {
     private static Formatter output;
     private static final int NUM_RODADAS = 5;
+    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
+    private static List<Integer> verticesSorteados = new LinkedList<>();
     
     public static void openFile()
     {
@@ -53,11 +55,18 @@ public class TesteAEstrela
     
     public static void main(String[] args) 
     {
+        SecureRandom randomNumbers = new SecureRandom();
         
         try ( DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes") ) )
         {
             paths.forEach( filePath -> 
             {
+                long tempoDijsktra = 0;
+                long tempoDijsktraAdpatado = 0;
+                long tempoAEstrela = 0;
+                long tempoAManhattan = 0;
+                
+                
                 if ( !Files.isDirectory(filePath) )
                 {
                     System.out.println("Processando: " + filePath.getFileName().toString() );
@@ -66,6 +75,18 @@ public class TesteAEstrela
                     
                     String arquivoDeCordenadas = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/Cordenadas/" + (filePath.getFileName().toString().replace(".gr", ".co"));
                     g.leArquivoDeCordenadas(arquivoDeCordenadas);
+                    
+                    for ( int i = 0; i < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; i++ )
+                    {
+                        int verticeEscolhido;
+                        do
+                        {
+                            verticeEscolhido = randomNumbers.nextInt( g.getNumeroVertices() );
+                        } while ( verticesSorteados.contains( verticeEscolhido ) );
+                        
+                        verticesSorteados.add(verticeEscolhido);
+                        
+                    }
                     
                     //System.out.printf("Caminho Grafo: %s%nCaminho Cordenadas: %s%n%n", filePath.toString(), arquivoDeCordenadas );
                     
