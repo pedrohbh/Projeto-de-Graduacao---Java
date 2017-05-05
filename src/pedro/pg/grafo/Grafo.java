@@ -361,7 +361,7 @@ public class Grafo
         boolean []isDeterminado = new boolean[ getNumeroVertices() ];
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
-        int numeroAbertos = 0;
+        int numeroAbertos = 1;
         
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
@@ -398,7 +398,7 @@ public class Grafo
                 {
                     heap.decreaseKey( nodoDestino.getIndiceAtual(), distanciaPrevista );
                     antecessor[ idVerticeDestino ] = idNodoAtual;
-                    if ( estados[ idVerticeDestino ] == EstadosVertice.NEUTRO && estados[ idVerticeDestino ] != EstadosVertice.FECHADO )
+                    if ( estados[ idVerticeDestino ] == EstadosVertice.NEUTRO )
                     {
                         estados[ idVerticeDestino ] = EstadosVertice.ABERTO;
                         numeroAbertos += 1;
