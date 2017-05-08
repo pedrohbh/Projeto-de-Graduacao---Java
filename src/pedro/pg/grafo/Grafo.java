@@ -472,6 +472,80 @@ public class Grafo
         
     }
     
+    public void dijkstraHeapBinarioAdptado( int idOrigem, int idObjetivo )
+    {
+        HeapBinario heap = new HeapBinario( getNumeroVertices() );
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        long []distancias = new long[ getNumeroVertices() ];
+        int verticesASeremVisitados = getNumeroVertices();
+        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[verticesASeremVisitados];
+        
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessor[ i ] = i;
+            isDeterminado[ i ] = false;
+            rastreador[ i ] = heap.insertHeap(i, Long.MAX_VALUE );
+            distancias[ i ]= Integer.MAX_VALUE;
+        }
+        
+        heap.decreaseKey(idOrigem, 0);
+        distancias[ idOrigem ] = 0;
+        
+        HeapBinario.HeapNode nodoAtual = heap.extractMin();
+        while ( nodoAtual.getIdVertice() != idObjetivo )
+        {
+            
+            int idAtual = nodoAtual.getIdVertice();
+            isDeterminado[ idAtual ] = true;
+            
+            for ( Aresta a: verticesGrafo[ idAtual ].arestasAdjacentes )
+            {
+                int idDestino = a.idVerticeDestino;
+                if ( isDeterminado[ idDestino ] )
+                    continue;
+                
+                HeapBinario.HeapNode nodoDestino = rastreador[ idDestino ];
+                if ( nodoDestino.getKey() > ( a.peso + nodoAtual.getKey() ) )
+                {
+                    if ( ( a.peso + nodoAtual.getKey() ) >= 0 )
+                    {
+                        heap.decreaseKey( nodoDestino.getIndiceAtual(), ( a.peso + nodoAtual.getKey() ) );
+                        antecessor[ idDestino ] = idAtual;
+                        distancias[ idDestino ] = a.peso + nodoAtual.getKey();
+                    }
+                }
+            }
+            nodoAtual = heap.extractMin();
+            
+            //verticesASeremVisitados--;
+            //if ( isDeterminado[ idAtual ] )
+                
+            
+        }
+        
+        //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
+        
+        if ( idObjetivo >= 0 )
+        {
+            System.out.println("Mostrando caminho para Dijkstra Adptado");
+            publicaCaminho(antecessor, idOrigem, idObjetivo );
+            System.out.println("Custo total para o vértice " + idObjetivo + ": " + distancias[ idObjetivo ] );
+            System.out.printf("Fim Dijkstra%n%n");            
+        }
+        
+        
+        
+        /*System.out.println("Imprimindo menores distanciaHeuristica Dijkstra Heap Binário");
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            System.out.printf("Distância( %d ): %d%n", i, distanciaHeuristica[ i ] );
+            //System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
+        }*/
+        
+    }
+    
     public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );

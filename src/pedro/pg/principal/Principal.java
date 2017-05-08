@@ -31,6 +31,7 @@ public class Principal
         novoGrafo.dijkstraHeapBinario( 0, 180 );
         //Instant start1 = Instant.now();
         novoGrafo.algoritmoAEstrela( 0, 180 );
+        novoGrafo.dijkstraHeapBinarioAdptado(0, 180);
         //System.out.println("Número de vértices abertos: " + novoGrafo.contaNumeroDeVerticesAbertosAEstrela(0, 1));
         //Instant end1 = Instant.now();
         //long tempo1 = Duration.between(start1, end1).toMillis();
