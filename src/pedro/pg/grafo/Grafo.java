@@ -418,6 +418,60 @@ public class Grafo
         
     }
     
+    public void algoritmoAEstrelaManhattan( int idOrigem, int idDestino, boolean imprimeRota )
+    {
+        HeapBinario heap = new HeapBinario( getNumeroVertices() );
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        long []distanciaHeuristica = new long[ getNumeroVertices() ];
+        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessor[ i ] = i;
+            isDeterminado[ i ] = false;
+            rastreador[ i ] = heap.insertHeap(i, Long.MAX_VALUE );
+            distanciaHeuristica[ i ] = 0;
+        }
+        
+        heap.decreaseKey(idOrigem, 0 );
+        distanciaHeuristica[ idOrigem ] = 0;
+        
+        HeapBinario.HeapNode nodoAtual = heap.extractMin();
+        
+        while ( nodoAtual.getIdVertice() != idDestino )
+        {
+            
+            int idNodoAtual = nodoAtual.getIdVertice();
+            isDeterminado[ idNodoAtual ] = true;
+            
+            for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
+            {
+                int idVerticeDestino = a.idVerticeDestino;
+                if ( isDeterminado[ idVerticeDestino ] == true )
+                    continue;
+                
+                if ( distanciaHeuristica[ idVerticeDestino ] == 0 )
+                {                    
+                    distanciaHeuristica[ idVerticeDestino ] = ( Math.abs( cordenadasX[ idVerticeDestino ] - cordenadasX[ idDestino ] ) + Math.abs( cordenadasY[ idVerticeDestino ] - cordenadasY[ idDestino ] ) );
+                }
+                
+                HeapBinario.HeapNode nodoDestino = rastreador[ idVerticeDestino ];
+                long distanciaPrevista = ( a.peso + nodoAtual.getKey() + distanciaHeuristica[ idVerticeDestino ] - distanciaHeuristica[ idNodoAtual ] );
+                if ( nodoDestino.getKey() > distanciaPrevista && distanciaPrevista >= 0  )
+                {
+                    heap.decreaseKey( nodoDestino.getIndiceAtual(), distanciaPrevista );
+                    antecessor[ idVerticeDestino ] = idNodoAtual;
+                }
+            }
+            nodoAtual = heap.extractMin();
+        }
+        
+        if ( imprimeRota == true )
+            publicaCaminho(antecessor, idOrigem, idDestino);
+        
+    }
+    
     public void algoritmoAEstrela( int idOrigem, int idDestino, boolean imprimeRota )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
