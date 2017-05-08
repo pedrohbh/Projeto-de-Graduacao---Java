@@ -30,8 +30,8 @@ public class Principal
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
         novoGrafo.dijkstraHeapBinario( 0, 180 );
         //Instant start1 = Instant.now();
-        novoGrafo.algoritmoAEstrela( 0, 180 );
-        novoGrafo.dijkstraHeapBinarioAdptado(0, 180);
+        novoGrafo.algoritmoAEstrela( 0, 180, true );
+        novoGrafo.dijkstraHeapBinarioAdptado(0, 180, true );
         //System.out.println("Número de vértices abertos por Dijkstra Adpatado: " + novoGrafo.contaNumeroDeVerticesAbertosDijkstraAdptado(0, 1));
         //System.out.println("Número de vértices abertos: " + novoGrafo.contaNumeroDeVerticesAbertosAEstrela(0, 1));
         //Instant end1 = Instant.now();

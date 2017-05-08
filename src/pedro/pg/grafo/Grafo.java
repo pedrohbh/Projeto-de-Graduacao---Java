@@ -418,7 +418,7 @@ public class Grafo
         
     }
     
-    public void algoritmoAEstrela( int idOrigem, int idDestino )
+    public void algoritmoAEstrela( int idOrigem, int idDestino, boolean imprimeRota )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
         int []antecessor = new int[ getNumeroVertices() ];
@@ -467,8 +467,8 @@ public class Grafo
             nodoAtual = heap.extractMin();
         }
         
-        
-        publicaCaminho(antecessor, idOrigem, idDestino);
+        if ( imprimeRota == true )
+            publicaCaminho(antecessor, idOrigem, idDestino);
         
     }
     
@@ -538,7 +538,7 @@ public class Grafo
         
     }
     
-    public void dijkstraHeapBinarioAdptado( int idOrigem, int idObjetivo )
+    public void dijkstraHeapBinarioAdptado( int idOrigem, int idObjetivo, boolean imprimeRota )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
         int []antecessor = new int[ getNumeroVertices() ];
@@ -593,7 +593,7 @@ public class Grafo
         
         //imprimeDistanciaEAntecessor(antecessor, distancias, "/home/administrador/Área de Trabalho/Testes/ResultadoDijkstraHeapBinarioNovo.txt");
         
-        if ( idObjetivo >= 0 )
+        if ( imprimeRota == true )
         {
             System.out.println("Mostrando caminho para Dijkstra Adptado");
             publicaCaminho(antecessor, idOrigem, idObjetivo );

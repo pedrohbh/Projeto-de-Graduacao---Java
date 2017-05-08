@@ -109,7 +109,7 @@ public class TesteAEstrela
                         for ( int j = 0; j < NUM_RODADAS; j++ )
                         {
                             Instant startAEstrela = Instant.now();
-                            g.algoritmoAEstrela( 0 ,  verticeEscolhido );
+                            g.algoritmoAEstrela( 0 ,  verticeEscolhido, false );
                             Instant endAEstrela = Instant.now();
                             
                             tempoAEstrela += Duration.between(startAEstrela, endAEstrela).toMillis();
