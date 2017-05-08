@@ -374,9 +374,12 @@ public class Grafo
         
         heap.decreaseKey(idOrigem, 0 );
         distanciaHeuristica[ idOrigem ] = 0;
-        while ( isDeterminado[ idDestino ] == false )
+        
+        HeapBinario.HeapNode nodoAtual = heap.extractMin();
+        
+        while ( nodoAtual.getIdVertice() != idDestino )
         {
-            HeapBinario.HeapNode nodoAtual = heap.extractMin();
+            
             int idNodoAtual = nodoAtual.getIdVertice();
             isDeterminado[ idNodoAtual ] = true;
             estados[ idNodoAtual ] = EstadosVertice.FECHADO;
@@ -405,6 +408,7 @@ public class Grafo
                     }
                 }
             }
+            nodoAtual = heap.extractMin();
         }
         
         
@@ -432,9 +436,12 @@ public class Grafo
         
         heap.decreaseKey(idOrigem, 0 );
         distanciaHeuristica[ idOrigem ] = 0;
-        while ( isDeterminado[ idDestino ] == false )
+        
+        HeapBinario.HeapNode nodoAtual = heap.extractMin();
+        
+        while ( nodoAtual.getIdVertice() != idDestino )
         {
-            HeapBinario.HeapNode nodoAtual = heap.extractMin();
+            
             int idNodoAtual = nodoAtual.getIdVertice();
             isDeterminado[ idNodoAtual ] = true;
             
@@ -457,6 +464,7 @@ public class Grafo
                     antecessor[ idVerticeDestino ] = idNodoAtual;
                 }
             }
+            nodoAtual = heap.extractMin();
         }
         
         
