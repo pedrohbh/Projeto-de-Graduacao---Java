@@ -137,7 +137,9 @@ public class TesteAEstrela
                         }
                         tempoAManhattan /= NUM_RODADAS;
                         
-                        // Início da contagem de vértices abertos
+                        // Início da contagem de vértices abertos - A REVISAR
+                        verticesAbertosDijkstraAdptado = g.contaNumeroDeVerticesAbertosDijkstraAdptado( 0 ,  verticeEscolhido );
+                        verticesAbertosAEstrela = g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
                     }
                     verticesSorteados.clear();                    
                 }
