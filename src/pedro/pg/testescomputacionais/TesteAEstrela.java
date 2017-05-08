@@ -102,8 +102,14 @@ public class TesteAEstrela
                         // Dijkstra Adptado
                         for ( int j = 0; j < NUM_RODADAS; j++ )
                         {
-                            // Dijkstra Adptado aqui
+                            Instant startDijkstraAdptado = Instant.now();
+                            g.dijkstraHeapBinarioAdptado( 0 , verticeEscolhido, false );
+                            Instant endDijsktraAdptado = Instant.now();
+                            
+                            tempoDijsktraAdpatado += Duration.between(startDijkstraAdptado, endDijsktraAdptado).toMillis();
                         }
+                        
+                        tempoDijsktraAdpatado /= NUM_RODADAS;
                         
                         // Algortimo A*
                         for ( int j = 0; j < NUM_RODADAS; j++ )
@@ -120,7 +126,13 @@ public class TesteAEstrela
                         for ( int j = 0; j < NUM_RODADAS; j++ )
                         {
                             // Algoritmo A* não-admissível
+                            Instant startNaoAdmissivel = Instant.now();
+                            g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false );
+                            Instant endNaoAdmissivel = Instant.now();
+                            
+                            tempoAManhattan += Duration.between(startNaoAdmissivel, endNaoAdmissivel).toMillis();
                         }
+                        tempoAManhattan /= NUM_RODADAS;
                     }
                     verticesSorteados.clear();
                     
