@@ -68,6 +68,9 @@ public class TesteAEstrela
                 long tempoAEstrela = 0;
                 long tempoAManhattan = 0;
                 
+                long verticesAbertosDijkstraAdptado = 0;
+                long verticesAbertosAEstrela = 0;
+                long verticesAbertosAManhattan = 0;                
                 
                 if ( !Files.isDirectory(filePath) )
                 {
@@ -133,11 +136,10 @@ public class TesteAEstrela
                             tempoAManhattan += Duration.between(startNaoAdmissivel, endNaoAdmissivel).toMillis();
                         }
                         tempoAManhattan /= NUM_RODADAS;
+                        
+                        // Início da contagem de vértices abertos
                     }
-                    verticesSorteados.clear();
-                    
-                    //System.out.printf("Caminho Grafo: %s%nCaminho Cordenadas: %s%n%n", filePath.toString(), arquivoDeCordenadas );
-                    
+                    verticesSorteados.clear();                    
                 }
             }
             );
