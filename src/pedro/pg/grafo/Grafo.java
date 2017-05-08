@@ -472,6 +472,72 @@ public class Grafo
         
     }
     
+    public int contaNumeroDeVerticesAbertosDijkstraAdptado( int idOrigem, int idObjetivo )
+    {
+        HeapBinario heap = new HeapBinario( getNumeroVertices() );
+        int []antecessor = new int[ getNumeroVertices() ];
+        boolean []isDeterminado = new boolean[ getNumeroVertices() ];
+        long []distancias = new long[ getNumeroVertices() ];
+        int verticesASeremVisitados = getNumeroVertices();
+        int numeroAbertos = 1;
+        EstadosVertice []estados = new EstadosVertice[verticesASeremVisitados];
+        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[verticesASeremVisitados];
+        
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessor[ i ] = i;
+            isDeterminado[ i ] = false;
+            rastreador[ i ] = heap.insertHeap(i, Long.MAX_VALUE );
+            distancias[ i ]= Integer.MAX_VALUE;
+            estados[ i ] = EstadosVertice.NEUTRO;
+        }
+        
+        heap.decreaseKey(idOrigem, 0);
+        distancias[ idOrigem ] = 0;
+        
+        HeapBinario.HeapNode nodoAtual = heap.extractMin();
+        while ( nodoAtual.getIdVertice() != idObjetivo )
+        {
+            
+            int idAtual = nodoAtual.getIdVertice();
+            isDeterminado[ idAtual ] = true;
+            estados[ idAtual ] = EstadosVertice.FECHADO;
+            
+            for ( Aresta a: verticesGrafo[ idAtual ].arestasAdjacentes )
+            {
+                int idDestino = a.idVerticeDestino;
+                if ( isDeterminado[ idDestino ] )
+                    continue;
+                
+                HeapBinario.HeapNode nodoDestino = rastreador[ idDestino ];
+                if ( nodoDestino.getKey() > ( a.peso + nodoAtual.getKey() ) )
+                {
+                    if ( ( a.peso + nodoAtual.getKey() ) >= 0 )
+                    {
+                        heap.decreaseKey( nodoDestino.getIndiceAtual(), ( a.peso + nodoAtual.getKey() ) );
+                        antecessor[ idDestino ] = idAtual;
+                        distancias[ idDestino ] = a.peso + nodoAtual.getKey();
+                        if ( estados[ idDestino ] == EstadosVertice.NEUTRO )
+                        {
+                            estados[ idDestino ] = EstadosVertice.ABERTO;
+                            numeroAbertos += 1;
+                        }
+                    }
+                }
+            }
+            nodoAtual = heap.extractMin();
+            
+            //verticesASeremVisitados--;
+            //if ( isDeterminado[ idAtual ] )
+                
+            
+        }
+        
+        return numeroAbertos;
+        
+    }
+    
     public void dijkstraHeapBinarioAdptado( int idOrigem, int idObjetivo )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
