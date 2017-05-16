@@ -205,7 +205,7 @@ public class TesteAEstrela
                         {
                             // Algoritmo A* não-admissível
                             Instant startNaoAdmissivel = Instant.now();
-                            g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false );
+                            g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false, false );
                             Instant endNaoAdmissivel = Instant.now();
                             
                             tempoLocalAManhattan += Duration.between(startNaoAdmissivel, endNaoAdmissivel).toMillis();
