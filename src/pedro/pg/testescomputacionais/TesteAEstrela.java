@@ -231,6 +231,7 @@ public class TesteAEstrela
                     verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
                     escreveDadosTempo(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
+                    escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosDijkstraAdptado, verticesAbertosAEstrela, verticesAbertosAManhattan );
                 }
             }
             );
