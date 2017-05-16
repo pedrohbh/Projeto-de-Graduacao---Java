@@ -15,8 +15,10 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Formatter;
+import java.util.FormatterClosedException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import pedro.pg.grafo.Grafo;
 
 /**
@@ -69,9 +71,31 @@ public class TesteAEstrela
         }
     }
     
-    public static void escreveDados( String nomeArquivo, int numeroVertices, int numeroArestas, long tempoDijkstra, long tempoDijkstraAdptado, long tempoAestrela, long tempoAManhattan )
+    public static void escreveDadosTempo( String nomeInstancia, int numeroVertices, int numeroArestas, long tempoDijkstra, long tempoDijkstraAdptado, long tempoAestrela, long tempoAManhattan )
     {
-        
+        try
+        {
+            arquivoTempo.format("%s;%d;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, tempoDijkstra, tempoDijkstraAdptado, tempoAestrela, tempoAManhattan );
+            
+        }
+        catch ( FormatterClosedException e)
+        {
+            System.err.println("Erro ao escrever em arquivo de saida. Termianando programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+        catch ( NoSuchElementException e )
+        {
+            System.err.println("A varíavel não existe para ser escrita. Encerrando o programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+    }
+    
+    public static void fechaArquivo( Formatter arquivo )
+    {
+        if ( arquivo != null )
+            arquivo.close();
     }
     
     
