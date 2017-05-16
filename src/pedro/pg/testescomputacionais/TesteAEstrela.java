@@ -64,9 +64,14 @@ public class TesteAEstrela
             paths.forEach( filePath -> 
             {
                 long tempoDijsktra = 0;
-                long tempoDijsktraAdpatado = 0;
-                long tempoAEstrela = 0;
-                long tempoAManhattan = 0;
+                
+                long tempoLocalDijsktraAdpatado = 0;
+                long tempoLocalAEstrela = 0;
+                long tempoLocalAManhattan = 0;
+                
+                long tempoGlobalDijsktraAdptado = 0;
+                long tempoGlobalAEstrela = 0;
+                long tempoGlobalAManhattan = 0; 
                 
                 long verticesAbertosDijkstraAdptado = 0;
                 long verticesAbertosAEstrela = 0;
@@ -109,10 +114,11 @@ public class TesteAEstrela
                             g.dijkstraHeapBinarioAdptado( 0 , verticeEscolhido, false );
                             Instant endDijsktraAdptado = Instant.now();
                             
-                            tempoDijsktraAdpatado += Duration.between(startDijkstraAdptado, endDijsktraAdptado).toMillis();
+                            tempoLocalDijsktraAdpatado += Duration.between(startDijkstraAdptado, endDijsktraAdptado).toMillis();
                         }
                         
-                        tempoDijsktraAdpatado /= NUM_RODADAS;
+                        tempoLocalDijsktraAdpatado /= NUM_RODADAS;
+                        tempoGlobalDijsktraAdptado += tempoLocalDijsktraAdpatado;
                         
                         // Algortimo A*
                         for ( int j = 0; j < NUM_RODADAS; j++ )
@@ -121,9 +127,10 @@ public class TesteAEstrela
                             g.algoritmoAEstrela( 0 ,  verticeEscolhido, false );
                             Instant endAEstrela = Instant.now();
                             
-                            tempoAEstrela += Duration.between(startAEstrela, endAEstrela).toMillis();
+                            tempoLocalAEstrela += Duration.between(startAEstrela, endAEstrela).toMillis();
                         }
-                        tempoAEstrela /= NUM_RODADAS;
+                        tempoLocalAEstrela /= NUM_RODADAS;
+                        tempoGlobalAEstrela += tempoLocalAEstrela;
                         
                         // Algortimo A* não-admissíveil
                         for ( int j = 0; j < NUM_RODADAS; j++ )
@@ -133,15 +140,23 @@ public class TesteAEstrela
                             g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false );
                             Instant endNaoAdmissivel = Instant.now();
                             
-                            tempoAManhattan += Duration.between(startNaoAdmissivel, endNaoAdmissivel).toMillis();
+                            tempoLocalAManhattan += Duration.between(startNaoAdmissivel, endNaoAdmissivel).toMillis();
                         }
-                        tempoAManhattan /= NUM_RODADAS;
+                        tempoLocalAManhattan /= NUM_RODADAS;
+                        tempoGlobalAManhattan += tempoLocalAManhattan;
                         
                         // Início da contagem de vértices abertos - A REVISAR
                         verticesAbertosDijkstraAdptado = g.contaNumeroDeVerticesAbertosDijkstraAdptado( 0 ,  verticeEscolhido );
                         verticesAbertosAEstrela = g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
                     }
-                    verticesSorteados.clear();                    
+                    verticesSorteados.clear();
+                    
+                    // Tirando a média dos tempos globais
+                    tempoGlobalAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    tempoGlobalAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    tempoGlobalDijsktraAdptado /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+
+                    
                 }
             }
             );
