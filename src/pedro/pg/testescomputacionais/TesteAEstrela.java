@@ -146,8 +146,9 @@ public class TesteAEstrela
                         tempoGlobalAManhattan += tempoLocalAManhattan;
                         
                         // Início da contagem de vértices abertos - A REVISAR
-                        verticesAbertosDijkstraAdptado = g.contaNumeroDeVerticesAbertosDijkstraAdptado( 0 ,  verticeEscolhido );
-                        verticesAbertosAEstrela = g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
+                        verticesAbertosDijkstraAdptado += g.contaNumeroDeVerticesAbertosDijkstraAdptado( 0 ,  verticeEscolhido );
+                        verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
+                        verticesAbertosAManhattan += g.contaNumeroDeVerticesAbertosAEstrelaNaoAdmissivel( 0, verticeEscolhido );
                     }
                     verticesSorteados.clear();
                     
@@ -155,8 +156,11 @@ public class TesteAEstrela
                     tempoGlobalAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     tempoGlobalAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     tempoGlobalDijsktraAdptado /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-
                     
+                    // Tirando a média do número de vértices abertos
+                    verticesAbertosDijkstraAdptado /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;                    
                 }
             }
             );
