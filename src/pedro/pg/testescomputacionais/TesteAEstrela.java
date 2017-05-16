@@ -71,6 +71,26 @@ public class TesteAEstrela
         }
     }
     
+    public static void escreveDadosVertices( String nomeInstancia, int numeroVertices, int numeroArestas, long dijkstraAdptado, long aEstrela, long aManhattan )
+    {
+        try
+        {
+            arquivoVertices.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
+        }
+        catch ( FormatterClosedException e)
+        {
+            System.err.println("Erro ao escrever em arquivo de saida. Termianando programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+        catch ( NoSuchElementException e )
+        {
+            System.err.println("A varíavel não existe para ser escrita. Encerrando o programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+    }
+    
     public static void escreveDadosTempo( String nomeInstancia, int numeroVertices, int numeroArestas, long tempoDijkstra, long tempoDijkstraAdptado, long tempoAestrela, long tempoAManhattan )
     {
         try
