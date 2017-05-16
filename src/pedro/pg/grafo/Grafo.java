@@ -537,6 +537,49 @@ public class Grafo
         
     }
     
+    private long calculaDistanciaTotal( int []antecessores, int idOrigem, int idDestino )
+    {
+        if ( idDestino == idOrigem )
+            return 0;
+        
+        Stack<Integer> pilha = new Stack<>();
+        int ultimoVisitado = idDestino;
+        long custoTotalCaminho = 0;
+        
+        while ( ultimoVisitado != idOrigem )
+        {
+            pilha.push( ultimoVisitado );
+            ultimoVisitado = antecessores[ ultimoVisitado ];
+        }
+        
+        pilha.push( idOrigem );
+        
+        int ultimoElemento = pilha.firstElement();
+        int elementoOrigem = pilha.pop();
+        while ( !pilha.isEmpty() )
+        {            
+            int elementoDestino;
+            if ( elementoOrigem != ultimoElemento )
+            {
+                elementoDestino = pilha.pop();
+            
+                for ( Aresta a: verticesGrafo[ elementoOrigem ].arestasAdjacentes )
+                {
+                    if ( a.getIdVerticeDestino() == elementoDestino )
+                    {
+                        custoTotalCaminho += a.peso;
+                        break;
+                    }
+                
+                }
+                elementoOrigem = elementoDestino;
+            }
+            
+        }
+        
+        return custoTotalCaminho;
+    }
+    
     public void algoritmoAEstrela( int idOrigem, int idDestino, boolean imprimeRota )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
@@ -588,6 +631,8 @@ public class Grafo
         
         if ( imprimeRota == true )
             publicaCaminho(antecessor, idOrigem, idDestino);
+        
+        calculaDistanciaTotal(antecessor, idOrigem, idDestino);
         
     }
     

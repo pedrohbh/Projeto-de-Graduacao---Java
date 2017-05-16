@@ -243,6 +243,9 @@ public class TesteAEstrela
             System.exit( 1 );
         }
         
+        fechaArquivo(arquivoTempo);
+        fechaArquivo(arquivoVertices);
+        
         System.out.println("SUCESS");
         
     }
