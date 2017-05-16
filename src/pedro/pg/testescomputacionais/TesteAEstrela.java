@@ -25,17 +25,18 @@ import pedro.pg.grafo.Grafo;
  */
 public class TesteAEstrela 
 {
-    private static Formatter output;
+    private static Formatter arquivoTempo;
+    private static Formatter arquivoVertices;
     private static final int NUM_RODADAS = 5;
     private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
     private static List<Integer> verticesSorteados = new LinkedList<>();
     
-    public static void openFile()
+    public static void openFileTempoComputacional()
     {
         try
         {
-            output = new Formatter("ResultadosAEstrela.csv");
-            output.format( "Nome Instância;Número de Vértices;Número de Arestas;Tempo médio Dijkstra;Tempo médio Dijkstra Adptado;Tempo médio A*;Tempo médio A* Manhattan%n");
+            arquivoTempo = new Formatter("ResultadosAEstrelaTempo.csv");
+            arquivoTempo.format( "Nome Instância;Número de Vértices;Número de Arestas;Tempo médio Dijkstra;Tempo médio Dijkstra Adptado;Tempo médio A*;Tempo médio A* Manhattan%n");
         }
         catch ( FileNotFoundException e )
         {
@@ -45,6 +46,25 @@ public class TesteAEstrela
         catch ( SecurityException e )
         {
             System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrela.csv\".");
+            System.exit( 1 );
+        }
+    }
+    
+    public static void openFileVerticesAbertos()
+    {
+        try
+        {
+            arquivoVertices = new Formatter("ResultadosAEstrelaVertices.csv");
+            arquivoVertices.format("Nome Instância;Número de Vértices;Número de Arestas;NVA Dijkstra Adptado;NVA A*;NVA A* Manhattan%n" );
+        }
+        catch ( FileNotFoundException e )
+        {
+            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAEstrelaVertices.csv\".");
+            System.exit( 1 );
+        }
+        catch ( SecurityException e )
+        {
+            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrelaVertices.csv\".");
             System.exit( 1 );
         }
     }
