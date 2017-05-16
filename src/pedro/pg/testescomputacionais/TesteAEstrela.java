@@ -143,6 +143,10 @@ public class TesteAEstrela
                     
                     for ( int i = 0; i < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; i++ )
                     {
+                        tempoLocalDijsktraAdpatado = 0;
+                        tempoLocalAEstrela = 0;
+                        tempoLocalAManhattan = 0;
+                        
                         int verticeEscolhido;
                         do
                         {
@@ -204,7 +208,9 @@ public class TesteAEstrela
                     // Tirando a média do número de vértices abertos
                     verticesAbertosDijkstraAdptado /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;                    
+                    verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    
+                    escreveDadosTempo(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
                 }
             }
             );
