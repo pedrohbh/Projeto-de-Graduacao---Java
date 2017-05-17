@@ -585,7 +585,7 @@ public class Grafo
         return custoTotalCaminho;
     }
     
-    public void algoritmoAEstrela( int idOrigem, int idDestino, boolean imprimeRota )
+    public long algoritmoAEstrela( int idOrigem, int idDestino, final boolean imprimeRota, final boolean imprimeCusto )
     {
         HeapBinario heap = new HeapBinario( getNumeroVertices() );
         int []antecessor = new int[ getNumeroVertices() ];
@@ -636,8 +636,11 @@ public class Grafo
         
         if ( imprimeRota == true )
             publicaCaminho(antecessor, idOrigem, idDestino);
+        if ( imprimeCusto == true )
+            return calculaDistanciaTotal(antecessor, idOrigem, idDestino);
         
-        calculaDistanciaTotal(antecessor, idOrigem, idDestino);
+        return -1;
+        //calculaDistanciaTotal(antecessor, idOrigem, idDestino);
         
     }
     
