@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Formatter;
@@ -29,9 +30,29 @@ public class TesteAEstrela
 {
     private static Formatter arquivoTempo;
     private static Formatter arquivoVertices;
+    private static Formatter arquivoSolucao;
     private static final int NUM_RODADAS = 5;
     private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
-    private static List<Integer> verticesSorteados = new LinkedList<>();
+    private static final List<Integer> verticesSorteados = new LinkedList<>();
+    
+    public static void openFileSolucao()
+    {
+        try
+        {
+            arquivoTempo = new Formatter("ResultadosAEstrelaSolucao.csv");
+            arquivoTempo.format( "Nome Instância;Número de Vértices;Número de Arestas;Qualidade Solução%n");
+        }
+        catch ( FileNotFoundException e )
+        {
+            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAEstrela.csv\".");
+            System.exit( 1 );
+        }
+        catch ( SecurityException e )
+        {
+            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrela.csv\".");
+            System.exit( 1 );
+        }
+    }
     
     public static void openFileTempoComputacional()
     {
@@ -76,6 +97,27 @@ public class TesteAEstrela
         try
         {
             arquivoVertices.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
+        }
+        catch ( FormatterClosedException e)
+        {
+            System.err.println("Erro ao escrever em arquivo de saida. Termianando programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+        catch ( NoSuchElementException e )
+        {
+            System.err.println("A varíavel não existe para ser escrita. Encerrando o programa.");
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+    }
+    
+    public static void escreveDadosSolucao( String nomeInstancia, int numeroVertices, int numeroArestas, double porcentagem )
+    {
+        try
+        {
+            String porcentagemTexto = NumberFormat.getPercentInstance().format(porcentagem);
+            arquivoSolucao.format("%s;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, porcentagemTexto );
         }
         catch ( FormatterClosedException e)
         {
@@ -139,7 +181,11 @@ public class TesteAEstrela
                 
                 long verticesAbertosDijkstraAdptado = 0;
                 long verticesAbertosAEstrela = 0;
-                long verticesAbertosAManhattan = 0;                
+                long verticesAbertosAManhattan = 0;
+                
+                long custoNaoAdmissivel = 0;
+                long custoAdmissivel = 0;
+                double porcentagemCusto = 0;
                 
                 if ( !Files.isDirectory(filePath) )
                 {
@@ -213,10 +259,15 @@ public class TesteAEstrela
                         tempoLocalAManhattan /= NUM_RODADAS;
                         tempoGlobalAManhattan += tempoLocalAManhattan;
                         
-                        // Início da contagem de vértices abertos - A REVISAR
+                        // Início da contagem de vértices abertos
                         verticesAbertosDijkstraAdptado += g.contaNumeroDeVerticesAbertosDijkstraAdptado( 0 ,  verticeEscolhido );
                         verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
                         verticesAbertosAManhattan += g.contaNumeroDeVerticesAbertosAEstrelaNaoAdmissivel( 0, verticeEscolhido );
+                        
+                        // Verifica solução entre Admissível e não-admissível
+                        custoAdmissivel = g.algoritmoAEstrela(0, verticeEscolhido, false, true );
+                        custoNaoAdmissivel = g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false, true );
+                        porcentagemCusto += (double)Math.abs( custoNaoAdmissivel - custoAdmissivel ) / custoAdmissivel;
                     }
                     verticesSorteados.clear();
                     
@@ -230,8 +281,11 @@ public class TesteAEstrela
                     verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
+                    porcentagemCusto /= (double)NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    
                     escreveDadosTempo(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
                     escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosDijkstraAdptado, verticesAbertosAEstrela, verticesAbertosAManhattan );
+                    escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
                 }
             }
             );
@@ -245,6 +299,7 @@ public class TesteAEstrela
         
         fechaArquivo(arquivoTempo);
         fechaArquivo(arquivoVertices);
+        fechaArquivo(arquivoSolucao);
         
         System.out.println("SUCESS");
         
