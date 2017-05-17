@@ -39,17 +39,17 @@ public class TesteAEstrela
     {
         try
         {
-            arquivoTempo = new Formatter("ResultadosAEstrelaSolucao.csv");
-            arquivoTempo.format( "Nome Instância;Número de Vértices;Número de Arestas;Qualidade Solução%n");
+            arquivoSolucao = new Formatter("ResultadosAEstrelaSolucao.csv");
+            arquivoSolucao.format( "Nome Instância;Número de Vértices;Número de Arestas;Qualidade Solução%n");
         }
         catch ( FileNotFoundException e )
         {
-            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAEstrela.csv\".");
+            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAEstrelaSolucao.csv\".");
             System.exit( 1 );
         }
         catch ( SecurityException e )
         {
-            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrela.csv\".");
+            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrelaSolucao.csv\".");
             System.exit( 1 );
         }
     }
@@ -164,6 +164,10 @@ public class TesteAEstrela
     public static void main(String[] args) 
     {
         SecureRandom randomNumbers = new SecureRandom();
+        
+        openFileSolucao();
+        openFileTempoComputacional();
+        openFileVerticesAbertos();
         
         try ( DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes") ) )
         {
