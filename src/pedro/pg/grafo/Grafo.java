@@ -784,21 +784,31 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreador, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes )
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario closedHeap, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         estadosVertices[ nodoAtual.getIdVertice() ] = EstadosVertice.FECHADO;
+        rastreadorClosed[ nodoAtual.getIdVertice() ] = closedHeap.insertHeap( nodoAtual.getIdVertice(), nodoAtual.getKey() );
+        
         while ( nodoAtual.getIdVertice() != idDestino )
         {
             int idNodoAtual = nodoAtual.getIdVertice();
             for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
             {
                 int idNodoAdjacente = a.getIdVerticeDestino();
-                HeapBinario.HeapNode nodoAdjacente = rastreador[ idNodoAdjacente ];
+                HeapBinario.HeapNode nodoAdjacente = null; // CUIDADO AQUI: PODE DAR ERROR
                 if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
                 {
-                    rastreador[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
+                    rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
                     distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );
+                }
+                if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.FECHADO )
+                {
+                    nodoAdjacente = rastreadorClosed[ idNodoAdjacente ];                    
+                }
+                else
+                {
+                    nodoAdjacente = rastreadorOpen[ idNodoAdjacente ];
                 }
                 
                 long distanciaPrevista = a.peso + nodoAtual.getKey() + distanciaHeuristica[ idNodoAdjacente ] - distanciaHeuristica[ idNodoAtual ];
@@ -815,8 +825,7 @@ public class Grafo
                         openHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista );
                         predecessor[ idNodoAdjacente ] = idNodoAtual;
                         estadosVertices [ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
-                        listaInconsistentes.add(nodoAdjacente);
-                        
+                        listaInconsistentes.add(nodoAdjacente);                       
                     }
                 }
             }
@@ -828,7 +837,8 @@ public class Grafo
         int []antecessores = new int[ getNumeroVertices() ];
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
-        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        HeapBinario closedHeap = new HeapBinario( getNumeroVertices() );
+        HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
         List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
         EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
         
@@ -838,7 +848,7 @@ public class Grafo
             estadosVertice[ i ] = EstadosVertice.NEUTRO;            
         }
         
-        rastreador[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
+        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
         estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
         distanciaHeuristica[ idOrigem ] = 0;//Math.round( Math.sqrt( Math.pow( cordenadasX[ idOrigem ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idOrigem ] - cordenadasY[ idDestino ], 2 ) ) );
     }
