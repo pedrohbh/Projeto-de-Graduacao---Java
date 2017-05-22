@@ -784,7 +784,7 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreador, EstadosVertice []estadosVertices )
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreador, EstadosVertice []estadosVertices, long []distanciaHeuristica )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         while ( nodoAtual.getIdVertice() != idDestino )
@@ -796,6 +796,7 @@ public class Grafo
                 if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
                 {
                     rastreador[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
+                    distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );
                 }
                 
                 
@@ -806,6 +807,7 @@ public class Grafo
     public void anaytimeSearchAEstrela( int idOrigem, int idDestino )
     {
         int []antecessores = new int[ getNumeroVertices() ];
+        long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
         EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
