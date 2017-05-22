@@ -784,12 +784,22 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap )
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreador, EstadosVertice []estadosVertices )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         while ( nodoAtual.getIdVertice() != idDestino )
         {
-            
+            int idNodoAtual = nodoAtual.getIdVertice();
+            for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
+            {
+                int idNodoAdjacente = a.getIdVerticeDestino();
+                if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
+                {
+                    rastreador[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
+                }
+                
+                
+            }
         }
     }
     
@@ -798,11 +808,12 @@ public class Grafo
         int []antecessores = new int[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
         
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             antecessores[ i ] = i;
-            
+            estadosVertice[ i ] = EstadosVertice.NEUTRO;            
         }
         
         rastreador[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
