@@ -153,7 +153,7 @@ public class Grafo
         }
         
     }*/
-    
+            
     public void dijkstraHeapFibonacci( int idOrigem )
     {
         int verticesVisitados = getNumeroVertices();
@@ -782,6 +782,30 @@ public class Grafo
             //System.out.printf("Antecessor( %d ): %d%n", i, antecessor[ i ] );
         }*/
         
+    }
+    
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap )
+    {
+        HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
+        while ( nodoAtual.getIdVertice() != idDestino )
+        {
+            
+        }
+    }
+    
+    public void anaytimeSearchAEstrela( int idOrigem, int idDestino )
+    {
+        int []antecessores = new int[ getNumeroVertices() ];
+        HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
+        HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessores[ i ] = i;
+            
+        }
+        
+        rastreador[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
     }
     
     public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
