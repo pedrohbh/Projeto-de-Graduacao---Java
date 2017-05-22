@@ -784,22 +784,41 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreador, EstadosVertice []estadosVertices, long []distanciaHeuristica )
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreador, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
+        estadosVertices[ nodoAtual.getIdVertice() ] = EstadosVertice.FECHADO;
         while ( nodoAtual.getIdVertice() != idDestino )
         {
             int idNodoAtual = nodoAtual.getIdVertice();
             for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
             {
                 int idNodoAdjacente = a.getIdVerticeDestino();
+                HeapBinario.HeapNode nodoAdjacente = rastreador[ idNodoAdjacente ];
                 if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
                 {
                     rastreador[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
                     distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );
                 }
                 
-                
+                long distanciaPrevista = a.peso + nodoAtual.getKey() + distanciaHeuristica[ idNodoAdjacente ] - distanciaHeuristica[ idNodoAtual ];
+                if ( nodoAdjacente.getKey() > distanciaPrevista && distanciaPrevista >= 0 )
+                {
+                    if ( estadosVertices[ idNodoAdjacente ] != EstadosVertice.FECHADO )
+                    {
+                        openHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista );
+                        predecessor[ idNodoAdjacente ] = idNodoAtual;
+                        estadosVertices [ idNodoAdjacente ] = EstadosVertice.ABERTO;
+                    }
+                    else
+                    {
+                        openHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista );
+                        predecessor[ idNodoAdjacente ] = idNodoAtual;
+                        estadosVertices [ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
+                        listaInconsistentes.add(nodoAdjacente);
+                        
+                    }
+                }
             }
         }
     }
@@ -810,6 +829,7 @@ public class Grafo
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreador = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
         EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
         
         for ( int i = 0; i < getNumeroVertices(); i++ )
@@ -819,6 +839,8 @@ public class Grafo
         }
         
         rastreador[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
+        estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
+        distanciaHeuristica[ idOrigem ] = 0;//Math.round( Math.sqrt( Math.pow( cordenadasX[ idOrigem ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idOrigem ] - cordenadasY[ idDestino ], 2 ) ) );
     }
     
     public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
