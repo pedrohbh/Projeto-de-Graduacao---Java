@@ -132,28 +132,7 @@ public class Grafo
                 System.out.printf("%d ", verticesChegaveis.get( i ) );
         }
     }
-    
-    /*public void buscaEmProfundidade()
-    {
-        Cores []cor = new Cores[ numeroVertices ];
-        int []pi = new int[ numeroVertices ];
-        int time;
-        
-        for ( int i = 0; i < numeroVertices; i++ )
-        {
-            cor[ i ] = Cores.WHITE;
-            pi[ i ] = -1;            
-        }
-        
-        time = 0;
-        for ( int i = 0; i < verticesGrafo.length; i++ )
-        {
-            if ( cor[ i ] == Cores.WHITE )
-                dsfVisit(i, cor, pi, time);
-        }
-        
-    }*/
-            
+                
     public void dijkstraHeapFibonacci( int idOrigem )
     {
         int verticesVisitados = getNumeroVertices();
@@ -839,6 +818,7 @@ public class Grafo
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario closedHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
         List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
         EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
         
@@ -850,7 +830,7 @@ public class Grafo
         
         rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
         estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
-        distanciaHeuristica[ idOrigem ] = 0;//Math.round( Math.sqrt( Math.pow( cordenadasX[ idOrigem ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idOrigem ] - cordenadasY[ idDestino ], 2 ) ) );
+        distanciaHeuristica[ idOrigem ] = 0;
     }
     
     public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
