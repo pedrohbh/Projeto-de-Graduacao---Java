@@ -96,6 +96,7 @@ public class HeapBinario
         HeapNode novoNodo = new HeapNode(id, key);
         heapSize = heapSize + 1;
         novoNodo.key = Long.MAX_VALUE;
+        novoNodo.indiceAtual = heapSize;
         heap[ heapSize ] = novoNodo;
         decreaseKey( heapSize, key);
         return novoNodo;

@@ -763,7 +763,7 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario closedHeap, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes )
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario closedHeap, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, double episolon )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         estadosVertices[ nodoAtual.getIdVertice() ] = EstadosVertice.FECHADO;
@@ -779,18 +779,24 @@ public class Grafo
                 if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
                 {
                     rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
+                    estadosVertices[ idNodoAdjacente ] = EstadosVertice.ABERTO;
                     distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );
                 }
-                if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.FECHADO )
+                
+                if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.ABERTO )
+                {
+                    nodoAdjacente = rastreadorOpen[ idNodoAdjacente ];                    
+                }
+                else if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.FECHADO )
                 {
                     nodoAdjacente = rastreadorClosed[ idNodoAdjacente ];                    
                 }
                 else
                 {
-                    nodoAdjacente = rastreadorOpen[ idNodoAdjacente ];
+                    continue;
                 }
                 
-                long distanciaPrevista = a.peso + nodoAtual.getKey() + distanciaHeuristica[ idNodoAdjacente ] - distanciaHeuristica[ idNodoAtual ];
+                long distanciaPrevista = a.peso + nodoAtual.getKey() + Math.round((distanciaHeuristica[ idNodoAdjacente ] - distanciaHeuristica[ idNodoAtual ]) * episolon);
                 if ( nodoAdjacente.getKey() > distanciaPrevista && distanciaPrevista >= 0 )
                 {
                     if ( estadosVertices[ idNodoAdjacente ] != EstadosVertice.FECHADO )
@@ -801,13 +807,15 @@ public class Grafo
                     }
                     else
                     {
-                        openHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista );
+                        //nodoAdjacente.
+                        closedHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista);
                         predecessor[ idNodoAdjacente ] = idNodoAtual;
                         estadosVertices [ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
                         listaInconsistentes.add(nodoAdjacente);                       
                     }
                 }
             }
+            nodoAtual = openHeap.extractMin();
         }
     }
     
