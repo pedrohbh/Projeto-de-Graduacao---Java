@@ -818,12 +818,16 @@ public class Grafo
         }
     }
     
-    public void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen )
+    public void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
     {
+        int idVertice;
+        HeapBinario.HeapNode nodo;
         for ( int i = 0; i < listaInconsitentes.size(); i++ )
         {
-            HeapBinario.HeapNode nodo = listaInconsitentes.remove( i );
-            rastreadorOpen[ nodo.getIdVertice() ] = openHeap.insertHeap( nodo.getIdVertice(), nodo.getKey() );
+            nodo = listaInconsitentes.remove( i );
+            idVertice = nodo.getIdVertice();
+            estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
+            rastreadorOpen[ idVertice ] = openHeap.insertHeap( idVertice, nodo.getKey() );
         }
     }
     
@@ -848,9 +852,13 @@ public class Grafo
         distanciaHeuristica[ idOrigem ] = 0;
         
         computePathAnytimeSearch( idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
+        publicaCaminho(antecessores, idOrigem, idDestino);
         while ( episilon > 1 )
         {
             episilon -= fatorDeCorte;
+            repassaInconsistentesParaAberto(listaInconsistentes, openHeap, rastreadorOpen, estadosVertice );
+            computePathAnytimeSearch(idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
+            publicaCaminho(antecessores, idOrigem, idDestino);
             
         }
     }

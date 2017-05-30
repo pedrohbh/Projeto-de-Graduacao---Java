@@ -29,10 +29,11 @@ public class Principal
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
         novoGrafo.dijkstraHeapBinario( 0, 180 );
+        novoGrafo.anaytimeSearchAEstrela(0, 180, 1, 0.5 );
         //Instant start1 = Instant.now();
-        novoGrafo.algoritmoAEstrela( 0, 180, true, true );
-        novoGrafo.dijkstraHeapBinarioAdptado(0, 180, true );
-        novoGrafo.algoritmoAEstrelaManhattan(0, 180, true, true);
+        //novoGrafo.algoritmoAEstrela( 0, 180, true, true );
+        //novoGrafo.dijkstraHeapBinarioAdptado(0, 180, true );
+        //novoGrafo.algoritmoAEstrelaManhattan(0, 180, true, true);
         //System.out.println("Número de vértices abertos por Dijkstra Adpatado: " + novoGrafo.contaNumeroDeVerticesAbertosDijkstraAdptado(0, 1));
         //System.out.println("Número de vértices abertos: " + novoGrafo.contaNumeroDeVerticesAbertosAEstrela(0, 1));
         //Instant end1 = Instant.now();
