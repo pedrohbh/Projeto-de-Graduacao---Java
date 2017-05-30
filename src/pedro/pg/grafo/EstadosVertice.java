@@ -11,6 +11,6 @@ package pedro.pg.grafo;
  */
 public enum EstadosVertice
 {
-    ABERTO, FECHADO, INCOSISTENTE, NEUTRO
+    ABERTO, FECHADO, INCOSISTENTE, NEUTRO, LIMBO
     
 }

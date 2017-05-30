@@ -763,7 +763,7 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, double epsilon )
+    private void computePathAnytimeSearch( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, List<HeapBinario.HeapNode> listaFechado, double epsilon )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         
@@ -772,6 +772,8 @@ public class Grafo
             // 4
             int idNodoAtual = nodoAtual.getIdVertice();
             estadosVertice[ idNodoAtual ] = EstadosVertice.FECHADO;
+            rastreadorClosed[ idNodoAtual ] = nodoAtual;
+            listaFechado.add(nodoAtual);
             
             for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
             {
@@ -786,13 +788,24 @@ public class Grafo
                 long distanciaPrevista = distanciaReal[ idNodoAdjacente ] + a.peso;
                 if ( distanciaReal[ idNodoAdjacente ] > distanciaPrevista && distanciaPrevista >= 0  )
                 {
-                    // EM CONSTRUÇÃO
                     distanciaReal[ idNodoAdjacente ] = distanciaPrevista;
-                    long distanciaChave = distanciaPrevista + Math.round(epsilon * distanciaHeuristica[ idNodoAdjacente ] );
-                    if ( rastreadorOpen[ idNodoAdjacente ] == null )
-                        rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, distanciaChave );
+                    
+                    if ( estadosVertice[ idNodoAdjacente ] != EstadosVertice.FECHADO )
+                    {
+                    
+                        long distanciaChave = distanciaPrevista + Math.round(epsilon * distanciaHeuristica[ idNodoAdjacente ] );
+                        estadosVertice[ idNodoAdjacente ] = EstadosVertice.ABERTO;
+                    
+                        if ( rastreadorOpen[ idNodoAdjacente ] == null )                        
+                            rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, distanciaChave );
+                        else
+                            openHeap.decreaseKey( rastreadorOpen[ idNodoAdjacente ].getIndiceAtual(), distanciaChave);
+                    }
                     else
-                        openHeap.decreaseKey( rastreadorOpen[ idNodoAdjacente ].getIndiceAtual(), distanciaChave);
+                    {
+                        estadosVertice[ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
+                        listaInconsistentes.add( rastreadorClosed[ idNodoAdjacente ] );
+                    }
                 }
             }
         }
