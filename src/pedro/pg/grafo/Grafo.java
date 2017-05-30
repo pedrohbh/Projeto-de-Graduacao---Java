@@ -836,6 +836,7 @@ public class Grafo
     public void anyTimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         int []antecessores = new int[ getNumeroVertices() ];
+        long []distanciaReal = new long[ getNumeroVertices() ];  // Valor correspondete ao g(s)
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
@@ -848,6 +849,16 @@ public class Grafo
             antecessores[ i ] = i;
             estadosVertice[ i ] = EstadosVertice.NEUTRO;
         }
+        
+        // Inicializações 4, 5
+        distanciaReal[ idDestino ] = Long.MAX_VALUE;
+        distanciaReal[ idOrigem ] = 0;
+        
+        // 6
+        distanciaHeuristica[ idOrigem ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idOrigem ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idOrigem ] - cordenadasY[ idDestino ], 2 ) ) );
+        long distanciaCalculada = Math.round(distanciaHeuristica[ idOrigem ] * episolon);
+        estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
+        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, distanciaCalculada );
     }
     
     public void anytimeSearchAEstrelaBeta( int idOrigem, int idDestino, double episilon, double fatorDeCorte )
