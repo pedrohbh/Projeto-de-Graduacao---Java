@@ -789,11 +789,11 @@ public class Grafo
                 if ( distanciaReal[ idNodoAdjacente ] > distanciaPrevista && distanciaPrevista >= 0  )
                 {
                     distanciaReal[ idNodoAdjacente ] = distanciaPrevista;
-                    
+                    long distanciaChave = distanciaPrevista + Math.round(epsilon * distanciaHeuristica[ idNodoAdjacente ] );
                     if ( estadosVertice[ idNodoAdjacente ] != EstadosVertice.FECHADO )
                     {
                     
-                        long distanciaChave = distanciaPrevista + Math.round(epsilon * distanciaHeuristica[ idNodoAdjacente ] );
+                        
                         estadosVertice[ idNodoAdjacente ] = EstadosVertice.ABERTO;
                     
                         if ( rastreadorOpen[ idNodoAdjacente ] == null )                        
@@ -804,6 +804,7 @@ public class Grafo
                     else
                     {
                         estadosVertice[ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
+                        rastreadorClosed[ idNodoAdjacente ].setKey(distanciaChave);
                         listaInconsistentes.add( rastreadorClosed[ idNodoAdjacente ] );
                     }
                 }
@@ -868,7 +869,7 @@ public class Grafo
         }
     }
     
-    public void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
+    private void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
     {
         int idVertice;
         HeapBinario.HeapNode nodo;
