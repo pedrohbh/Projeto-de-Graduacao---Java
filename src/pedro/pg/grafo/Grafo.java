@@ -763,7 +763,42 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, double episolon )
+    private void computePathAnytimeSearch( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, double epsilon )
+    {
+        HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
+        
+        while( nodoAtual.getIdVertice() != idDestino )
+        {
+            // 4
+            int idNodoAtual = nodoAtual.getIdVertice();
+            estadosVertice[ idNodoAtual ] = EstadosVertice.FECHADO;
+            
+            for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
+            {
+                int idNodoAdjacente = a.idVerticeDestino;
+                
+                if ( estadosVertice[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
+                {
+                    distanciaReal[ idNodoAdjacente ] = Long.MAX_VALUE;
+                    distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );;
+                }
+                
+                long distanciaPrevista = distanciaReal[ idNodoAdjacente ] + a.peso;
+                if ( distanciaReal[ idNodoAdjacente ] > distanciaPrevista && distanciaPrevista >= 0  )
+                {
+                    // EM CONSTRUÇÃO
+                    distanciaReal[ idNodoAdjacente ] = distanciaPrevista;
+                    long distanciaChave = distanciaPrevista + Math.round(epsilon * distanciaHeuristica[ idNodoAdjacente ] );
+                    if ( rastreadorOpen[ idNodoAdjacente ] == null )
+                        rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, distanciaChave );
+                    else
+                        openHeap.decreaseKey( rastreadorOpen[ idNodoAdjacente ].getIndiceAtual(), distanciaChave);
+                }
+            }
+        }
+    }
+    
+    private void computePathAnytimeSearchBeta( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, double episolon )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         estadosVertices[ nodoAtual.getIdVertice() ] = EstadosVertice.FECHADO;
@@ -881,13 +916,13 @@ public class Grafo
         estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
         distanciaHeuristica[ idOrigem ] = 0;
         
-        computePathAnytimeSearch( idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
+        computePathAnytimeSearchBeta( idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
         publicaCaminho(antecessores, idOrigem, idDestino);
         while ( episilon > 1 )
         {
             episilon -= fatorDeCorte;
             repassaInconsistentesParaAberto(listaInconsistentes, openHeap, rastreadorOpen, estadosVertice );
-            computePathAnytimeSearch(idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
+            computePathAnytimeSearchBeta(idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
             publicaCaminho(antecessores, idOrigem, idDestino);
             
         }
