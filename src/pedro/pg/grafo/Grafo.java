@@ -763,11 +763,11 @@ public class Grafo
         
     }
     
-    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario closedHeap, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, double episolon )
+    private void computePathAnytimeSearch( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, double episolon )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
         estadosVertices[ nodoAtual.getIdVertice() ] = EstadosVertice.FECHADO;
-        rastreadorClosed[ nodoAtual.getIdVertice() ] = closedHeap.insertHeap( nodoAtual.getIdVertice(), nodoAtual.getKey() );
+        rastreadorClosed[ nodoAtual.getIdVertice() ] = nodoAtual; //closedHeap.insertHeap( nodoAtual.getIdVertice(), nodoAtual.getKey() );
         
         while ( nodoAtual.getIdVertice() != idDestino )
         {
@@ -807,8 +807,7 @@ public class Grafo
                     }
                     else
                     {
-                        //nodoAdjacente.
-                        closedHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista);
+                        nodoAdjacente.setKey(distanciaPrevista);
                         predecessor[ idNodoAdjacente ] = idNodoAtual;
                         estadosVertices [ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
                         listaInconsistentes.add(nodoAdjacente);                       
@@ -824,7 +823,6 @@ public class Grafo
         int []antecessores = new int[ getNumeroVertices() ];
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
-        HeapBinario closedHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
         HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
         List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();

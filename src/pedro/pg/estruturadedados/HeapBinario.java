@@ -69,7 +69,7 @@ public class HeapBinario
             System.exit( 1 );
         }
         // 3
-        heap[ i ].key = key;
+        heap[ i ].setKey(key);
         // 4
         while ( i > 0 && heap[ parent(i) ].getKey() > heap[ i ].getKey() )
         {
@@ -95,7 +95,7 @@ public class HeapBinario
     {
         HeapNode novoNodo = new HeapNode(id, key);
         heapSize = heapSize + 1;
-        novoNodo.key = Long.MAX_VALUE;
+        novoNodo.setKey(Long.MAX_VALUE);
         novoNodo.indiceAtual = heapSize;
         heap[ heapSize ] = novoNodo;
         decreaseKey( heapSize, key);
@@ -176,6 +176,13 @@ public class HeapBinario
          */
         public void setIndiceAtual(int indiceAtual) {
             this.indiceAtual = indiceAtual;
+        }
+
+        /**
+         * @param key the key to set
+         */
+        public void setKey(long key) {
+            this.key = key;
         }
     }
     
