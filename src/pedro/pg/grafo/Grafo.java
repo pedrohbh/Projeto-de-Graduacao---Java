@@ -818,7 +818,16 @@ public class Grafo
         }
     }
     
-    public void anaytimeSearchAEstrela( int idOrigem, int idDestino )
+    public void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen )
+    {
+        for ( int i = 0; i < listaInconsitentes.size(); i++ )
+        {
+            HeapBinario.HeapNode nodo = listaInconsitentes.remove( i );
+            rastreadorOpen[ nodo.getIdVertice() ] = openHeap.insertHeap( nodo.getIdVertice(), nodo.getKey() );
+        }
+    }
+    
+    public void anaytimeSearchAEstrela( int idOrigem, int idDestino, double episilon, double fatorDeCorte )
     {
         int []antecessores = new int[ getNumeroVertices() ];
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
@@ -837,6 +846,13 @@ public class Grafo
         rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
         estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
         distanciaHeuristica[ idOrigem ] = 0;
+        
+        computePathAnytimeSearch( idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
+        while ( episilon > 1 )
+        {
+            episilon -= fatorDeCorte;
+            
+        }
     }
     
     public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
