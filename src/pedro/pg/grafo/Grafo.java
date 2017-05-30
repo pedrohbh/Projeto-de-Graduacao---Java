@@ -772,10 +772,12 @@ public class Grafo
         while ( nodoAtual.getIdVertice() != idDestino )
         {
             int idNodoAtual = nodoAtual.getIdVertice();
+            estadosVertices[ idNodoAtual ] = EstadosVertice.FECHADO;
+            rastreadorClosed[ idNodoAtual ] = nodoAtual;
             for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
             {
                 int idNodoAdjacente = a.getIdVerticeDestino();
-                HeapBinario.HeapNode nodoAdjacente = null; // CUIDADO AQUI: PODE DAR ERROR
+                HeapBinario.HeapNode nodoAdjacente = null;
                 if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
                 {
                     rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
@@ -831,7 +833,24 @@ public class Grafo
         }
     }
     
-    public void anaytimeSearchAEstrela( int idOrigem, int idDestino, double episilon, double fatorDeCorte )
+    public void anyTimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
+    {
+        int []antecessores = new int[ getNumeroVertices() ];
+        long []distanciaHeuristica = new long[ getNumeroVertices() ];
+        HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
+        HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
+        EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessores[ i ] = i;
+            estadosVertice[ i ] = EstadosVertice.NEUTRO;
+        }
+    }
+    
+    public void anytimeSearchAEstrelaBeta( int idOrigem, int idDestino, double episilon, double fatorDeCorte )
     {
         int []antecessores = new int[ getNumeroVertices() ];
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
