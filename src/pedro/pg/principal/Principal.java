@@ -27,7 +27,7 @@ public class Principal
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
         novoGrafo.dijkstraHeapBinario( 0, 1 );
-        novoGrafo.anyTimeSearchAEstrela(0, 1, 1, 0.5 );
+        novoGrafo.anyTimeSearchAEstrela(0, 1, 2, 1 );
         //novoGrafo.anaytimeSearchAEstrela(0, 1, 2.0, 1.0 );
         //Instant start1 = Instant.now();
         //novoGrafo.algoritmoAEstrela( 0, 180, true, true );

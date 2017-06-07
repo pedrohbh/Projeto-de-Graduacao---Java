@@ -776,6 +776,18 @@ public class Grafo
         }
     }
     
+    private void limpaListaFechado( List<HeapBinario.HeapNode> listaFechado, EstadosVertice []estadosVertices )
+    {
+        int idVertice;
+        HeapBinario.HeapNode nodo;
+        for ( int i = 0; i < listaFechado.size(); i++ )
+        {
+            nodo = listaFechado.remove(i);
+            idVertice = nodo.getIdVertice();
+            estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
+        }
+    }
+    
     private void computePathAnytimeSearch( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, List<HeapBinario.HeapNode> listaFechado, double epsilon )
     {
         HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
@@ -855,9 +867,19 @@ public class Grafo
         
         // 7
         computePathAnytimeSearch(idDestino, antecessores, openHeap, rastreadorOpen, rastreadorClosed, estadosVertice, distanciaReal, distanciaHeuristica, listaInconsistentes, listaFechado, episolon);
+        System.out.println("Publicando caminho para eps = " + episolon);
         publicaCaminho(antecessores, idOrigem, idDestino);
         System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
-        
+        while ( episolon > 1 )
+        {
+            episolon -= fatorDeCorte;
+            limpaListaFechado(listaFechado, estadosVertice);
+            repassaInconsistentesParaAberto(listaInconsistentes, openHeap, rastreadorOpen, estadosVertice);
+            computePathAnytimeSearch(idDestino, antecessores, openHeap, rastreadorOpen, rastreadorClosed, estadosVertice, distanciaReal, distanciaHeuristica, listaInconsistentes, listaFechado, episolon);
+            System.out.println("Publicando caminho para eps = " + episolon);
+            publicaCaminho(antecessores, idOrigem, idDestino);
+            System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+        }
         
     }
     
