@@ -14,6 +14,11 @@ public class HeapBinario
     private int heapSize;
     private HeapNode []heap;
     
+    public HeapNode getMin()
+    {
+        return heap[ 0 ];
+    }
+    
     public HeapBinario( int tamanhoHeap )
     {
         heap = new HeapNode[tamanhoHeap];

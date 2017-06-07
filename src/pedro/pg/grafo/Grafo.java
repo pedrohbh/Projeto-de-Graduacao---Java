@@ -794,6 +794,7 @@ public class Grafo
         
         while( nodoAtual.getIdVertice() != idDestino )
         {
+            
             // 4
             int idNodoAtual = nodoAtual.getIdVertice();
             estadosVertice[ idNodoAtual ] = EstadosVertice.FECHADO;
