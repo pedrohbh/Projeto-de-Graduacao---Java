@@ -856,6 +856,8 @@ public class Grafo
         // 7
         computePathAnytimeSearch(idDestino, antecessores, openHeap, rastreadorOpen, rastreadorClosed, estadosVertice, distanciaReal, distanciaHeuristica, listaInconsistentes, listaFechado, episolon);
         publicaCaminho(antecessores, idOrigem, idDestino);
+        System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+        
         
     }
     
