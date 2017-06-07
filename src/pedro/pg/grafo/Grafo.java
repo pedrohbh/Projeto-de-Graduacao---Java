@@ -798,7 +798,7 @@ public class Grafo
                     distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );
                 }
                 
-                long distanciaPrevista = distanciaReal[ idNodoAdjacente ] + a.peso;
+                long distanciaPrevista = distanciaReal[ idNodoAtual ] + a.peso;
                 if ( distanciaReal[ idNodoAdjacente ] > distanciaPrevista && distanciaPrevista >= 0  )
                 {
                     distanciaReal[ idNodoAdjacente ] = distanciaPrevista;
@@ -821,6 +821,7 @@ public class Grafo
                     }
                 }
             }
+            nodoAtual = openHeap.extractMin();
         }
     }
     
@@ -854,6 +855,7 @@ public class Grafo
         
         // 7
         computePathAnytimeSearch(idDestino, antecessores, openHeap, rastreadorOpen, rastreadorClosed, estadosVertice, distanciaReal, distanciaHeuristica, listaInconsistentes, listaFechado, episolon);
+        publicaCaminho(antecessores, idOrigem, idDestino);
         
     }
     
