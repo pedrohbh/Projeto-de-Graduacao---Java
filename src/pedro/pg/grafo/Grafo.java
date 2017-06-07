@@ -762,6 +762,19 @@ public class Grafo
         }*/
         
     }
+            
+    private void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
+    {
+        int idVertice;
+        HeapBinario.HeapNode nodo;
+        for ( int i = 0; i < listaInconsitentes.size(); i++ )
+        {
+            nodo = listaInconsitentes.remove( i );
+            idVertice = nodo.getIdVertice();
+            estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
+            rastreadorOpen[ idVertice ] = openHeap.insertHeap( idVertice, nodo.getKey() );
+        }
+    }
     
     private void computePathAnytimeSearch( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, List<HeapBinario.HeapNode> listaFechado, double epsilon )
     {
@@ -812,76 +825,6 @@ public class Grafo
         }
     }
     
-    private void computePathAnytimeSearchBeta( int idOrigem, int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, int []predecessor, EstadosVertice []estadosVertices, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, double episolon )
-    {
-        HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
-        estadosVertices[ nodoAtual.getIdVertice() ] = EstadosVertice.FECHADO;
-        rastreadorClosed[ nodoAtual.getIdVertice() ] = nodoAtual; //closedHeap.insertHeap( nodoAtual.getIdVertice(), nodoAtual.getKey() );
-        
-        while ( nodoAtual.getIdVertice() != idDestino )
-        {
-            int idNodoAtual = nodoAtual.getIdVertice();
-            estadosVertices[ idNodoAtual ] = EstadosVertice.FECHADO;
-            rastreadorClosed[ idNodoAtual ] = nodoAtual;
-            for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
-            {
-                int idNodoAdjacente = a.getIdVerticeDestino();
-                HeapBinario.HeapNode nodoAdjacente = null;
-                if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.NEUTRO )
-                {
-                    rastreadorOpen[ idNodoAdjacente ] = openHeap.insertHeap( idNodoAdjacente, Long.MAX_VALUE );
-                    estadosVertices[ idNodoAdjacente ] = EstadosVertice.ABERTO;
-                    distanciaHeuristica[ idNodoAdjacente ] = Math.round( Math.sqrt( Math.pow( cordenadasX[ idNodoAdjacente ] - cordenadasX[ idDestino ], 2 ) + Math.pow( cordenadasY[ idNodoAdjacente ] - cordenadasY[ idDestino ], 2 ) ) );
-                }
-                
-                if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.ABERTO )
-                {
-                    nodoAdjacente = rastreadorOpen[ idNodoAdjacente ];                    
-                }
-                else if ( estadosVertices[ idNodoAdjacente ] == EstadosVertice.FECHADO )
-                {
-                    nodoAdjacente = rastreadorClosed[ idNodoAdjacente ];                    
-                }
-                else
-                {
-                    continue;
-                }
-                
-                long distanciaPrevista = a.peso + nodoAtual.getKey() + Math.round((distanciaHeuristica[ idNodoAdjacente ] - distanciaHeuristica[ idNodoAtual ]) * episolon);
-                if ( nodoAdjacente.getKey() > distanciaPrevista && distanciaPrevista >= 0 )
-                {
-                    if ( estadosVertices[ idNodoAdjacente ] != EstadosVertice.FECHADO )
-                    {
-                        openHeap.decreaseKey( nodoAdjacente.getIndiceAtual(), distanciaPrevista );
-                        predecessor[ idNodoAdjacente ] = idNodoAtual;
-                        estadosVertices [ idNodoAdjacente ] = EstadosVertice.ABERTO;
-                    }
-                    else
-                    {
-                        nodoAdjacente.setKey(distanciaPrevista);
-                        predecessor[ idNodoAdjacente ] = idNodoAtual;
-                        estadosVertices [ idNodoAdjacente ] = EstadosVertice.INCOSISTENTE;
-                        listaInconsistentes.add(nodoAdjacente);                       
-                    }
-                }
-            }
-            nodoAtual = openHeap.extractMin();
-        }
-    }
-    
-    private void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
-    {
-        int idVertice;
-        HeapBinario.HeapNode nodo;
-        for ( int i = 0; i < listaInconsitentes.size(); i++ )
-        {
-            nodo = listaInconsitentes.remove( i );
-            idVertice = nodo.getIdVertice();
-            estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
-            rastreadorOpen[ idVertice ] = openHeap.insertHeap( idVertice, nodo.getKey() );
-        }
-    }
-    
     public void anyTimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         int []antecessores = new int[ getNumeroVertices() ];
@@ -891,6 +834,7 @@ public class Grafo
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
         HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
         List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
+        List<HeapBinario.HeapNode> listaFechado = new LinkedList<>();
         EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
         
         for ( int i = 0; i < getNumeroVertices(); i++ )
@@ -908,38 +852,9 @@ public class Grafo
         long distanciaCalculada = Math.round(distanciaHeuristica[ idOrigem ] * episolon);
         estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
         rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, distanciaCalculada );
-    }
-    
-    public void anytimeSearchAEstrelaBeta( int idOrigem, int idDestino, double episilon, double fatorDeCorte )
-    {
-        int []antecessores = new int[ getNumeroVertices() ];
-        long []distanciaHeuristica = new long[ getNumeroVertices() ];
-        HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
-        HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
-        HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
-        List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
-        EstadosVertice []estadosVertice = new EstadosVertice[ getNumeroVertices() ];
         
-        for ( int i = 0; i < getNumeroVertices(); i++ )
-        {
-            antecessores[ i ] = i;
-            estadosVertice[ i ] = EstadosVertice.NEUTRO;            
-        }
-        
-        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, 0 );
-        estadosVertice[ idOrigem ] = EstadosVertice.ABERTO;
-        distanciaHeuristica[ idOrigem ] = 0;
-        
-        computePathAnytimeSearchBeta( idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
-        publicaCaminho(antecessores, idOrigem, idDestino);
-        while ( episilon > 1 )
-        {
-            episilon -= fatorDeCorte;
-            repassaInconsistentesParaAberto(listaInconsistentes, openHeap, rastreadorOpen, estadosVertice );
-            computePathAnytimeSearchBeta(idOrigem, idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, estadosVertice, distanciaHeuristica, listaInconsistentes, episilon );
-            publicaCaminho(antecessores, idOrigem, idDestino);
-            
-        }
+        // 7
+        computePathAnytimeSearch(idDestino, openHeap, rastreadorOpen, rastreadorClosed, estadosVertice, distanciaReal, distanciaHeuristica, listaInconsistentes, listaFechado, episolon);
     }
     
     public void dijkstraHeapBinario( int idOrigem, int idObjetivo )
