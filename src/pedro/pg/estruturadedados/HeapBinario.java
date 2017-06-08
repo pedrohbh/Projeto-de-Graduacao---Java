@@ -19,6 +19,11 @@ public class HeapBinario
         return heap[ 0 ];
     }
     
+    public HeapNode getElementoPosicao( int i )
+    {
+        return heap[ i ];
+    }
+    
     public HeapBinario( int tamanhoHeap )
     {
         heap = new HeapNode[tamanhoHeap];
@@ -42,22 +47,22 @@ public class HeapBinario
     
     public HeapNode extractMin()
     {
-        if ( heapSize < 0 )
+        if ( getHeapSize() < 0 )
         {
             System.err.println("Heap Underflow");
             System.exit( 1 );
         }
         // Inicio Swap
         HeapNode min = heap[ 0 ];
-        heap[ 0 ] = heap[ heapSize ];
-        heap[ heapSize ] = min;
+        heap[ 0 ] = heap[ getHeapSize() ];
+        heap[ getHeapSize() ] = min;
         
         int tempNum = heap[ 0 ].getIndiceAtual();
-        heap[ 0 ].setIndiceAtual( heap[ heapSize ].getIndiceAtual() );
-        heap[ heapSize ].setIndiceAtual(tempNum);
+        heap[ 0 ].setIndiceAtual(heap[ getHeapSize() ].getIndiceAtual() );
+        heap[ getHeapSize() ].setIndiceAtual(tempNum);
         // Fim Swap
         
-        heapSize = heapSize-1;
+        heapSize = getHeapSize()-1;
         minHeapify( 0 );
         return min;
     }
@@ -93,17 +98,14 @@ public class HeapBinario
         
     }
     
-    
-    
-    
     public HeapNode insertHeap( int id, long key )
     {
         HeapNode novoNodo = new HeapNode(id, key);
-        heapSize = heapSize + 1;
+        heapSize = getHeapSize() + 1;
         novoNodo.setKey(Long.MAX_VALUE);
-        novoNodo.indiceAtual = heapSize;
-        heap[ heapSize ] = novoNodo;
-        decreaseKey( heapSize, key);
+        novoNodo.indiceAtual = getHeapSize();
+        heap[ getHeapSize() ] = novoNodo;
+        decreaseKey(getHeapSize(), key);
         return novoNodo;
     }
 
@@ -112,14 +114,14 @@ public class HeapBinario
         int l = left(i);
         int r = right(i);
         int menor;
-        if ( l <= heapSize && heap[ l ].getKey() < heap[ i ].getKey() )
+        if ( l <= getHeapSize() && heap[ l ].getKey() < heap[ i ].getKey() )
         {
             menor = l;
         }
         else
             menor = i;
         
-        if ( r <= heapSize && heap[ r ].getKey() < heap[ menor ].getKey() )
+        if ( r <= getHeapSize() && heap[ r ].getKey() < heap[ menor ].getKey() )
             menor = r;
         
         if ( menor != i )
@@ -137,10 +139,6 @@ public class HeapBinario
             minHeapify( menor );
         }       
     }
-    
-    
-    
-    
     
     public class HeapNode
     {
@@ -189,6 +187,13 @@ public class HeapBinario
         public void setKey(long key) {
             this.key = key;
         }
+    }
+
+    /**
+     * @return the heapSize
+     */
+    public int getHeapSize() {
+        return heapSize;
     }
     
 }
