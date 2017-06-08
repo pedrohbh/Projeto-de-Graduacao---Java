@@ -5,10 +5,7 @@
  */
 package pedro.pg.principal;
 
-import java.time.Duration;
-import java.time.Instant;
 import pedro.pg.grafo.Grafo;
-import pedro.pg.utilitario.GraphViz;
 
 /**
  *
@@ -26,49 +23,9 @@ public class Principal
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
-        novoGrafo.dijkstraHeapBinario( 0, 180 );
-        novoGrafo.anyTimeSearchAEstrela(0, 180, 2, 1 );
-        //novoGrafo.anaytimeSearchAEstrela(0, 1, 2.0, 1.0 );
-        //Instant start1 = Instant.now();
-        //novoGrafo.algoritmoAEstrela( 0, 180, true, true );
-        //novoGrafo.dijkstraHeapBinarioAdptado(0, 180, true );
-        //novoGrafo.algoritmoAEstrelaManhattan(0, 180, true, true);
-        //System.out.println("Número de vértices abertos por Dijkstra Adpatado: " + novoGrafo.contaNumeroDeVerticesAbertosDijkstraAdptado(0, 1));
-        //System.out.println("Número de vértices abertos: " + novoGrafo.contaNumeroDeVerticesAbertosAEstrela(0, 1));
-        //Instant end1 = Instant.now();
-        //long tempo1 = Duration.between(start1, end1).toMillis();
-        //Instant start2 = Instant.now();
-        //novoGrafo.algoritmoAEstrelaBeta(0, 180);
-        //Instant end2 = Instant.now();
-        
-        
-        //long tempo2 = Duration.between(start2, end2).toMillis();
-        //System.out.printf("Tempo 1: %d ms%nTempo Beta: %d ms%n", tempo1, tempo2 );
-        //novoGrafo.dijkstraCanonico( 0 );
-        
-        //novoGrafo.dijkstraHeapBinario(0);
-        //novoGrafo.dijkstraHeapFibonacci( 0 );
-        
-        /*Grafo g = new Grafo();
-        g.leArquivoEntrada(caminho);
-        Instant strat = Instant.now();
-        g.dijkstraHeapBinario( 0  );
-        Instant end = Instant.now();
-        long tempoBin = Duration.between(strat, end ).toMillis();
-        
-        Instant fibStart = Instant.now();
-        g.dijkstraHeapFibonacci( 0 );
-        Instant fibEnd = Instant.now();
-        long tempoFib = Duration.between( fibStart , fibEnd ).toMillis();
-        
-        System.out.println("Tempos totais");
-        System.out.println("Heap binario: " + tempoBin + " ms." );
-        System.out.println("Fibonacci: " + tempoFib + " ms." );*/
-        
-        
-        //novoGrafo.dijkstraHeapFibonacciPrototipo(2 );
-        //GraphViz.desenhaGrafo(caminho, novoGrafo);
-                
+        novoGrafo.dijkstraHeapBinario( 0, 1 );
+        novoGrafo.anyTimeSearchAEstrela(0, 1, 1, 1 );
+                        
         System.out.println("SUCESS");
     }
     

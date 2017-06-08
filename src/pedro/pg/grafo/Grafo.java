@@ -789,17 +789,16 @@ public class Grafo
     }
     
     private void computePathAnytimeSearch( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, List<HeapBinario.HeapNode> listaFechado, double epsilon )
-    {
-        HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
-        
-        while( nodoAtual.getIdVertice() != idDestino )
+    {                
+        while( distanciaReal[ idDestino ] > openHeap.getMin().getKey() )
         {
-            
+            HeapBinario.HeapNode nodoAtual = openHeap.extractMin();            
             // 4
             int idNodoAtual = nodoAtual.getIdVertice();
             estadosVertice[ idNodoAtual ] = EstadosVertice.FECHADO;
             rastreadorClosed[ idNodoAtual ] = nodoAtual;
             listaFechado.add(nodoAtual);
+            rastreadorOpen[ idNodoAtual ] = null;
             
             for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
             {
@@ -833,8 +832,13 @@ public class Grafo
                         listaInconsistentes.add( rastreadorClosed[ idNodoAdjacente ] );
                     }
                 }
-            }
-            nodoAtual = openHeap.extractMin();
+            }            
+        }
+        if ( openHeap.getMin().getIdVertice() == idDestino )
+        {
+            openHeap.extractMin();
+            rastreadorOpen[ idDestino ] = null;
+            estadosVertice[ idDestino ] = EstadosVertice.LIMBO;
         }
     }
     
