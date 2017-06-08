@@ -788,6 +788,20 @@ public class Grafo
         }
     }
     
+    private void atualizaOpen( HeapBinario openHeap, long []distanciaReal, long []distanciaHeuristica, double epsilon)
+    {
+        HeapBinario.HeapNode novoNodo;
+        long novaDistancia;
+        int indice;
+        for ( int i = 0; i <= openHeap.getHeapSize(); i++ )
+        {
+            novoNodo = openHeap.getElementoPosicao(i);
+            indice = novoNodo.getIdVertice();
+            novaDistancia = distanciaReal[ indice ] + Math.round(distanciaHeuristica[ indice ] * epsilon);
+            openHeap.decreaseKey( novoNodo.getIndiceAtual(), novaDistancia);
+        }       
+    }
+    
     private void computePathAnytimeSearch( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, EstadosVertice []estadosVertice, long []distanciaReal, long []distanciaHeuristica, List<HeapBinario.HeapNode> listaInconsistentes, List<HeapBinario.HeapNode> listaFechado, double epsilon )
     {                
         while( distanciaReal[ idDestino ] > openHeap.getMin().getKey() )
