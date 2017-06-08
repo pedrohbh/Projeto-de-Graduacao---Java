@@ -23,8 +23,8 @@ public class Principal
         Grafo novoGrafo = new Grafo();
         novoGrafo.leArquivoEntrada(caminho);
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
-        novoGrafo.dijkstraHeapBinario( 0, 1 );
-        novoGrafo.anyTimeSearchAEstrela(0, 1, 1, 1 );
+        novoGrafo.dijkstraHeapBinario( 0, 180 );
+        novoGrafo.anyTimeSearchAEstrela(0, 180, 2, 0.5 );
                         
         System.out.println("SUCESS");
     }

@@ -889,15 +889,18 @@ public class Grafo
         System.out.println("Publicando caminho para eps = " + episolon);
         publicaCaminho(antecessores, idOrigem, idDestino);
         System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+        System.out.println("");
         while ( episolon > 1 )
         {
             episolon -= fatorDeCorte;
             limpaListaFechado(listaFechado, estadosVertice);
             repassaInconsistentesParaAberto(listaInconsistentes, openHeap, rastreadorOpen, estadosVertice);
+            atualizaOpen(openHeap, distanciaReal, distanciaHeuristica, episolon);
             computePathAnytimeSearch(idDestino, antecessores, openHeap, rastreadorOpen, rastreadorClosed, estadosVertice, distanciaReal, distanciaHeuristica, listaInconsistentes, listaFechado, episolon);
             System.out.println("Publicando caminho para eps = " + episolon);
             publicaCaminho(antecessores, idOrigem, idDestino);
             System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+            System.out.println("");
         }
         
     }
