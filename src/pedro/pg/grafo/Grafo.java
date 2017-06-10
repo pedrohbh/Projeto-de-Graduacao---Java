@@ -856,6 +856,23 @@ public class Grafo
         }
     }
     
+    private long computeKeyAD( int idVertice, long []distanciaReal, long []v, long []distanciaHeuristica, double episolon )
+    {
+        if ( v[ idVertice ] >= distanciaReal[ idVertice ] )
+        {
+            return Math.max(distanciaReal[ idVertice ] + Math.round(episolon * distanciaHeuristica[ idVertice ] ), distanciaReal[ idVertice ] );
+        }
+        else
+        {
+            return Math.max( v[ idVertice ] + distanciaHeuristica[ idVertice ], v[ idVertice ] );
+        }
+    }
+    
+    private long calculaDistanciaHeuristicaEuclidiana( int idVerticeOrigem, int idVerticeDestino )
+    {
+        return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
+    }
+    
     public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         // Definições de varíaveis
@@ -874,6 +891,7 @@ public class Grafo
         
         // 8
         distanciaReal[ idOrigem ] = 0;
+        distanciaHeuristica[ idOrigem ] = calculaDistanciaHeuristicaEuclidiana( idOrigem, idDestino );
         
         
     }
