@@ -873,7 +873,20 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
-    private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, List<HeapBinario.HeapNode> listaInconsistentes, double epsilon )
+    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, double epsilon )
+    {
+        if ( v[ idVertice ] != distanciaReal[ idVertice ] )
+            if ( estadosVertices[ idVertice ] != EstadosVertice.FECHADO )
+            {
+                if ( estadosVertices[ idVertice ] == EstadosVertice.NEUTRO )
+                    rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
+                else
+                    openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon));
+            }
+        // PAREI AQUI
+    }
+    
+    private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, List<HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
     {
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
@@ -884,6 +897,26 @@ public class Grafo
                 v[ idNodoAtual ] = distanciaReal[ idNodoAtual ];
                 estadosVertices[ idNodoAtual ] = EstadosVertice.FECHADO;
                 listaFechado.add( nodoAtual );
+                
+                for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
+                {
+                    int idAdjacente = a.idVerticeDestino;
+                    // 14
+                    if ( estadosVertices[ idAdjacente ] == EstadosVertice.NEUTRO )
+                    {
+                        distanciaReal[ idAdjacente ] = v[ idAdjacente ] = Long.MAX_VALUE;
+                        distanciaHeuristica[ idAdjacente ] = calculaDistanciaHeuristicaEuclidiana(idAdjacente, idDestino );
+                        bp[ idAdjacente ] = null;
+                    }
+                    
+                    long distanciaCalculada = distanciaReal[ idNodoAtual ] + a.peso;
+                    if ( distanciaReal[ idAdjacente ] > distanciaCalculada && distanciaCalculada >= 0 )
+                    {
+                        bp[ idAdjacente ] = nodoAtual;
+                        // PAREI AQUI
+                        distanciaReal[ idAdjacente ] = distanciaReal[ bp[ idAdjacente ].getIdVertice() ] + a.peso;
+                    }
+                }
                 
             }
             
