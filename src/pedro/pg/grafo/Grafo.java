@@ -873,10 +873,19 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
-    private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, double epsilon )
+    private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, List<HeapBinario.HeapNode> listaInconsistentes, double epsilon )
     {
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
+            HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
+            int idNodoAtual = nodoAtual.getIdVertice();
+            if ( v[ idNodoAtual ] > distanciaReal[ idNodoAtual ] )
+            {
+                v[ idNodoAtual ] = distanciaReal[ idNodoAtual ];
+                estadosVertices[ idNodoAtual ] = EstadosVertice.FECHADO;
+                listaFechado.add( nodoAtual );
+                
+            }
             
         }
     }
@@ -891,6 +900,9 @@ public class Grafo
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        List<HeapBinario.HeapNode> listaFechado = new LinkedList<>();
+        List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
         EstadosVertice []estadosVertices = new EstadosVertice[ getNumeroVertices() ];
         
         // 7
