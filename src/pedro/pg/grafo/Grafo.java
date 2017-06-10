@@ -856,6 +856,28 @@ public class Grafo
         }
     }
     
+    public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
+    {
+        // Definições de varíaveis
+        int []antecessores = new int[ getNumeroVertices() ];
+        long []distanciaReal = new long[ getNumeroVertices() ]; // valor correspondente ao g(s)
+        long []v = new long[ getNumeroVertices() ]; // valor corresponde ao v(s)
+        HeapBinario.HeapNode []bp = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        long []distanciaHeuristica = new long[ getNumeroVertices() ];
+        HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
+        HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        
+        // 7
+        distanciaReal[ idDestino ] = v[ idDestino ] = Long.MAX_VALUE;
+        v[ idOrigem ] = Long.MAX_VALUE;
+        bp[ idDestino ] = bp[ idOrigem ] = null;
+        
+        // 8
+        distanciaReal[ idOrigem ] = 0;
+        
+        
+    }
+    
     public void anyTimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         int []antecessores = new int[ getNumeroVertices() ];
