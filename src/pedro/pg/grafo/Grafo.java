@@ -883,6 +883,7 @@ public class Grafo
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        EstadosVertice []estadosVertices = new EstadosVertice[ getNumeroVertices() ];
         
         // 7
         distanciaReal[ idDestino ] = v[ idDestino ] = Long.MAX_VALUE;
@@ -893,7 +894,9 @@ public class Grafo
         distanciaReal[ idOrigem ] = 0;
         distanciaHeuristica[ idOrigem ] = calculaDistanciaHeuristicaEuclidiana( idOrigem, idDestino );
         
-        
+        // 9
+        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, episolon) );
+        estadosVertices[ idOrigem ] = EstadosVertice.ABERTO;
     }
     
     public void anyTimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
