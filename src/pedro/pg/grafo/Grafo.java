@@ -873,6 +873,14 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
+    private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, double epsilon )
+    {
+        while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
+        {
+            
+        }
+    }
+    
     public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         // Definições de varíaveis
