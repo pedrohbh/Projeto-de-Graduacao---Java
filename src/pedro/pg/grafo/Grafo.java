@@ -876,6 +876,7 @@ public class Grafo
     private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaInconsistentes, double epsilon )
     {
         if ( v[ idVertice ] != distanciaReal[ idVertice ] )
+        {
             if ( estadosVertices[ idVertice ] != EstadosVertice.FECHADO )
             {
                 estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
@@ -889,6 +890,19 @@ public class Grafo
                 estadosVertices[ idVertice ] = EstadosVertice.INCOSISTENTE;
                 rastreadorClosed[ idVertice ].setKey( computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
                 listaInconsistentes.add( rastreadorClosed[ idVertice ] );
+            }
+        }
+        else
+            {
+                if ( estadosVertices[ idVertice ] == EstadosVertice.ABERTO )
+                {
+                    
+                }
+                else if ( estadosVertices[ idVertice ] == EstadosVertice.INCOSISTENTE )
+                {
+                    
+                }
+                
             }
     }
     
