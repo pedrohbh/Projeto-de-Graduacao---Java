@@ -911,7 +911,7 @@ public class Grafo
             }
     }
     
-    private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, List<HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
+    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
     {
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
@@ -938,8 +938,8 @@ public class Grafo
                     if ( distanciaReal[ idAdjacente ] > distanciaCalculada && distanciaCalculada >= 0 )
                     {
                         bp[ idAdjacente ] = nodoAtual;
-                        // PAREI AQUI
                         distanciaReal[ idAdjacente ] = distanciaReal[ bp[ idAdjacente ].getIdVertice() ] + a.peso;
+                        updateSetMembership(idDestino, openHeap, rastreadorOpen, rastreadorOpen, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon);
                     }
                 }
                 
