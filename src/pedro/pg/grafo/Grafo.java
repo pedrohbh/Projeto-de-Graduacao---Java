@@ -873,17 +873,23 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
-    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, double epsilon )
+    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaInconsistentes, double epsilon )
     {
         if ( v[ idVertice ] != distanciaReal[ idVertice ] )
             if ( estadosVertices[ idVertice ] != EstadosVertice.FECHADO )
             {
+                estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
                 if ( estadosVertices[ idVertice ] == EstadosVertice.NEUTRO )
                     rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
                 else
                     openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon));
             }
-        // PAREI AQUI
+            else if ( estadosVertices[ idVertice ] != EstadosVertice.INCOSISTENTE )
+            {
+                estadosVertices[ idVertice ] = EstadosVertice.INCOSISTENTE;
+                rastreadorClosed[ idVertice ].setKey( computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
+                listaInconsistentes.add( rastreadorClosed[ idVertice ] );
+            }
     }
     
     private void computePathAD( int idDestino, HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, List<HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
