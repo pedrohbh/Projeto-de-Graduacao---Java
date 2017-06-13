@@ -9,8 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
@@ -873,7 +875,7 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
-    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaInconsistentes, double epsilon )
+    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, double epsilon )
     {
         if ( v[ idVertice ] != distanciaReal[ idVertice ] )
         {
@@ -889,18 +891,21 @@ public class Grafo
             {
                 estadosVertices[ idVertice ] = EstadosVertice.INCOSISTENTE;
                 rastreadorClosed[ idVertice ].setKey( computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
-                listaInconsistentes.add( rastreadorClosed[ idVertice ] );
+                listaInconsistentes.put(idVertice, rastreadorClosed[ idVertice ] );
+                rastreadorClosed[ idVertice ] = null;
             }
         }
         else
             {
                 if ( estadosVertices[ idVertice ] == EstadosVertice.ABERTO )
                 {
-                    
+                    rastreadorOpen[ idVertice ] = openHeap.removeElemento( rastreadorOpen[ idVertice ].getIndiceAtual() );
+                    estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
                 }
                 else if ( estadosVertices[ idVertice ] == EstadosVertice.INCOSISTENTE )
                 {
-                    
+                    listaInconsistentes.remove( idVertice );
+                    estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
                 }
                 
             }
@@ -955,7 +960,8 @@ public class Grafo
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
         HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
         List<HeapBinario.HeapNode> listaFechado = new LinkedList<>();
-        List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
+        Map<Integer, HeapBinario.HeapNode> listaInconsistentes = new HashMap<>();
+        //List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
         EstadosVertice []estadosVertices = new EstadosVertice[ getNumeroVertices() ];
         
         // 7
