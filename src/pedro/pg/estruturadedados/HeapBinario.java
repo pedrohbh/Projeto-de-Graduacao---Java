@@ -67,6 +67,29 @@ public class HeapBinario
         return min;
     }
     
+    public HeapNode removeElemento( int indiceAtual )
+    {
+        if ( indiceAtual > heapSize )
+        {
+            System.err.println("Elemento retirado está acima do heapsize. Indice buscado: " + indiceAtual + ". HeapSize: " + heapSize );
+            System.exit( 1 );
+        }
+        
+        // Inicio Swap
+        HeapNode min = heap[ indiceAtual ];
+        heap[ indiceAtual ] = heap[ getHeapSize() ];
+        heap[ getHeapSize() ] = min;
+        
+        int tempNum = heap[ indiceAtual ].getIndiceAtual();
+        heap[ indiceAtual ].setIndiceAtual(heap[ getHeapSize() ].getIndiceAtual() );
+        heap[ getHeapSize() ].setIndiceAtual(tempNum);
+        // Fim Swap
+        
+        heapSize = getHeapSize() - 1;
+        minHeapify( indiceAtual );
+        return null;
+    }
+    
     //public void swap( )
     
     public void decreaseKey(int i, long key)
