@@ -911,7 +911,7 @@ public class Grafo
             }
     }
     
-    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
+    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
     {
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
@@ -939,10 +939,31 @@ public class Grafo
                     {
                         bp[ idAdjacente ] = nodoAtual;
                         distanciaReal[ idAdjacente ] = distanciaReal[ bp[ idAdjacente ].getIdVertice() ] + a.peso;
-                        updateSetMembership(idDestino, openHeap, rastreadorOpen, rastreadorOpen, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon);
+                        updateSetMembership( idAdjacente, openHeap, rastreadorOpen, rastreadorClosed, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon );                        
                     }
                 }
                 
+            }
+            else
+            {
+                v[ idNodoAtual ] = Long.MAX_VALUE;
+                updateSetMembership(idDestino, openHeap, rastreadorOpen, rastreadorClosed, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon );
+                for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
+                {
+                    int idAdjacente = a.idVerticeDestino;
+                    // 22
+                    if ( estadosVertices[ idAdjacente ] == EstadosVertice.NEUTRO )
+                    {
+                        distanciaReal[ idAdjacente ] = v[ idAdjacente ] = Long.MAX_VALUE;
+                        distanciaHeuristica[ idAdjacente ] = calculaDistanciaHeuristicaEuclidiana(idAdjacente, idDestino );
+                        bp[ idAdjacente ] = null;
+                    }
+                    
+                    if ( bp[ idAdjacente ] == rastreadorOpen[ idNodoAtual ] )
+                    {
+                        // PAREI AQUI
+                    }
+                }
             }
             
         }
