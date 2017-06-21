@@ -875,6 +875,31 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
+    private void argmin( int idVertice, List<Integer> []listaPredecessores, long []v )
+    {
+        long menorValor = Long.MAX_VALUE;
+        int minId = Integer.MAX_VALUE;
+        
+        for ( Integer e: listaPredecessores[ idVertice ] )
+        {
+            Aresta arestaEscolida = null;
+            for ( Aresta a: verticesGrafo[ e ].arestasAdjacentes )
+            {
+                if ( a.getIdVerticeDestino() == idVertice )
+                {
+                    arestaEscolida = a;
+                    break;
+                }
+            }
+            if ( v[ e ] + arestaEscolida.peso < menorValor )
+            {
+                minId = e;
+                menorValor = v[ e ] + arestaEscolida.peso;
+            }
+        }
+        
+    }
+    
     private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, double epsilon )
     {
         if ( v[ idVertice ] != distanciaReal[ idVertice ] )
