@@ -25,6 +25,7 @@ public class Principal
         novoGrafo.leArquivoDeCordenadas(nomeCordenadas);
         novoGrafo.dijkstraHeapBinario( 0, 180 );
         novoGrafo.anyTimeSearchAEstrela(0, 180, 2, 0.5 );
+        //novoGrafo.dynamicSearchAEstrela(0, 180, 1, 1 );
                         
         System.out.println("SUCESS");
     }

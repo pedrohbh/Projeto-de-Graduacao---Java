@@ -911,7 +911,7 @@ public class Grafo
             }
     }
     
-    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, HeapBinario.HeapNode []bp, double epsilon )
+    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, List<Integer> []listaPredecessores, HeapBinario.HeapNode []bp, double epsilon )
     {
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
@@ -932,7 +932,11 @@ public class Grafo
                         distanciaReal[ idAdjacente ] = v[ idAdjacente ] = Long.MAX_VALUE;
                         distanciaHeuristica[ idAdjacente ] = calculaDistanciaHeuristicaEuclidiana(idAdjacente, idDestino );
                         bp[ idAdjacente ] = null;
+                        listaPredecessores[ idAdjacente ] = new LinkedList<>();
                     }
+                    
+                    // VERIFICAR ISSO AQUI - CUIDADO
+                    listaPredecessores[ idAdjacente ].add( idNodoAtual );
                     
                     long distanciaCalculada = distanciaReal[ idNodoAtual ] + a.peso;
                     if ( distanciaReal[ idAdjacente ] > distanciaCalculada && distanciaCalculada >= 0 )
@@ -982,6 +986,7 @@ public class Grafo
         HeapBinario.HeapNode []rastreadorClosed = new HeapBinario.HeapNode[ getNumeroVertices() ];
         List<HeapBinario.HeapNode> listaFechado = new LinkedList<>();
         Map<Integer, HeapBinario.HeapNode> listaInconsistentes = new HashMap<>();
+        List<Integer> []listaPredecessores = new List[ getNumeroVertices() ];
         //List<HeapBinario.HeapNode> listaInconsistentes = new LinkedList<>();
         EstadosVertice []estadosVertices = new EstadosVertice[ getNumeroVertices() ];
         
@@ -997,6 +1002,12 @@ public class Grafo
         // 9
         rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, episolon) );
         estadosVertices[ idOrigem ] = EstadosVertice.ABERTO;
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessores[ i ] = i;
+            estadosVertices[ i ] = EstadosVertice.NEUTRO;
+        }
     }
     
     public void anyTimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
