@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Stack;
 import pedro.pg.estruturadedados.FibonacciHeap;
 import pedro.pg.estruturadedados.HeapBinario;
@@ -875,29 +876,21 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
-    private void argmin( int idVertice, List<Integer> []listaPredecessores, long []v )
+    private void argmin( int idVertice, Map<Integer, VerticeEspecialAD> []listaPredecessores, long []v )
     {
         long menorValor = Long.MAX_VALUE;
         int minId = Integer.MAX_VALUE;
         
-        for ( Integer e: listaPredecessores[ idVertice ] )
+        Set<Integer> chaves = listaPredecessores[ idVertice ].keySet();
+        for ( Integer chave: chaves )
         {
-            Aresta arestaEscolida = null;
-            for ( Aresta a: verticesGrafo[ e ].arestasAdjacentes )
+            long valorCalculado = v[ chave ] + listaPredecessores[ idVertice ].get( chave ).getPeso();
+            if ( valorCalculado < menorValor )
             {
-                if ( a.getIdVerticeDestino() == idVertice )
-                {
-                    arestaEscolida = a;
-                    break;
-                }
+                minId = chave;
+                menorValor = valorCalculado;
             }
-            if ( v[ e ] + arestaEscolida.peso < menorValor )
-            {
-                minId = e;
-                menorValor = v[ e ] + arestaEscolida.peso;
-            }
-        }
-        
+        }       
     }
     
     private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, double epsilon )
