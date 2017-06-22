@@ -1423,6 +1423,43 @@ public class Grafo
         }
     }
     
+    public class VerticeEspecialAD
+    {
+        private final int idVertice;
+        private int peso;
+        
+        public VerticeEspecialAD( int id, int peso )
+        {
+            this.idVertice = id;
+            this.peso = peso;
+        }
+
+        /**
+         * @return the idVertice
+         */
+        public int getIdVertice() {
+            return idVertice;
+        }
+
+        /**
+         * @return the peso
+         */
+        public int getPeso() {
+            return peso;
+        }
+
+        /**
+         * @param peso the peso to set
+         */
+        public void setPeso(int peso) {
+            this.peso = peso;
+        }
+        
+        
+        
+        
+    }
+    
     
     public class Aresta
     {
