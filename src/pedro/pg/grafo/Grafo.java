@@ -876,7 +876,7 @@ public class Grafo
         return Math.round( Math.sqrt( Math.pow( cordenadasX[ idVerticeOrigem ] - cordenadasX[ idVerticeDestino ], 2 ) + Math.pow( cordenadasY[ idVerticeOrigem ] - cordenadasY[ idVerticeDestino ], 2 ) ) );
     }
     
-    private void argmin( int idVertice, Map<Integer, VerticeEspecialAD> []listaPredecessores, long []v )
+    private VerticeEspecialAD argmin( int idVertice, Map<Integer, VerticeEspecialAD> []listaPredecessores, long []v )
     {
         long menorValor = Long.MAX_VALUE;
         int minId = Integer.MAX_VALUE;
@@ -890,7 +890,9 @@ public class Grafo
                 minId = chave;
                 menorValor = valorCalculado;
             }
-        }       
+        }
+        
+        return listaPredecessores[ idVertice ].get( minId );
     }
     
     private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, double epsilon )
@@ -929,7 +931,7 @@ public class Grafo
             }
     }
     
-    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, HeapBinario.HeapNode []bp, double epsilon )
+    private void computePathAD( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, HeapBinario.HeapNode []rastreadorClosed, int []antecessores, long []distanciaReal, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, List<HeapBinario.HeapNode> listaFechado, Map<Integer, HeapBinario.HeapNode> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, VerticeEspecialAD []bp, double epsilon )
     {
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
@@ -960,9 +962,10 @@ public class Grafo
                     long distanciaCalculada = distanciaReal[ idNodoAtual ] + a.peso;
                     if ( distanciaReal[ idAdjacente ] > distanciaCalculada && distanciaCalculada >= 0 )
                     {
-                        bp[ idAdjacente ] = nodoAtual;
+                        bp[ idAdjacente ] = new VerticeEspecialAD( idNodoAtual, a.peso );
+                        antecessores[ idAdjacente ] = idNodoAtual;
                         distanciaReal[ idAdjacente ] = distanciaReal[ bp[ idAdjacente ].getIdVertice() ] + a.peso;
-                        updateSetMembership( idAdjacente, openHeap, rastreadorOpen, rastreadorClosed, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon );                        
+                        updateSetMembership( idAdjacente, openHeap, rastreadorOpen, rastreadorClosed, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon );
                     }
                 }
                 
@@ -982,9 +985,11 @@ public class Grafo
                         bp[ idAdjacente ] = null;
                     }
                     
-                    if ( bp[ idAdjacente ] == rastreadorOpen[ idNodoAtual ] )
+                    if ( bp[ idAdjacente ].idVertice == idNodoAtual )
                     {
-                        // PAREI AQUI
+                       bp[ idAdjacente ] = argmin( idAdjacente, listaPredecessores, v );
+                       distanciaReal[ idAdjacente ] = v[ bp[ idAdjacente].idVertice ] + bp[ idAdjacente ].getPeso();
+                       updateSetMembership( idAdjacente, openHeap, rastreadorOpen, rastreadorClosed, distanciaReal, v, distanciaHeuristica, estadosVertices, listaInconsistentes, epsilon);
                     }
                 }
             }
@@ -998,7 +1003,8 @@ public class Grafo
         int []antecessores = new int[ getNumeroVertices() ];
         long []distanciaReal = new long[ getNumeroVertices() ]; // valor correspondente ao g(s)
         long []v = new long[ getNumeroVertices() ]; // valor corresponde ao v(s)
-        HeapBinario.HeapNode []bp = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        //HeapBinario.HeapNode []bp = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        VerticeEspecialAD []bp = new VerticeEspecialAD[ getNumeroVertices() ];
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
