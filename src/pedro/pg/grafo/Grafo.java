@@ -900,12 +900,13 @@ public class Grafo
         if ( v[ idVertice ] != distanciaReal[ idVertice ] )
         {
             if ( estadosVertices[ idVertice ] != EstadosVertice.FECHADO )
-            {
-                estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
+            {                
                 if ( estadosVertices[ idVertice ] == EstadosVertice.NEUTRO )
                     rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
                 else
                     openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon));
+                
+                estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
             }
             else if ( estadosVertices[ idVertice ] != EstadosVertice.INCOSISTENTE )
             {
@@ -936,12 +937,14 @@ public class Grafo
         while ( computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, epsilon) > openHeap.getMin().getKey() || v[ idDestino ] < distanciaReal[ idDestino ] )
         {
             HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
-            int idNodoAtual = nodoAtual.getIdVertice();
+            int idNodoAtual = nodoAtual.getIdVertice();            
             if ( v[ idNodoAtual ] > distanciaReal[ idNodoAtual ] )
             {
                 v[ idNodoAtual ] = distanciaReal[ idNodoAtual ];
                 estadosVertices[ idNodoAtual ] = EstadosVertice.FECHADO;
                 listaFechado.add( nodoAtual );
+                rastreadorClosed[ idNodoAtual ] = nodoAtual;
+                rastreadorOpen[ idNodoAtual ] = null;
                 
                 for ( Aresta a: verticesGrafo[ idNodoAtual ].arestasAdjacentes )
                 {
@@ -1026,13 +1029,23 @@ public class Grafo
         distanciaHeuristica[ idOrigem ] = calculaDistanciaHeuristicaEuclidiana( idOrigem, idDestino );
         
         // 9
-        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idDestino, distanciaReal, v, distanciaHeuristica, episolon) );
+        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idOrigem, distanciaReal, v, distanciaHeuristica, episolon) );
         estadosVertices[ idOrigem ] = EstadosVertice.ABERTO;
+        listaPredecessores[ idOrigem ] = new HashMap<>();
         
         for ( int i = 0; i < getNumeroVertices(); i++ )
         {
             antecessores[ i ] = i;
             estadosVertices[ i ] = EstadosVertice.NEUTRO;
+        }
+        
+        while ( episolon >= 1 )
+        {
+            computePathAD(idDestino, openHeap, rastreadorOpen, rastreadorClosed, antecessores, distanciaReal, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, listaPredecessores, bp, episolon);
+            episolon -= fatorDeCorte;
+            publicaCaminho(antecessores, idOrigem, idDestino);
+            System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+            // PUBLICA CAMINHO
         }
     }
     
