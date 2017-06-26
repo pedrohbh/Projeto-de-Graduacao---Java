@@ -765,6 +765,21 @@ public class Grafo
         }*/
         
     }
+    
+    private void repassaInconsistenstesParaAbertoAD( Map<Integer, HeapBinario.HeapNode> listaInconsistentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
+    {
+        int idVertice;
+        HeapBinario.HeapNode nodo;
+        
+        Set<Integer> chaves = listaInconsistentes.keySet();
+        for ( Integer chave: chaves )
+        {
+            nodo = listaInconsistentes.get( chave );
+            idVertice = nodo.getIdVertice();
+            estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
+            rastreadorOpen[ idVertice ] = openHeap.insertHeap( idVertice, nodo.getKey() );
+        }
+    }
             
     private void repassaInconsistentesParaAberto( List<HeapBinario.HeapNode> listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, EstadosVertice []estadosVertices )
     {
@@ -915,7 +930,7 @@ public class Grafo
         {
             if ( estadosVertices[ idVertice ] != EstadosVertice.FECHADO )
             {                
-                if ( estadosVertices[ idVertice ] == EstadosVertice.NEUTRO )
+                if ( estadosVertices[ idVertice ] == EstadosVertice.NEUTRO || estadosVertices[ idVertice ] == EstadosVertice.LIMBO )
                     rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon) );
                 else
                     openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), computeKeyAD(idVertice, distanciaReal, v, distanciaHeuristica, epsilon));
@@ -1058,7 +1073,7 @@ public class Grafo
             System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
             episolon -= fatorDeCorte;
             limpaListaFechado(listaFechado, estadosVertices);
-            repassaInconsistentesParaAberto(listaFechado, openHeap, rastreadorOpen, estadosVertices );
+            repassaInconsistenstesParaAbertoAD(listaInconsistentes, openHeap, rastreadorOpen, estadosVertices );
             atualizaOpenAD(openHeap, distanciaReal, v, distanciaHeuristica, episolon);
             // PUBLICA CAMINHO
         }
