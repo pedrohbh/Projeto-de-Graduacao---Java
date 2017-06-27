@@ -199,7 +199,7 @@ public class Grafo
         return g[ idVertice ] + Math.round( distanciaHeuristica[ idVertice ] * episolon );
     }
     
-    public void anytimeSearchAEstrelaBeta( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
+    public void anytimeSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
@@ -231,7 +231,7 @@ public class Grafo
         estadosVertices[ idOrigem ] = EstadosVertice.ABERTO;
         
         // 7
-        computePathARABeta(idDestino, antecessores, openHeap, rastreadorOpen, g, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+        computePathARA(idDestino, antecessores, openHeap, rastreadorOpen, g, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
         System.out.println("Mostando caminho de ARA para o vértice: " + idDestino + ". eps = " + episolon );
         publicaCaminho(antecessores, idOrigem, idDestino);
         System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
@@ -240,10 +240,10 @@ public class Grafo
         while ( episolon > 1 )
         {
             episolon -= fatorDeCorte;
-            repassaInconsitentesParaOpenARABeta(listaInconsistentes, openHeap, rastreadorOpen, g, distanciaHeuristica, estadosVertices, episolon );
-            atualizaOpenARABeta(openHeap, rastreadorOpen, g, distanciaHeuristica, episolon );
-            limpaFechadoARABeta(listaFechado, estadosVertices );
-            computePathARABeta(idDestino, antecessores, openHeap, rastreadorOpen, g, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+            repassaInconsitentesParaOpenARA(listaInconsistentes, openHeap, rastreadorOpen, g, distanciaHeuristica, estadosVertices, episolon );
+            atualizaOpenARA(openHeap, g, distanciaHeuristica, episolon );
+            limpaFechadoARA(listaFechado, estadosVertices );
+            computePathARA(idDestino, antecessores, openHeap, rastreadorOpen, g, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
             System.out.println("Mostando caminho de ARA para o vértice: " + idDestino + ". eps = " + episolon );
             publicaCaminho(antecessores, idOrigem, idDestino);
             System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
@@ -253,7 +253,7 @@ public class Grafo
         
     }
     
-    private void limpaFechadoARABeta( Set<Integer> listaFechado, EstadosVertice []estadosVertices )
+    private void limpaFechadoARA( Set<Integer> listaFechado, EstadosVertice []estadosVertices )
     {
         for ( Integer e: listaFechado )
         {
@@ -262,7 +262,7 @@ public class Grafo
         listaFechado.clear();
     }
     
-    private void atualizaOpenARABeta( HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []distanciaHeuristica, double episolon )
+    private void atualizaOpenARA( HeapBinario openHeap, long []g, long []distanciaHeuristica, double episolon )
     {
         HeapBinario.HeapNode elemento;
         for ( int i = 0; i <= openHeap.getHeapSize(); i++ )
@@ -272,7 +272,7 @@ public class Grafo
         }
     }
     
-    private void repassaInconsitentesParaOpenARABeta( List< Integer > listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
+    private void repassaInconsitentesParaOpenARA( List< Integer > listaInconsitentes, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
     {
         for ( int i = 0; i < listaInconsitentes.size(); i++ )
         {
@@ -282,7 +282,7 @@ public class Grafo
         }
     }
     
-    private void computePathARABeta( int idDestino, int[] antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, Set<Integer> listaFechado, List<Integer> listaInconsistente, double episolon )
+    private void computePathARA( int idDestino, int[] antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, Set<Integer> listaFechado, List<Integer> listaInconsistente, double episolon )
     {
         // 2
         while( computeKeyARA( idDestino, g, distanciaHeuristica, episolon ) > openHeap.getMin().getKey() )
