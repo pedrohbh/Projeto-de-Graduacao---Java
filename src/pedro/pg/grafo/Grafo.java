@@ -1179,13 +1179,52 @@ public class Grafo
                         g[ idVerticeAdjacente ] = g[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
                     }
                     
-                }
-                
-                
-                
+                }               
             }
         }
         
+    }
+    
+    private void updateSetMembershipBeta( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Set< Integer > listaFechado, Set< Integer > listaInconsistens, double episolon )
+    {
+        // 2
+        if ( v[ idVertice ] != g[ idVertice ] )
+        {
+            // 3
+            if ( estadosVertices[ idVertice ] != EstadosVertice.FECHADO )
+            {
+                if ( rastreadorOpen[ idVertice ] == null )
+                {
+                    rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, computeKeyAD( idVertice, g, v, distanciaHeuristica, episolon ) );
+                }
+                else
+                    openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), computeKeyAD(idVertice, g, v, distanciaHeuristica, episolon) );
+                
+                estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
+            }
+            else if ( estadosVertices[ idVertice ] != EstadosVertice.INCOSISTENTE )
+            {
+                if ( listaFechado.contains( idVertice ) )
+                    listaFechado.remove( idVertice );
+                
+                listaInconsistens.add(idVertice);
+                estadosVertices[ idVertice ] = EstadosVertice.INCOSISTENTE;
+            }            
+        }
+        else
+        {
+            if ( estadosVertices[ idVertice ] == EstadosVertice.ABERTO )
+            {
+                openHeap.removeElemento(idVertice);
+                rastreadorOpen[ idVertice ] = null;
+                estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
+            }
+            else if ( estadosVertices[ idVertice ] == EstadosVertice.INCOSISTENTE )
+            {
+                listaInconsistens.remove( idVertice );
+                estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
+            }
+        }
     }
     
     public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
