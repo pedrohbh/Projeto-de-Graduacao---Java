@@ -1177,9 +1177,48 @@ public class Grafo
                         bp[ idVerticeAdjacente ] = listaPredecessores[ idVerticeAdjacente ].get( idNodoAtual );
                         // 18
                         g[ idVerticeAdjacente ] = g[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
+                        updateSetMembershipBeta( idVerticeAdjacente, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                    }                    
+                }               
+            }
+            // 19
+            else
+            {
+                // 30
+                v[ idNodoAtual ] = Long.MAX_VALUE;
+                updateSetMembershipBeta( idNodoAtual, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                
+                // 21
+                for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
+                {
+                    int idVerticeAdjacente = a.getIdVerticeDestino();
+                    
+                    if ( estadosVertices[ idVerticeAdjacente ] == EstadosVertice.NEUTRO )
+                    {
+                        // 15
+                        v[ idVerticeAdjacente ] = g[ idVerticeAdjacente ] = Long.MAX_VALUE;
+                        bp[ idVerticeAdjacente ] = null;
+                        distanciaHeuristica[ idVerticeAdjacente ] = calculaDistanciaHeuristicaEuclidiana( idVerticeAdjacente, idDestino );
+                        listaPredecessores[ idVerticeAdjacente ] = new HashMap<>();
                     }
                     
-                }               
+                    // Adiciona a lista de predecessores que serão usados em argmin
+                    if ( !listaPredecessores[ idVerticeAdjacente ].containsKey( idNodoAtual ) )
+                    {
+                        listaPredecessores[ idVerticeAdjacente ].put( idNodoAtual, new VerticeEspecialAD(idNodoAtual, a.peso) );
+                    }
+                    
+                    // 24
+                    if ( bp[ idVerticeAdjacente ] != null && bp[ idVerticeAdjacente ].idVertice == idNodoAtual )
+                    {
+                        bp[ idVerticeAdjacente ] = argmin( idVerticeAdjacente, listaPredecessores, v );
+                        g[ idVerticeAdjacente ] = v[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
+                        updateSetMembershipBeta(idDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                    }
+                }
+                
+                
+                
             }
         }
         
