@@ -954,11 +954,11 @@ public class Grafo
         }
     }
         
-    private long computeKeyAD( int idVertice, long []distanciaReal, long []v, long []distanciaHeuristica, double episolon )
+    private long computeKeyAD( int idVertice, long []g, long []v, long []distanciaHeuristica, double episolon )
     {
-        if ( v[ idVertice ] >= distanciaReal[ idVertice ] )
+        if ( v[ idVertice ] >= g[ idVertice ] )
         {
-            return Math.max(distanciaReal[ idVertice ] + Math.round(episolon * distanciaHeuristica[ idVertice ] ), distanciaReal[ idVertice ] );
+            return Math.max(g[ idVertice ] + Math.round(episolon * distanciaHeuristica[ idVertice ] ), g[ idVertice ] );
         }
         else
         {
@@ -1128,6 +1128,63 @@ public class Grafo
         distanciaHeuristica[ idOrigem ] = calculaDistanciaHeuristicaEuclidiana( idOrigem, idDestino );
         
         // 9
+        
+    }
+    
+    private void computePathADBeta( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, VerticeEspecialAD []bp, Set<Integer> listaFechado, Set<Integer> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, double episolon )
+    {
+        while( computeKeyAD(idDestino, g, v, distanciaHeuristica, episolon ) > openHeap.getMin().getKey() || v[ idDestino ] < g[ idDestino ] )
+        {
+            // 10
+            HeapBinario.HeapNode nodoAtual = openHeap.extractMin();
+            int idNodoAtual = nodoAtual.getIdVertice();
+            rastreadorOpen[ idNodoAtual ] = null;
+            estadosVertices[ idNodoAtual ] = EstadosVertice.LIMBO;
+            
+            // 11
+            if ( v[ idNodoAtual ] > g[ idNodoAtual ] )
+            {
+                // 12
+                v[ idNodoAtual ] = g[ idNodoAtual ];
+                listaFechado.add( idNodoAtual );
+                estadosVertices[ idNodoAtual ] = EstadosVertice.FECHADO;
+                
+                // 13
+                for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
+                {
+                    int idVerticeAdjacente = a.idVerticeDestino;
+                    // 14
+                    if ( estadosVertices[ idVerticeAdjacente ] == EstadosVertice.NEUTRO )
+                    {
+                        // 15
+                        v[ idVerticeAdjacente ] = g[ idVerticeAdjacente ] = Long.MAX_VALUE;
+                        bp[ idVerticeAdjacente ] = null;
+                        distanciaHeuristica[ idVerticeAdjacente ] = calculaDistanciaHeuristicaEuclidiana( idVerticeAdjacente, idDestino );
+                        listaPredecessores[ idVerticeAdjacente ] = new HashMap<>();
+                    }
+                    
+                    // Adiciona a lista de predecessores que serão usados em argmin
+                    if ( !listaPredecessores[ idVerticeAdjacente ].containsKey( idNodoAtual ) )
+                    {
+                        listaPredecessores[ idVerticeAdjacente ].put( idNodoAtual, new VerticeEspecialAD(idNodoAtual, a.peso) );
+                    }
+                    
+                    // 16
+                    long distanciaCalculada = g[ idNodoAtual ] + listaPredecessores[ idVerticeAdjacente ].get( idNodoAtual ).getPeso();
+                    if ( g[ idVerticeAdjacente ] > distanciaCalculada && distanciaCalculada >= 0 )
+                    {
+                        // 17
+                        bp[ idVerticeAdjacente ] = listaPredecessores[ idVerticeAdjacente ].get( idNodoAtual );
+                        // 18
+                        g[ idVerticeAdjacente ] = g[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
+                    }
+                    
+                }
+                
+                
+                
+            }
+        }
         
     }
     
