@@ -1128,10 +1128,16 @@ public class Grafo
         distanciaHeuristica[ idOrigem ] = calculaDistanciaHeuristicaEuclidiana( idOrigem, idDestino );
         
         // 9
+        rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idOrigem, g, v, distanciaHeuristica, episolon) );
+        computePathADBeta(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
+        System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
+        publicaCaminho( antecessores, idOrigem, idDestino );
+        System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+        System.out.println("");
         
     }
     
-    private void computePathADBeta( int idDestino, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, VerticeEspecialAD []bp, Set<Integer> listaFechado, Set<Integer> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, double episolon )
+    private void computePathADBeta( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, VerticeEspecialAD []bp, Set<Integer> listaFechado, Set<Integer> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, double episolon )
     {
         while( computeKeyAD(idDestino, g, v, distanciaHeuristica, episolon ) > openHeap.getMin().getKey() || v[ idDestino ] < g[ idDestino ] )
         {
@@ -1178,6 +1184,7 @@ public class Grafo
                         // 18
                         g[ idVerticeAdjacente ] = g[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
                         updateSetMembershipBeta( idVerticeAdjacente, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                        antecessores[ idVerticeAdjacente ] = bp[ idVerticeAdjacente ].idVertice;
                     }                    
                 }               
             }
@@ -1214,14 +1221,11 @@ public class Grafo
                         bp[ idVerticeAdjacente ] = argmin( idVerticeAdjacente, listaPredecessores, v );
                         g[ idVerticeAdjacente ] = v[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
                         updateSetMembershipBeta(idDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                        antecessores[ idVerticeAdjacente ] = bp[ idVerticeAdjacente ].idVertice;
                     }
-                }
-                
-                
-                
+                }               
             }
-        }
-        
+        }       
     }
     
     private void updateSetMembershipBeta( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Set< Integer > listaFechado, Set< Integer > listaInconsistens, double episolon )
