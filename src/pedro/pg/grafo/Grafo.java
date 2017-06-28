@@ -1095,6 +1095,42 @@ public class Grafo
         }
     }
     
+    public void dynamicSearchAEstrelaBeta( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
+    {
+        // Definições de variáveis
+        int []antecessores = new int[ getNumeroVertices() ];
+        long []g = new long[ getNumeroVertices() ];
+        long []v = new long[ getNumeroVertices() ];
+        VerticeEspecialAD []bp = new VerticeEspecialAD[ getNumeroVertices() ];
+        long []distanciaHeuristica = new long[ getNumeroVertices() ];
+        HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
+        HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        Set<Integer> listaFechado = new HashSet<>();
+        Set<Integer> listaInconsistentes = new HashSet<>();
+        Map<Integer, VerticeEspecialAD> []listaPredecessores = new Map[ getNumeroVertices() ];
+        EstadosVertice []estadosVertices = new EstadosVertice[ getNumeroVertices() ];
+        
+        for ( int i = 0; i < getNumeroVertices(); i++ )
+        {
+            antecessores[ i ] = i;
+            estadosVertices[ i ] = EstadosVertice.NEUTRO;
+        }
+        
+        // 7
+        g[ idDestino ] = v[ idDestino ] = Long.MAX_VALUE;
+        distanciaHeuristica[ idDestino ] = 0;
+        v[ idOrigem ] = Long.MAX_VALUE;
+        bp[ idDestino ] = bp[ idOrigem ] = null;
+        
+        // 8
+        g[ idOrigem ] = 0;
+        listaPredecessores[ idOrigem ] = new HashMap<>();
+        distanciaHeuristica[ idOrigem ] = calculaDistanciaHeuristicaEuclidiana( idOrigem, idDestino );
+        
+        // 9
+        
+    }
+    
     public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         // Definições de varíaveis
