@@ -262,6 +262,16 @@ public class Grafo
         listaFechado.clear();
     }
     
+    private void atualizaOpenAD( HeapBinario openHeap, long []g, long []v, long []distanciaHeuristica, double episolon )
+    {
+        HeapBinario.HeapNode elemento;
+        for ( int i = 0; i <= openHeap.getHeapSize(); i++ )
+        {
+            elemento = openHeap.getElementoPosicao( i );
+            openHeap.decreaseKey( elemento.getIndiceAtual(), computeKeyAD( elemento.getIdVertice(), g, v, distanciaHeuristica, episolon) );
+        }
+    }
+    
     private void atualizaOpenARA( HeapBinario openHeap, long []g, long []distanciaHeuristica, double episolon )
     {
         HeapBinario.HeapNode elemento;
@@ -939,21 +949,7 @@ public class Grafo
             estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
         }
     }
-    
-    private void atualizaOpenAD( HeapBinario openHeap, long []distanciaReal, long []v, long []distanciaHeuristica, double episolon )
-    {
-        HeapBinario.HeapNode novoNodo;
-        long novaDistancia;
-        int indice;
-        for ( int i = 0; i <= openHeap.getHeapSize(); i++ )
-        {
-            novoNodo = openHeap.getElementoPosicao(i);
-            indice = novoNodo.getIdVertice();
-            novaDistancia = computeKeyAD(indice, distanciaReal, v, distanciaHeuristica, episolon );
-            openHeap.decreaseKey( novoNodo.getIndiceAtual(), novaDistancia);
-        }
-    }
-        
+           
     private long computeKeyAD( int idVertice, long []g, long []v, long []distanciaHeuristica, double episolon )
     {
         if ( v[ idVertice ] >= g[ idVertice ] )
@@ -1135,6 +1131,29 @@ public class Grafo
         System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
         System.out.println("");
         
+        while ( episolon > 1 )
+        {
+            episolon -= fatorDeCorte;
+            repassaInconsistentesParaAbertoADBeta(openHeap, rastreadorOpen, listaInconsistentes, v, g, distanciaHeuristica, estadosVertices, episolon);
+            atualizaOpenAD(openHeap, g, v, distanciaHeuristica, episolon);
+            limpaFechadoARA(listaFechado, estadosVertices);
+            computePathADBeta(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
+            System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
+            publicaCaminho( antecessores, idOrigem, idDestino );
+            System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+            System.out.println("");
+        }
+        
+    }
+    
+    private void repassaInconsistentesParaAbertoADBeta( HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, Set< Integer> listaInconsistenstes, long []v, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
+    {
+        for ( Integer e: listaInconsistenstes )
+        {
+            rastreadorOpen[ e ] = openHeap.insertHeap( e, computeKeyAD( e, g, v, distanciaHeuristica, episolon) );
+            estadosVertices[ e ] = EstadosVertice.ABERTO;            
+        }
+        listaInconsistenstes.clear();
     }
     
     private void computePathADBeta( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, VerticeEspecialAD []bp, Set<Integer> listaFechado, Set<Integer> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, double episolon )
