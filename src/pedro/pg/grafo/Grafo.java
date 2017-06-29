@@ -1093,7 +1093,7 @@ public class Grafo
         }
     }
     
-    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores)
+    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores, List<Aresta> arestasModificadas )
     {
         SecureRandom random = new SecureRandom();
         
@@ -1114,6 +1114,7 @@ public class Grafo
                 {
                     listaPredecessores[ a.idVerticeDestino ].get( verticeInicialSorteado ).peso = novoPeso;
                 }
+                arestasModificadas.add( a );
                 
                 break;
             }
@@ -1133,6 +1134,7 @@ public class Grafo
         long []distanciaHeuristica = new long[ getNumeroVertices() ];
         HeapBinario openHeap = new HeapBinario( getNumeroVertices() );
         HeapBinario.HeapNode []rastreadorOpen = new HeapBinario.HeapNode[ getNumeroVertices() ];
+        List<Aresta> arestasModificadas = new LinkedList<>();
         Set<Integer> listaFechado = new HashSet<>();
         Set<Integer> listaInconsistentes = new HashSet<>();
         Map<Integer, VerticeEspecialAD> []listaPredecessores = new Map[ getNumeroVertices() ];
@@ -1166,6 +1168,20 @@ public class Grafo
         while ( episolon > 1 )
         {
             episolon -= fatorDeCorte;
+            if ( episolon == 1 )
+            {
+                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas );                
+            }
+            for ( Aresta a: arestasModificadas )
+            {
+                if ( a.idVerticeDestino != idOrigem && estadosVertices[ a.idVerticeDestino ] != EstadosVertice.NEUTRO )
+                {
+                    bp[ a.idVerticeDestino ] = argmin( a.idVerticeDestino, listaPredecessores, v );
+                    g[ a.idVerticeDestino ] = v[ bp[ a.idVerticeDestino ].idVertice ] + bp[ a.idVerticeDestino ].peso;
+                    updateSetMembershipBeta( a.idVerticeDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                }
+            }
+            arestasModificadas.clear();
             repassaInconsistentesParaAbertoADBeta(openHeap, rastreadorOpen, listaInconsistentes, v, g, distanciaHeuristica, estadosVertices, episolon);
             atualizaOpenAD(openHeap, g, v, distanciaHeuristica, episolon);
             limpaFechadoARA(listaFechado, estadosVertices);
