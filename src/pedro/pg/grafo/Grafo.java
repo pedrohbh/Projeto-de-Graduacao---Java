@@ -8,6 +8,7 @@ package pedro.pg.grafo;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ public class Grafo
     private long []cordenadasX;
     private long []cordenadasY;
     private static Scanner input;
+    private static boolean grafoFoiMudado = false;
     
  
     public Grafo()
@@ -1091,6 +1093,36 @@ public class Grafo
         }
     }
     
+    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores)
+    {
+        SecureRandom random = new SecureRandom();
+        
+        int verticeInicialSorteado = 1357;
+        int nodoSorteado = 1357;
+        int novoPeso = 80000;
+        
+        //verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.get( nodoSorteado );
+        
+        for ( Aresta a: verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes )
+        {
+            if ( a.idVerticeDestino == 1356 )
+            {
+                System.out.printf("Realizando alteração de peso.%nAresta: %d -> %d. Peso antigo: %d; Novo peso: %d%n", verticeInicialSorteado, a.idVerticeDestino, a.peso, novoPeso );
+                a.peso = novoPeso;
+                
+                if ( listaPredecessores[ a.idVerticeDestino ].containsKey( verticeInicialSorteado ) )
+                {
+                    listaPredecessores[ a.idVerticeDestino ].get( verticeInicialSorteado ).peso = novoPeso;
+                }
+                
+                break;
+            }
+            
+        }
+        
+        System.out.printf("Peso mudado com sucesso%n%n");
+    }
+    
     public void dynamicSearchAEstrelaBeta( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
     {
         // Definições de variáveis
@@ -1720,7 +1752,7 @@ public class Grafo
     {
         private final int idVeticeOrigem;
         private final int idVerticeDestino;
-        private final int peso;
+        private int peso;
         
         
         public Aresta( int origem, int destino, int peso )
