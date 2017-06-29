@@ -1308,7 +1308,18 @@ public class Grafo
                     rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, computeKeyAD( idVertice, g, v, distanciaHeuristica, episolon ) );
                 }
                 else
-                    openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), computeKeyAD(idVertice, g, v, distanciaHeuristica, episolon) );
+                {
+                    long novaChave = computeKeyAD(idVertice, g, v, distanciaHeuristica, episolon );
+                    // GAMBIARRA AQUI - CUIDADO
+                    if ( novaChave > rastreadorOpen[ idVertice ].getKey() )
+                    {
+                        rastreadorOpen[ idVertice ] = openHeap.removeElemento( rastreadorOpen[ idVertice ].getIndiceAtual() );
+                        rastreadorOpen[ idVertice ] = openHeap.insertHeap(idVertice, novaChave);
+                    }
+                    else
+                        openHeap.decreaseKey( rastreadorOpen[ idVertice ].getIndiceAtual(), novaChave );
+                    
+                }
                 
                 estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
             }
