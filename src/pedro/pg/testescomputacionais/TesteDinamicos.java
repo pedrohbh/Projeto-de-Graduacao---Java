@@ -28,7 +28,7 @@ import pedro.pg.grafo.Grafo;
  */
 public class TesteDinamicos 
 {
-    private static Formatter arquivoTempo;
+    private static Formatter arquivoTestesARA;
     private static Formatter arquivoVertices;
     private static Formatter arquivoSolucao;
     private static final int NUM_RODADAS = 5;
@@ -54,21 +54,21 @@ public class TesteDinamicos
         }
     }
     
-    public static void openFileTempoComputacional()
+    public static void openFileTestesARA()
     {
         try
         {
-            arquivoTempo = new Formatter("ResultadosAEstrelaTempo.csv");
-            arquivoTempo.format( "Nome Instância;Número de Vértices;Número de Arestas;Tempo médio Dijkstra;Tempo médio Dijkstra Adptado;Tempo médio A*;Tempo médio A* Manhattan%n");
+            arquivoTestesARA = new Formatter("ResultadosARA.csv");
+            arquivoTestesARA.format( "Nome Instância;Número de Vértices;Número de Arestas;Epsisolon;NVA A*;Tempo médio A*;NVA ARA*;Tempo médio ARA*;Ganho de tempo com realção ao A*");
         }
         catch ( FileNotFoundException e )
         {
-            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAEstrela.csv\".");
+            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosARA.csv\".");
             System.exit( 1 );
         }
         catch ( SecurityException e )
         {
-            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrela.csv\".");
+            System.err.println("Error de permissão de escrita no arquivo \"ResultadosARA.csv\".");
             System.exit( 1 );
         }
     }
@@ -133,11 +133,11 @@ public class TesteDinamicos
         }
     }
     
-    public static void escreveDadosTempo( String nomeInstancia, int numeroVertices, int numeroArestas, long tempoDijkstra, long tempoDijkstraAdptado, long tempoAestrela, long tempoAManhattan )
+    public static void escreveDadosTestesARA( String nomeInstancia, int numeroVertices, int numeroArestas, long tempoDijkstra, long tempoDijkstraAdptado, long tempoAestrela, long tempoAManhattan )
     {
         try
         {
-            arquivoTempo.format("%s;%d;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, tempoDijkstra, tempoDijkstraAdptado, tempoAestrela, tempoAManhattan );
+            arquivoTestesARA.format("%s;%d;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, tempoDijkstra, tempoDijkstraAdptado, tempoAestrela, tempoAManhattan );
             
         }
         catch ( FormatterClosedException e)
@@ -166,12 +166,12 @@ public class TesteDinamicos
         SecureRandom randomNumbers = new SecureRandom();
         
         openFileSolucao();
-        openFileTempoComputacional();
+        openFileTestesARA();
         openFileVerticesAbertos();
         
         try ( DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes") ) )
         {
-            paths.forEach( filePath -> 
+            paths.forEach(filePath -> 
             {
                 long tempoDijsktra = 0;
                 
@@ -287,7 +287,7 @@ public class TesteDinamicos
                     
                     porcentagemCusto /= (double)NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
-                    escreveDadosTempo(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
+                    escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
                     escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosDijkstraAdptado, verticesAbertosAEstrela, verticesAbertosAManhattan );
                     escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
                 }
@@ -301,7 +301,7 @@ public class TesteDinamicos
             System.exit( 1 );
         }
         
-        fechaArquivo(arquivoTempo);
+        fechaArquivo(arquivoTestesARA);
         fechaArquivo(arquivoVertices);
         fechaArquivo(arquivoSolucao);
         
