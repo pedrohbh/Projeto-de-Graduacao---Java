@@ -182,21 +182,23 @@ public class TesteDinamicos
             {
                 long tempoDijsktra = 0;
                 
-                long tempoLocalDijsktraAdpatado = 0;
+                long tempoLocalARA = 0;
                 long tempoLocalAEstrela = 0;
                 long tempoLocalAManhattan = 0;
                 
-                long tempoGlobalDijsktraAdptado = 0;
+                long tempoGlobalARA = 0;
                 long tempoGlobalAEstrela = 0;
                 long tempoGlobalAManhattan = 0; 
                 
-                long verticesAbertosDijkstraAdptado = 0;
+                long verticesAbertosARA = 0;
                 long verticesAbertosAEstrela = 0;
                 long verticesAbertosAManhattan = 0;
                 
                 long custoNaoAdmissivel = 0;
                 long custoAdmissivel = 0;
                 double porcentagemCusto = 0;
+                
+                double episolon = 3;
                 
                 if ( !Files.isDirectory(filePath) )
                 {
@@ -207,20 +209,9 @@ public class TesteDinamicos
                     String arquivoDeCordenadas = "/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes/Cordenadas/" + (filePath.getFileName().toString().replace(".gr", ".co"));
                     g.leArquivoDeCordenadas(arquivoDeCordenadas);
                     
-                    // Dijkstra Canônico
-                    for ( int j = 0; j < NUM_RODADAS; j++ )
-                    {
-                        Instant startDijkstra = Instant.now();
-                        g.dijkstraHeapBinario( 0 , -1 );
-                        Instant endDijkstra = Instant.now();
-                        
-                        tempoDijsktra += Duration.between(startDijkstra, endDijkstra).toMillis();
-                    }
-                    tempoDijsktra /= NUM_RODADAS;
-                    
                     for ( int i = 0; i < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; i++ )
                     {
-                        tempoLocalDijsktraAdpatado = 0;
+                        tempoLocalARA = 0;
                         tempoLocalAEstrela = 0;
                         tempoLocalAManhattan = 0;
                         
@@ -231,20 +222,7 @@ public class TesteDinamicos
                         } while ( verticesSorteados.contains( verticeEscolhido ) || verticeEscolhido == 0 );
                         
                         verticesSorteados.add(verticeEscolhido);
-                        
-                        // Dijkstra Adptado
-                        for ( int j = 0; j < NUM_RODADAS; j++ )
-                        {
-                            Instant startDijkstraAdptado = Instant.now();
-                            g.dijkstraHeapBinarioAdptado( 0 , verticeEscolhido, false );
-                            Instant endDijsktraAdptado = Instant.now();
-                            
-                            tempoLocalDijsktraAdpatado += Duration.between(startDijkstraAdptado, endDijsktraAdptado).toMillis();
-                        }
-                        
-                        tempoLocalDijsktraAdpatado /= NUM_RODADAS;
-                        tempoGlobalDijsktraAdptado += tempoLocalDijsktraAdpatado;
-                        
+                                                
                         // Algortimo A*
                         for ( int j = 0; j < NUM_RODADAS; j++ )
                         {
@@ -257,21 +235,19 @@ public class TesteDinamicos
                         tempoLocalAEstrela /= NUM_RODADAS;
                         tempoGlobalAEstrela += tempoLocalAEstrela;
                         
-                        // Algortimo A* não-admissíveil
+                        // Algortimo ARA*
                         for ( int j = 0; j < NUM_RODADAS; j++ )
                         {
-                            // Algoritmo A* não-admissível
-                            Instant startNaoAdmissivel = Instant.now();
-                            g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false, false );
-                            Instant endNaoAdmissivel = Instant.now();
+                            Instant startARA = Instant.now();
+                            g.medeTempoAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
+                            Instant endARA = Instant.now();
                             
-                            tempoLocalAManhattan += Duration.between(startNaoAdmissivel, endNaoAdmissivel).toMillis();
+                            tempoLocalARA += Duration.between(startARA, endARA).toMillis();
                         }
-                        tempoLocalAManhattan /= NUM_RODADAS;
-                        tempoGlobalAManhattan += tempoLocalAManhattan;
-                        
+                        tempoLocalARA /= NUM_RODADAS;
+                        tempoGlobalARA += tempoLocalARA;
+                                                
                         // Início da contagem de vértices abertos
-                        verticesAbertosDijkstraAdptado += g.contaNumeroDeVerticesAbertosDijkstraAdptado( 0 ,  verticeEscolhido );
                         verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
                         verticesAbertosAManhattan += g.contaNumeroDeVerticesAbertosAEstrelaNaoAdmissivel( 0, verticeEscolhido );
                         
@@ -285,17 +261,17 @@ public class TesteDinamicos
                     // Tirando a média dos tempos globais
                     tempoGlobalAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     tempoGlobalAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    tempoGlobalDijsktraAdptado /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    tempoGlobalARA /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
                     // Tirando a média do número de vértices abertos
-                    verticesAbertosDijkstraAdptado /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                    verticesAbertosARA /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
                     porcentagemCusto /= (double)NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
-                    //escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
-                    escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosDijkstraAdptado, verticesAbertosAEstrela, verticesAbertosAManhattan );
+                    //escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalARA, tempoGlobalAEstrela, tempoGlobalAManhattan );
+                    escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosARA, verticesAbertosAEstrela, verticesAbertosAManhattan );
                     escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
                 }
             }
