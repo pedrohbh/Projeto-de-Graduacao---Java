@@ -266,11 +266,7 @@ public class TesteDinamicos
                         }
                         // Contagem de vértices abertos AEstrela
                         verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
-                        
-                        // Verifica solução entre Admissível e não-admissível
-                        custoAdmissivel = g.algoritmoAEstrela(0, verticeEscolhido, false, true );
-                        custoNaoAdmissivel = g.algoritmoAEstrelaManhattan( 0, verticeEscolhido, false, true );
-                        porcentagemCusto += (double)Math.abs( custoNaoAdmissivel - custoAdmissivel ) / custoAdmissivel;
+                                                
                     }
                     verticesSorteados.clear();
                     
@@ -324,6 +320,13 @@ public class TesteDinamicos
         public void adicionaATempoExistente( long novoTempo )
         {
             this.tempoAssociado += novoTempo;
+        }
+
+        /**
+         * @return the tempoAssociado
+         */
+        public long getTempoAssociado() {
+            return tempoAssociado;
         }
     }
     
