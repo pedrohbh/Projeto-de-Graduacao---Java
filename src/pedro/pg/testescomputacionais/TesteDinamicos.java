@@ -17,8 +17,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Formatter;
 import java.util.FormatterClosedException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import pedro.pg.grafo.Grafo;
 
@@ -36,7 +38,7 @@ public class TesteDinamicos
     private static final double EPISOLON_INICIAL = 3.0;
     private static final double FATOR_DE_CORTE = 0.5;
     private static final List<Integer> verticesSorteados = new LinkedList<>();
-    private static final List<GuardaTempo> resultadosAra = new LinkedList<>();
+    private static final Map<Double, GuardaTempo> resultadosAra = new HashMap<>();
     
     public static void openFileSolucao()
     {
@@ -250,13 +252,17 @@ public class TesteDinamicos
                                 tempoLocalARA += Duration.between(startARA, endARA).toMillis();
                             }
                             tempoLocalARA /= NUM_RODADAS;
-                            tempoGlobalARA += tempoLocalARA;
+                            //tempoGlobalARA += tempoLocalARA;
                                                 
                             // Contagem de vértices abertos ARA
                             verticesAbertosARA += g.calculaVerticesAbertosAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
-                            resultadosAra.add( new GuardaTempo(episolon, tempoGlobalARA, verticesAbertosARA ) );
-                            // FALTA VER O TEMPO AINDA
-                            episolon -= FATOR_DE_CORTE;
+                            if ( !resultadosAra.containsKey( episolon ) )
+                                resultadosAra.put(episolon, new GuardaTempo(episolon, tempoLocalARA, verticesAbertosARA ) );
+                            else
+                                resultadosAra.get( episolon ).adicionaATempoExistente( tempoLocalARA );
+                            
+                            
+                            episolon -= FATOR_DE_CORTE;                            
                         }
                         // Contagem de vértices abertos AEstrela
                         verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
@@ -304,7 +310,7 @@ public class TesteDinamicos
     
     private static class GuardaTempo
     {
-        private final long tempoAssociado;
+        private long tempoAssociado;
         private final double episolon;
         private final long verticesAberto;
         
@@ -313,6 +319,11 @@ public class TesteDinamicos
             this.episolon = episolon;
             this.tempoAssociado = tempoAssociado;
             this.verticesAberto = verticesAbertos;
+        }
+        
+        public void adicionaATempoExistente( long novoTempo )
+        {
+            this.tempoAssociado += novoTempo;
         }
     }
     
