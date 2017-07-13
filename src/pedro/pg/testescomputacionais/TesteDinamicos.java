@@ -133,11 +133,18 @@ public class TesteDinamicos
         }
     }
     
-    public static void escreveDadosTestesARA( String nomeInstancia, int numeroVertices, int numeroArestas, long tempoDijkstra, long tempoDijkstraAdptado, long tempoAestrela, long tempoAManhattan )
+    public static void escreveDadosTestesARA( String nomeInstancia, int numeroVertices, int numeroArestas, boolean escreveNome, double epsiolon, long tempoARA, long tempoA, long nvaA, long nvaARA )
     {
         try
         {
-            arquivoTestesARA.format("%s;%d;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, tempoDijkstra, tempoDijkstraAdptado, tempoAestrela, tempoAManhattan );
+            
+            if ( escreveNome )
+                arquivoTestesARA.format("%s;;;;;;;;", nomeInstancia);
+            else
+            {
+                String porcentagem = NumberFormat.getPercentInstance().format( (double)(tempoA / tempoARA) );
+                arquivoTestesARA.format("%s;%d;%d;%f;%d;%d;%d;%d;%s", nomeInstancia, numeroVertices, numeroArestas, epsiolon, nvaA, tempoA, nvaARA, tempoARA, porcentagem );
+            }
             
         }
         catch ( FormatterClosedException e)
@@ -287,7 +294,7 @@ public class TesteDinamicos
                     
                     porcentagemCusto /= (double)NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     
-                    escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
+                    //escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalDijsktraAdptado, tempoGlobalAEstrela, tempoGlobalAManhattan );
                     escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosDijkstraAdptado, verticesAbertosAEstrela, verticesAbertosAManhattan );
                     escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
                 }
