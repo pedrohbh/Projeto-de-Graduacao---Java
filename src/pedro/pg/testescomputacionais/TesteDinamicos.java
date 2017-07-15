@@ -138,19 +138,12 @@ public class TesteDinamicos
         }
     }
     
-    public static void escreveDadosTestesARA( String nomeInstancia, int numeroVertices, int numeroArestas, boolean escreveNome, double epsiolon, long tempoARA, long tempoA, long nvaA, long nvaARA )
+    public static void escreveDadosTestesARA( String nomeInstancia, int numeroVertices, int numeroArestas, double epsiolon, long tempoARA, long tempoA, long nvaA, long nvaARA )
     {
         try
-        {
-            
-            if ( escreveNome )
-                arquivoTestesARA.format("%s;;;;;;;;", nomeInstancia);
-            else
-            {
-                String porcentagem = NumberFormat.getPercentInstance().format( (double)(tempoA / tempoARA) );
-                arquivoTestesARA.format("%s;%d;%d;%f;%d;%d;%d;%d;%s", nomeInstancia, numeroVertices, numeroArestas, epsiolon, nvaA, tempoA, nvaARA, tempoARA, porcentagem );
-            }
-            
+        {            
+            String porcentagem = NumberFormat.getPercentInstance().format( (double)(tempoA / tempoARA) );
+            arquivoTestesARA.format("%s;%d;%d;%f;%d;%d;%d;%d;%s", nomeInstancia, numeroVertices, numeroArestas, epsiolon, nvaA, tempoA, nvaARA, tempoARA, porcentagem );                     
         }
         catch ( FormatterClosedException e)
         {
@@ -265,7 +258,8 @@ public class TesteDinamicos
                             }
                             
                             
-                            episolon -= FATOR_DE_CORTE;                            
+                            episolon -= FATOR_DE_CORTE;
+                            tempoLocalARA = 0;
                         }
                         // Contagem de vértices abertos AEstrela
                         verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
@@ -275,19 +269,13 @@ public class TesteDinamicos
                     
                     // Tirando a média dos tempos globais
                     tempoGlobalAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    tempoGlobalAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    tempoGlobalARA /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    
+                                        
                     // Tirando a média do número de vértices abertos
-                    verticesAbertosARA /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                     verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    verticesAbertosAManhattan /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    
-                    porcentagemCusto /= (double)NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    
+                                        
                     //escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalARA, tempoGlobalAEstrela, tempoGlobalAManhattan );
-                    escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosARA, verticesAbertosAEstrela, verticesAbertosAManhattan );
-                    escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
+                    //escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosARA, verticesAbertosAEstrela, verticesAbertosAManhattan );
+                    //escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
                 }
             }
             );
