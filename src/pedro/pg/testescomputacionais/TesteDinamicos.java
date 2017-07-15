@@ -264,18 +264,23 @@ public class TesteDinamicos
                         // Contagem de vértices abertos AEstrela
                         verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
                                                 
-                    }
-                    verticesSorteados.clear();
-                    
+                    }                   
                     // Tirando a média dos tempos globais
                     tempoGlobalAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                                         
                     // Tirando a média do número de vértices abertos
                     verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                                        
-                    //escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), tempoDijsktra, tempoGlobalARA, tempoGlobalAEstrela, tempoGlobalAManhattan );
-                    //escreveDadosVertices(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), verticesAbertosARA, verticesAbertosAEstrela, verticesAbertosAManhattan );
-                    //escreveDadosSolucao(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), porcentagemCusto );
+                    
+                    episolon = EPISOLON_INICIAL;
+                    while ( episolon >= 1 )
+                    {
+                        tempoGlobalARA = resultadosAra.get( episolon ).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                        verticesAbertosARA = resultadosAra.get( episolon ).getVerticesAberto() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                        escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), episolon, tempoGlobalARA, tempoGlobalAEstrela, verticesAbertosAEstrela, verticesAbertosARA);
+                        episolon -= FATOR_DE_CORTE;
+                    }
+                    resultadosAra.clear();
+                    verticesSorteados.clear();
                 }
             }
             );
@@ -323,6 +328,20 @@ public class TesteDinamicos
          */
         public long getTempoAssociado() {
             return tempoAssociado;
+        }
+
+        /**
+         * @return the episolon
+         */
+        public double getEpisolon() {
+            return episolon;
+        }
+
+        /**
+         * @return the verticesAberto
+         */
+        public long getVerticesAberto() {
+            return verticesAberto;
         }
     }
     
