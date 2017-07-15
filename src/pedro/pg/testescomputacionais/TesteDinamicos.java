@@ -18,10 +18,10 @@ import java.time.Instant;
 import java.util.Formatter;
 import java.util.FormatterClosedException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import pedro.pg.grafo.Grafo;
 
 /**
@@ -37,7 +37,7 @@ public class TesteDinamicos
     private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
     private static final double EPISOLON_INICIAL = 3.0;
     private static final double FATOR_DE_CORTE = 0.5;
-    private static final List<Integer> verticesSorteados = new LinkedList<>();
+    private static final Set<Integer> verticesSorteados = new HashSet<>();
     private static final Map<Double, GuardaTempo> resultadosAra = new HashMap<>();
     
     public static void openFileSolucao()
@@ -255,11 +255,14 @@ public class TesteDinamicos
                             //tempoGlobalARA += tempoLocalARA;
                                                 
                             // Contagem de vértices abertos ARA
-                            verticesAbertosARA += g.calculaVerticesAbertosAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
+                            verticesAbertosARA = g.calculaVerticesAbertosAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
                             if ( !resultadosAra.containsKey( episolon ) )
                                 resultadosAra.put(episolon, new GuardaTempo(episolon, tempoLocalARA, verticesAbertosARA ) );
                             else
+                            {
                                 resultadosAra.get( episolon ).adicionaATempoExistente( tempoLocalARA );
+                                resultadosAra.get( episolon ).adicionaAVerticesAbertosExistentes(custoAdmissivel);
+                            }
                             
                             
                             episolon -= FATOR_DE_CORTE;                            
@@ -308,7 +311,7 @@ public class TesteDinamicos
     {
         private long tempoAssociado;
         private final double episolon;
-        private final long verticesAberto;
+        private long verticesAberto;
         
         public GuardaTempo( double episolon, long tempoAssociado, long verticesAbertos )
         {
@@ -320,6 +323,11 @@ public class TesteDinamicos
         public void adicionaATempoExistente( long novoTempo )
         {
             this.tempoAssociado += novoTempo;
+        }
+        
+        public void adicionaAVerticesAbertosExistentes( long novoVertices )
+        {
+            this.verticesAberto += novoVertices;
         }
 
         /**
