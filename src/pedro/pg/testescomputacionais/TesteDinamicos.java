@@ -64,7 +64,7 @@ public class TesteDinamicos
         try
         {
             arquivoTestesARA = new Formatter("ResultadosARA.csv");
-            arquivoTestesARA.format( "Nome Instância;Número de Vértices;Número de Arestas;Epsisolon;NVA A*;Tempo médio A*;NVA ARA*;Tempo médio ARA*;Ganho de tempo com realção ao A*");
+            arquivoTestesARA.format( "Nome Instância;Número de Vértices;Número de Arestas;Epsisolon;NVA A*;Tempo médio A*;NVA ARA*;Tempo médio ARA*;Ganho de tempo com realção ao A*%n");
         }
         catch ( FileNotFoundException e )
         {
@@ -143,7 +143,7 @@ public class TesteDinamicos
         try
         {            
             String porcentagem = NumberFormat.getPercentInstance().format( (double)(tempoA / tempoARA) );
-            arquivoTestesARA.format("%s;%d;%d;%f;%d;%d;%d;%d;%s", nomeInstancia, numeroVertices, numeroArestas, epsiolon, nvaA, tempoA, nvaARA, tempoARA, porcentagem );                     
+            arquivoTestesARA.format("%s;%d;%d;%s;%d;%d;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, epsiolon, nvaA, tempoA, nvaARA, tempoARA, porcentagem );                     
         }
         catch ( FormatterClosedException e)
         {
@@ -170,9 +170,9 @@ public class TesteDinamicos
     {
         SecureRandom randomNumbers = new SecureRandom();
         
-        openFileSolucao();
+        //openFileSolucao();
         openFileTestesARA();
-        openFileVerticesAbertos();
+        //openFileVerticesAbertos();
         
         try ( DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes") ) )
         {
@@ -228,7 +228,7 @@ public class TesteDinamicos
                             g.algoritmoAEstrela( 0 ,  verticeEscolhido, false, false );
                             Instant endAEstrela = Instant.now();
                             
-                            tempoLocalAEstrela += Duration.between(startAEstrela, endAEstrela).toMillis();
+                            tempoLocalAEstrela += Duration.between(startAEstrela, endAEstrela).toNanos();
                         }
                         tempoLocalAEstrela /= NUM_RODADAS;
                         tempoGlobalAEstrela += tempoLocalAEstrela;
@@ -242,7 +242,7 @@ public class TesteDinamicos
                                 g.medeTempoAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
                                 Instant endARA = Instant.now();
                             
-                                tempoLocalARA += Duration.between(startARA, endARA).toMillis();
+                                tempoLocalARA += Duration.between(startARA, endARA).toNanos();
                             }
                             tempoLocalARA /= NUM_RODADAS;
                             //tempoGlobalARA += tempoLocalARA;
