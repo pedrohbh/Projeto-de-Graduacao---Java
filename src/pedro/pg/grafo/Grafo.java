@@ -1102,19 +1102,26 @@ public class Grafo
         return listaPredecessores[ idVertice ].get( minId );
     }
          
-    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores, List<Aresta> arestasModificadas )
+    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores, List<Aresta> arestasModificadas, final HeapBinario openHeap, boolean aumetarAresta )
     {
         SecureRandom random = new SecureRandom();
         
-        int verticeInicialSorteado = 1357;
-        int nodoSorteado = 1357;
-        int novoPeso = 80000;
+        int verticeInicialSorteado = random.nextInt() % (openHeap.getHeapSize() + 1);
+        verticeInicialSorteado = openHeap.getElementoPosicao( verticeInicialSorteado ).getIdVertice();
+        int nodoSorteado = random.nextInt() % verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.size();
+        nodoSorteado = verticesGrafo[ nodoSorteado ].idVertice;
+        int novoPeso;
+        
+        if ( aumetarAresta )
+            novoPeso = 80000;
+        else
+            novoPeso = 20;
         
         //verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.get( nodoSorteado );
         
         for ( Aresta a: verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes )
         {
-            if ( a.idVerticeDestino == 1356 )
+            if ( a.idVerticeDestino == nodoSorteado )
             {
                 System.out.printf("Realizando alteração de peso.%nAresta: %d -> %d. Peso antigo: %d; Novo peso: %d%n", verticeInicialSorteado, a.idVerticeDestino, a.peso, novoPeso );
                 a.peso = novoPeso;
@@ -1179,7 +1186,7 @@ public class Grafo
             episolon -= fatorDeCorte;
             if ( episolon == 1 )
             {
-                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas );                
+                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, true );                
             }
             for ( Aresta a: arestasModificadas )
             {
