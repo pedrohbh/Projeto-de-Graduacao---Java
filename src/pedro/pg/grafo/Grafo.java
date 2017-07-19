@@ -47,6 +47,15 @@ public class Grafo
         cordenadasY = null;
     }
     
+    public Grafo( Grafo novoGrafo )
+    {
+        this.cordenadasX = novoGrafo.cordenadasX;
+        this.cordenadasY = novoGrafo.cordenadasY;
+        this.numeroArestas = novoGrafo.numeroArestas;
+        this.numeroVertices = novoGrafo.numeroVertices;
+        this.verticesGrafo = novoGrafo.verticesGrafo;
+    }
+    
     public void buscaEmLargutaPorVertice( int idVertice )
     {
         List<Integer> verticesChegaveis = new LinkedList<>();
