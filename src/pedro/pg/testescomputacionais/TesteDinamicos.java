@@ -31,7 +31,7 @@ import pedro.pg.grafo.Grafo;
 public class TesteDinamicos 
 {
     private static Formatter arquivoTestesARA;
-    private static Formatter arquivoVertices;
+    private static Formatter arquivoTestesAD;
     private static Formatter arquivoSolucao;
     private static final int NUM_RODADAS = 5;
     private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
@@ -78,12 +78,12 @@ public class TesteDinamicos
         }
     }
     
-    public static void openFileVerticesAbertos()
+    public static void openFileTestesAD()
     {
         try
         {
-            arquivoVertices = new Formatter("ResultadosAEstrelaVertices.csv");
-            arquivoVertices.format("Nome Instância;Número de Vértices;Número de Arestas;NVA Dijkstra Adptado;NVA A*;NVA A* Manhattan%n" );
+            arquivoTestesAD = new Formatter("ResultadosAEstrelaVertices.csv");
+            arquivoTestesAD.format("Nome Instância;Número de Vértices;Número de Arestas;NVA Dijkstra Adptado;NVA A*;NVA A* Manhattan%n" );
         }
         catch ( FileNotFoundException e )
         {
@@ -97,11 +97,11 @@ public class TesteDinamicos
         }
     }
     
-    public static void escreveDadosVertices( String nomeInstancia, int numeroVertices, int numeroArestas, long dijkstraAdptado, long aEstrela, long aManhattan )
+    public static void escreveDadosTestesAD( String nomeInstancia, int numeroVertices, int numeroArestas, long dijkstraAdptado, long aEstrela, long aManhattan )
     {
         try
         {
-            arquivoVertices.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
+            arquivoTestesAD.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
         }
         catch ( FormatterClosedException e)
         {
@@ -293,7 +293,7 @@ public class TesteDinamicos
         }
         
         fechaArquivo(arquivoTestesARA);
-        fechaArquivo(arquivoVertices);
+        fechaArquivo(arquivoTestesAD);
         fechaArquivo(arquivoSolucao);
         
         System.out.println("SUCESS");
