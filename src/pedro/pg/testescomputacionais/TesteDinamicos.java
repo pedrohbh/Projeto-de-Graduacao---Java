@@ -82,26 +82,28 @@ public class TesteDinamicos
     {
         try
         {
-            arquivoTestesAD = new Formatter("ResultadosAEstrelaVertices.csv");
-            arquivoTestesAD.format("Nome Instância;Número de Vértices;Número de Arestas;NVA Dijkstra Adptado;NVA A*;NVA A* Manhattan%n" );
+            arquivoTestesAD = new Formatter("ResultadosAD.csv");
+            arquivoTestesAD.format("Nome Instância;Número Vértices;Número Arestas;Modo;Tempo A*;NVA A*;Tempo AD*;NVA AD*;Ganho em relação ao A*%n");
         }
         catch ( FileNotFoundException e )
         {
-            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAEstrelaVertices.csv\".");
+            System.err.println("Erro ao abrir o arquivo de escrita \"ResultadosAD.csv\".");
             System.exit( 1 );
         }
         catch ( SecurityException e )
         {
-            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAEstrelaVertices.csv\".");
+            System.err.println("Error de permissão de escrita no arquivo \"ResultadosAD.csv\".");
             System.exit( 1 );
         }
     }
     
-    public static void escreveDadosTestesAD( String nomeInstancia, int numeroVertices, int numeroArestas, long dijkstraAdptado, long aEstrela, long aManhattan )
+    public static void escreveDadosTestesAD( String nomeInstancia, int numeroVertices, int numeroArestas, String modo, long tempoAEstrela, long nvaA, long tempoAD, long nvaAD )
     {
         try
         {
-            arquivoTestesAD.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
+            String porcentagem = NumberFormat.getPercentInstance().format( (double)(tempoAEstrela / tempoAD) );
+            //arquivoTestesAD.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
+            arquivoTestesAD.format("%s;%d;%d;%s;%d;%d;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, modo, porcentagem );
         }
         catch ( FormatterClosedException e)
         {
