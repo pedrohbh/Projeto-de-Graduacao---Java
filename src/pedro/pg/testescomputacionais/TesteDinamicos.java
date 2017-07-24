@@ -267,6 +267,34 @@ public class TesteDinamicos
                                     else
                                         resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
                                 }
+                                
+                                // Parte AD* Normal começa aqui
+                            }
+                            // Parte de diminuir o peso das arestas do grafo
+                            else if ( modoAtual == ModosAD.DIMINUI )
+                            {
+                                tempoGlobalAEstrelaDinamico = 0;
+                                tempoLocalAEstrelaDinamico = 0;
+                                for ( int m = 0; m < porcentagem.length; m++ )
+                                {
+                                    double porcentagemAtual = porcentagem[ m ];
+                                    // FUNÇÂO DE ALTERAR PESOS
+                                    for ( int l = 0; l < NUM_RODADAS; l++ )
+                                        {
+                                            Instant startAEstrelaDinamico = Instant.now();
+                                            g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
+                                            Instant endAEstrelaDinamico = Instant.now();
+                                        
+                                            tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
+                                        }
+                                        tempoLocalAEstrelaDinamico /= NUM_RODADAS;
+                                        tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
+                                    
+                                        if ( !resultadosADinamico.containsKey( (double)0 ) )
+                                            resultadosADinamico.put( (double)0 , new GuardaTempo( 0, tempoGlobalAEstrelaDinamico, 0) );
+                                        else
+                                            resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                }
                             }
                             
                         }
