@@ -278,6 +278,8 @@ public class TesteDinamicos
                                 for ( int m = 0; m < porcentagem.length; m++ )
                                 {
                                     double porcentagemAtual = porcentagem[ m ];
+                                    tempoLocalAEstrelaDinamico = 0;
+                                    tempoGlobalAEstrelaDinamico = 0;
                                     // FUNÇÂO DE ALTERAR PESOS
                                     for ( int l = 0; l < NUM_RODADAS; l++ )
                                         {
@@ -290,10 +292,37 @@ public class TesteDinamicos
                                         tempoLocalAEstrelaDinamico /= NUM_RODADAS;
                                         tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
                                     
-                                        if ( !resultadosADinamico.containsKey( (double)0 ) )
-                                            resultadosADinamico.put( (double)0 , new GuardaTempo( 0, tempoGlobalAEstrelaDinamico, 0) );
+                                        if ( !resultadosADinamico.containsKey( porcentagemAtual ) )
+                                            resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
-                                            resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                            resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                }
+                            }
+                            else if ( modoAtual == ModosAD.AUMENTAR )
+                            {
+                                tempoGlobalAEstrelaDinamico = 0;
+                                tempoLocalAEstrelaDinamico = 0;
+                                for ( int m = 0; m < porcentagem.length; m++ )
+                                {
+                                    double porcentagemAtual = porcentagem[ m ];
+                                    tempoLocalAEstrelaDinamico = 0;
+                                    tempoGlobalAEstrelaDinamico = 0;
+                                    // FUNÇÂO DE ALTERAR PESOS
+                                    for ( int l = 0; l < NUM_RODADAS; l++ )
+                                        {
+                                            Instant startAEstrelaDinamico = Instant.now();
+                                            g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
+                                            Instant endAEstrelaDinamico = Instant.now();
+                                        
+                                            tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
+                                        }
+                                        tempoLocalAEstrelaDinamico /= NUM_RODADAS;
+                                        tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
+                                    
+                                        if ( !resultadosADinamico.containsKey( porcentagemAtual ) )
+                                            resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
+                                        else
+                                            resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
                                 }
                             }
                             
