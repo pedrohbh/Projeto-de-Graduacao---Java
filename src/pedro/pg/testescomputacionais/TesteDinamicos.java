@@ -43,6 +43,7 @@ public class TesteDinamicos
     private static final double FATOR_DE_CORTE = 0.5;
     private static final Set<Integer> verticesSorteados = new HashSet<>();
     private static final Map<Double, GuardaTempo> resultadosAra = new HashMap<>();
+    private static final Map<Double, GuardaTempo> resultadosADinamico = new HashMap<>();
     
     public static void openFileSolucao()
     {
@@ -187,11 +188,11 @@ public class TesteDinamicos
                 
                 long tempoLocalARA = 0;
                 long tempoLocalAEstrela = 0;
-                long tempoLocalAManhattan = 0;
+                long tempoLocalAEstrelaDinamico = 0;
                 
                 long tempoGlobalARA = 0;
                 long tempoGlobalAEstrela = 0;
-                long tempoGlobalAManhattan = 0; 
+                long tempoGlobalAEstrelaDinamico = 0; 
                 
                 long verticesAbertosARA = 0;
                 long verticesAbertosAEstrela = 0;
@@ -216,7 +217,7 @@ public class TesteDinamicos
                     {
                         tempoLocalARA = 0;
                         tempoLocalAEstrela = 0;
-                        tempoLocalAManhattan = 0;
+                        tempoLocalAEstrelaDinamico = 0;
                         
                         int verticeEscolhido;
                         do
@@ -247,6 +248,25 @@ public class TesteDinamicos
                             {
                                 grafoOrignal = new Grafo( g );
                                 
+                                // Parte A*
+                                for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
+                                {
+                                    for ( int l = 0; l < NUM_RODADAS; l++ )
+                                    {
+                                        Instant startAEstrelaDinamico = Instant.now();
+                                        g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
+                                        Instant endAEstrelaDinamico = Instant.now();
+                                        
+                                        tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
+                                    }
+                                    tempoLocalAEstrelaDinamico /= NUM_RODADAS;
+                                    tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
+                                    
+                                    if ( !resultadosADinamico.containsKey( (double)0 ) )
+                                        resultadosADinamico.put( (double)0 , new GuardaTempo( 0, tempoGlobalAEstrelaDinamico, 0) );
+                                    else
+                                        resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                }
                             }
                             
                         }
