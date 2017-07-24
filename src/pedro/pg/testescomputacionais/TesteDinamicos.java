@@ -33,9 +33,12 @@ public class TesteDinamicos
     private static Formatter arquivoTestesARA;
     private static Formatter arquivoTestesAD;
     private static Formatter arquivoSolucao;
+    private static ModosAD modoAtual = ModosAD.NORMAL;
+    private static final ModosAD []modosPossiveis = { ModosAD.NORMAL, ModosAD.DIMINUI, ModosAD.AUMENTAR };
     private static final double []porcentagem = { 2.5, 20.0, 50.0, 70.0 };
     private static final int NUM_RODADAS = 5;
-    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
+    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 100;
+    private static final int NUM_INSTANCIAS_CALCULADAS = 20;
     private static final double EPISOLON_INICIAL = 3.0;
     private static final double FATOR_DE_CORTE = 0.5;
     private static final Set<Integer> verticesSorteados = new HashSet<>();
@@ -235,6 +238,19 @@ public class TesteDinamicos
                         tempoLocalAEstrela /= NUM_RODADAS;
                         tempoGlobalAEstrela += tempoLocalAEstrela;
                         
+                        // Algoritmo AD* e A*
+                        for ( int j = 0; j < modosPossiveis.length; j++ )
+                        {
+                            Grafo grafoOrignal;
+                            modoAtual = modosPossiveis[ j ];
+                            if ( modoAtual == ModosAD.NORMAL )
+                            {
+                                grafoOrignal = new Grafo( g );
+                                
+                            }
+                            
+                        }
+                        
                         // Algortimo ARA*
                         while ( episolon >= 1 )
                         {                            
@@ -247,7 +263,6 @@ public class TesteDinamicos
                                 tempoLocalARA += Duration.between(startARA, endARA).toNanos();
                             }
                             tempoLocalARA /= NUM_RODADAS;
-                            //tempoGlobalARA += tempoLocalARA;
                                                 
                             // Contagem de vértices abertos ARA
                             verticesAbertosARA = g.calculaVerticesAbertosAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
