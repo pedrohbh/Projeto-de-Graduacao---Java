@@ -1163,7 +1163,7 @@ public class Grafo
             System.out.printf("Peso mudado com sucesso%n%n");
     }
     
-    public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
+    public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, boolean debug )
     {
         // Definições de variáveis
         int []antecessores = new int[ getNumeroVertices() ];
@@ -1199,10 +1199,13 @@ public class Grafo
         // 9
         rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idOrigem, g, v, distanciaHeuristica, episolon) );
         computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
-        System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
-        publicaCaminho( antecessores, idOrigem, idDestino );
-        System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
-        System.out.println("");
+        if ( debug )
+        {
+            System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
+            publicaCaminho( antecessores, idOrigem, idDestino );
+            System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+            System.out.println("");
+        }
         
         while ( episolon > 1 )
         {
@@ -1225,10 +1228,13 @@ public class Grafo
             atualizaOpenAD(openHeap, g, v, distanciaHeuristica, episolon);
             limpaFechadoARA(listaFechado, estadosVertices);
             computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
-            System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
-            publicaCaminho( antecessores, idOrigem, idDestino );
-            System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
-            System.out.println("");
+            if ( debug )
+            {
+                System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
+                publicaCaminho( antecessores, idOrigem, idDestino );
+                System.out.println("Custo total para o vértice " + idDestino + ": " + calculaDistanciaTotal(antecessores, idOrigem, idDestino) );
+                System.out.println("");
+            }
         }
         
     }
