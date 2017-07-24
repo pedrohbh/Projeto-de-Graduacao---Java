@@ -319,10 +319,12 @@ public class TesteDinamicos
                                         tempoLocalAEstrelaDinamico /= NUM_RODADAS;
                                         tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
                                     
-                                        if ( !resultadosADinamico.containsKey( porcentagemAtual ) )
-                                            resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
+                                        // Para o caso do modo de aumentar o peso das Arestas, o valor da chave será multiplicado por 100 para diferenciar das chvaves de diminuir o peso
+                                        double chaveRegistradora = porcentagemAtual * 100;
+                                        if ( !resultadosADinamico.containsKey( chaveRegistradora ) )
+                                            resultadosADinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
-                                            resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                            resultadosADinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
                                 }
                             }
                             
