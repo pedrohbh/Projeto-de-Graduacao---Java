@@ -1102,14 +1102,29 @@ public class Grafo
         return listaPredecessores[ idVertice ].get( minId );
     }
          
-    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores, List<Aresta> arestasModificadas, final HeapBinario openHeap, boolean aumetarAresta )
+    private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores, List<Aresta> arestasModificadas, final HeapBinario openHeap, boolean aumetarAresta, boolean depuracao )
     {
         SecureRandom random = new SecureRandom();
         
-        int verticeInicialSorteado = random.nextInt() % (openHeap.getHeapSize() + 1);
+        int verticeInicialSorteado = random.nextInt(openHeap.getHeapSize() + 1);
         verticeInicialSorteado = openHeap.getElementoPosicao( verticeInicialSorteado ).getIdVertice();
-        int nodoSorteado = random.nextInt() % verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.size();
-        nodoSorteado = verticesGrafo[ nodoSorteado ].idVertice;
+        int moeda = 1; //random.nextInt( 2 );
+        int nodoSorteado = 0;
+        if ( moeda == 1 && !listaPredecessores[ verticeInicialSorteado ].isEmpty() )
+        {            
+            Set<Integer> chaves = listaPredecessores[ verticeInicialSorteado ].keySet();
+            nodoSorteado = random.nextInt( chaves.size() );
+            nodoSorteado = (int) chaves.toArray()[ nodoSorteado ];
+            nodoSorteado = listaPredecessores[ verticeInicialSorteado ].get( nodoSorteado ).idVertice;
+            int temp = nodoSorteado;
+            nodoSorteado = verticeInicialSorteado;
+            verticeInicialSorteado = temp;            
+        }
+        else
+        {
+            nodoSorteado = random.nextInt(verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.size());
+            nodoSorteado = verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.get(nodoSorteado).idVerticeDestino;
+        }
         int novoPeso;
         
         if ( aumetarAresta )
@@ -1123,12 +1138,20 @@ public class Grafo
         {
             if ( a.idVerticeDestino == nodoSorteado )
             {
-                System.out.printf("Realizando alteração de peso.%nAresta: %d -> %d. Peso antigo: %d; Novo peso: %d%n", verticeInicialSorteado, a.idVerticeDestino, a.peso, novoPeso );
+                if ( depuracao )
+                    System.out.printf("Realizando alteração de peso.%nAresta: %d -> %d. Peso antigo: %d; Novo peso: %d%n", verticeInicialSorteado, a.idVerticeDestino, a.peso, novoPeso );
                 a.peso = novoPeso;
                 
-                if ( listaPredecessores[ a.idVerticeDestino ].containsKey( verticeInicialSorteado ) )
+                if ( listaPredecessores[ a.idVerticeDestino ] != null && listaPredecessores[ a.idVerticeDestino ].containsKey( verticeInicialSorteado ) )
                 {
                     listaPredecessores[ a.idVerticeDestino ].get( verticeInicialSorteado ).peso = novoPeso;
+                }
+                else
+                {
+                    if ( listaPredecessores[ a.idVerticeDestino ] == null )
+                        listaPredecessores[ a.idVerticeDestino ] = new HashMap<>();
+                    
+                    listaPredecessores[ a.idVerticeDestino ].put( verticeInicialSorteado, new VerticeEspecialAD( verticeInicialSorteado, novoPeso ) );
                 }
                 arestasModificadas.add( a );
                 
@@ -1136,8 +1159,8 @@ public class Grafo
             }
             
         }
-        
-        System.out.printf("Peso mudado com sucesso%n%n");
+        if ( depuracao )
+            System.out.printf("Peso mudado com sucesso%n%n");
     }
     
     public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte )
@@ -1186,7 +1209,7 @@ public class Grafo
             episolon -= fatorDeCorte;
             if ( episolon == 1 )
             {
-                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, true );                
+                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, true, true );                
             }
             for ( Aresta a: arestasModificadas )
             {
