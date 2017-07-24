@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1163,8 +1165,10 @@ public class Grafo
             System.out.printf("Peso mudado com sucesso%n%n");
     }
     
-    public void dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, boolean debug )
+    public long dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, int numeroDeIteracoes, boolean debug )
     {
+        long tempoDeMudanca = 0;
+        
         // Definições de variáveis
         int []antecessores = new int[ getNumeroVertices() ];
         long []g = new long[ getNumeroVertices() ];
@@ -1207,13 +1211,17 @@ public class Grafo
             System.out.println("");
         }
         
-        while ( episolon > 1 )
+        for ( int i = 0; i < (numeroDeIteracoes - 1); i++ )
         {
-            episolon -= fatorDeCorte;
-            if ( episolon == 1 )
+            Instant startTime = Instant.now();
+            alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, true, false );
+            Instant endTime = Instant.now();
+            tempoDeMudanca += Duration.between(startTime, endTime).toNanos();
+            if ( episolon > 1 )
             {
-                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, true, true );                
+                episolon -= fatorDeCorte;                
             }
+                
             for ( Aresta a: arestasModificadas )
             {
                 if ( a.idVerticeDestino != idOrigem && estadosVertices[ a.idVerticeDestino ] != EstadosVertice.NEUTRO )
@@ -1236,7 +1244,7 @@ public class Grafo
                 System.out.println("");
             }
         }
-        
+        return tempoDeMudanca;
     }
     
     private void repassaInconsistentesParaAbertoAD( HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, Set< Integer> listaInconsistenstes, long []v, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
