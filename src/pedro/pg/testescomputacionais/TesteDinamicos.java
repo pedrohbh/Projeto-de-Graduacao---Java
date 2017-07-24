@@ -33,6 +33,7 @@ public class TesteDinamicos
     private static Formatter arquivoTestesARA;
     private static Formatter arquivoTestesAD;
     private static Formatter arquivoSolucao;
+    private static final double []porcentagem = { 2.5, 20.0, 50.0, 70.0 };
     private static final int NUM_RODADAS = 5;
     private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
     private static final double EPISOLON_INICIAL = 3.0;
@@ -83,7 +84,7 @@ public class TesteDinamicos
         try
         {
             arquivoTestesAD = new Formatter("ResultadosAD.csv");
-            arquivoTestesAD.format("Nome Instância;Número Vértices;Número Arestas;Modo;Tempo A*;NVA A*;Tempo AD*;NVA AD*;Ganho em relação ao A*%n");
+            arquivoTestesAD.format("Nome Instância;Número Vértices;Número Arestas;Porcentagem de mudança de vértices;Modo;Tempo A*;NVA A*;Tempo AD*;NVA AD*;Ganho em relação ao A*%n");
         }
         catch ( FileNotFoundException e )
         {
@@ -172,9 +173,8 @@ public class TesteDinamicos
     {
         SecureRandom randomNumbers = new SecureRandom();
         
-        //openFileSolucao();
         openFileTestesARA();
-        //openFileVerticesAbertos();
+        openFileTestesAD();
         
         try ( DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes") ) )
         {
@@ -234,10 +234,10 @@ public class TesteDinamicos
                         }
                         tempoLocalAEstrela /= NUM_RODADAS;
                         tempoGlobalAEstrela += tempoLocalAEstrela;
-                         
+                        
+                        // Algortimo ARA*
                         while ( episolon >= 1 )
-                        {
-                            // Algortimo ARA*
+                        {                            
                             for ( int j = 0; j < NUM_RODADAS; j++ )
                             {
                                 Instant startARA = Instant.now();

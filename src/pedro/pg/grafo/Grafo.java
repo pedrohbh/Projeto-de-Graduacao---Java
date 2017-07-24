@@ -1198,7 +1198,7 @@ public class Grafo
                 }
             }
             arestasModificadas.clear();
-            repassaInconsistentesParaAbertoADBeta(openHeap, rastreadorOpen, listaInconsistentes, v, g, distanciaHeuristica, estadosVertices, episolon);
+            repassaInconsistentesParaAbertoAD(openHeap, rastreadorOpen, listaInconsistentes, v, g, distanciaHeuristica, estadosVertices, episolon);
             atualizaOpenAD(openHeap, g, v, distanciaHeuristica, episolon);
             limpaFechadoARA(listaFechado, estadosVertices);
             computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
@@ -1210,7 +1210,7 @@ public class Grafo
         
     }
     
-    private void repassaInconsistentesParaAbertoADBeta( HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, Set< Integer> listaInconsistenstes, long []v, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
+    private void repassaInconsistentesParaAbertoAD( HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, Set< Integer> listaInconsistenstes, long []v, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
     {
         for ( Integer e: listaInconsistenstes )
         {
