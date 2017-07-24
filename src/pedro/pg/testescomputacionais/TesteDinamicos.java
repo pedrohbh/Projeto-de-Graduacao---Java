@@ -239,10 +239,10 @@ public class TesteDinamicos
                         tempoLocalAEstrela /= NUM_RODADAS;
                         tempoGlobalAEstrela += tempoLocalAEstrela;
                         
+                        Grafo grafoOrignal = null;
                         // Algoritmo AD* e A*
                         for ( int j = 0; j < modosPossiveis.length; j++ )
-                        {
-                            Grafo grafoOrignal;
+                        {                            
                             modoAtual = modosPossiveis[ j ];
                             if ( modoAtual == ModosAD.NORMAL )
                             {
@@ -327,7 +327,7 @@ public class TesteDinamicos
                                             resultadosADinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
                                 }
                             }
-                            
+                            g = grafoOrignal;
                         }
                         
                         // Algortimo ARA*
