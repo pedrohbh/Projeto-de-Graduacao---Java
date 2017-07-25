@@ -268,6 +268,11 @@ public class TesteDinamicos
                                         resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
                                 }
                                 
+                                Instant startAD = Instant.now();
+                                long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, false, true, 0.0, false );
+                                Instant endAD = Instant.now();
+                                tempoLocalAEstrelaDinamico = Duration.between(startAD, endAD).toNanos();
+                                tempoLocalAEstrelaDinamico -= tempoASerDebitadoAD;
                                 // Parte AD* Normal começa aqui
                             }
                             // Parte de diminuir o peso das arestas do grafo
@@ -296,6 +301,14 @@ public class TesteDinamicos
                                             resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
                                             resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                        
+                                        g.recuperaGrafoOriginal( grafoOrignal );
+                                        
+                                        Instant startAD = Instant.now();
+                                        long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, false, porcentagemAtual, false );
+                                        Instant endAD = Instant.now();
+                                        tempoLocalAEstrelaDinamico = Duration.between(startAD, endAD).toNanos();
+                                        tempoLocalAEstrelaDinamico -= tempoASerDebitadoAD;
                                         
                                         g.recuperaGrafoOriginal( grafoOrignal );
                                 }
