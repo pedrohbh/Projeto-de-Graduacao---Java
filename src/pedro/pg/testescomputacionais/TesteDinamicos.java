@@ -239,6 +239,7 @@ public class TesteDinamicos
                                 // Parte A*
                                 for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
                                 {
+                                    tempoLocalAEstrelaDinamico = 0;
                                     for ( int l = 0; l < NUM_RODADAS; l++ )
                                     {
                                         Instant startAEstrelaDinamico = Instant.now();
@@ -248,7 +249,7 @@ public class TesteDinamicos
                                         tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
                                     }
                                     tempoLocalAEstrelaDinamico /= NUM_RODADAS;
-                                    tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
+                                    tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
                                     
                                     if ( !resultadosADinamico.containsKey( (double)0 ) )
                                         resultadosADinamico.put( (double)0 , new GuardaTempo( (double)0, tempoGlobalAEstrelaDinamico, 0) );
@@ -277,32 +278,43 @@ public class TesteDinamicos
                                     double porcentagemAtual = porcentagem[ m ];
                                     tempoLocalAEstrelaDinamico = 0;
                                     tempoGlobalAEstrelaDinamico = 0;
-                                    g.alteraPesosArestasGrafoPublico( false, false );
-                                    for ( int l = 0; l < NUM_RODADAS; l++ )
+                                    for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
+                                    {
+                                        tempoLocalAEstrelaDinamico = 0;
+                                        porcentagemAtual /= 100;
+                                        int numeroVezes = (int) (g.getNumeroVertices() * porcentagemAtual);
+                                        for ( int n = 0; n < numeroVezes; n++ )
+                                            g.alteraPesosArestasGrafoPublico( false, false );
+                                        porcentagemAtual *= 100;
+                                        for ( int l = 0; l < NUM_RODADAS; l++ )
                                         {
                                             Instant startAEstrelaDinamico = Instant.now();
                                             g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
                                             Instant endAEstrelaDinamico = Instant.now();
-                                        
                                             tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
                                         }
                                         tempoLocalAEstrelaDinamico /= NUM_RODADAS;
-                                        tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
-                                    
+                                        tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
+                                        
                                         if ( !resultadosADinamico.containsKey( porcentagemAtual ) )
                                             resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
                                             resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                    }
+                                    g.recuperaGrafoOriginal( grafoOrignal );
+                                      
+                                    Instant startAD = Instant.now();
+                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, false, porcentagemAtual, false );
+                                    Instant endAD = Instant.now();
+                                    tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
+                                    tempoLocalAD -= tempoASerDebitadoAD;
+                                    
+                                    if ( !temposADDinamico.containsKey( porcentagemAtual ) )
+                                        temposADDinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoLocalAD, 0) );
+                                    else
+                                        temposADDinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoLocalAD );
                                         
-                                        g.recuperaGrafoOriginal( grafoOrignal );
-                                        
-                                        Instant startAD = Instant.now();
-                                        long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, false, porcentagemAtual, false );
-                                        Instant endAD = Instant.now();
-                                        tempoLocalAEstrelaDinamico = Duration.between(startAD, endAD).toNanos();
-                                        tempoLocalAEstrelaDinamico -= tempoASerDebitadoAD;
-                                        
-                                        g.recuperaGrafoOriginal( grafoOrignal );
+                                    g.recuperaGrafoOriginal( grafoOrignal );
                                 }
                             }
                             else if ( modoAtual == ModosAD.AUMENTAR )
@@ -314,8 +326,17 @@ public class TesteDinamicos
                                     double porcentagemAtual = porcentagem[ m ];
                                     tempoLocalAEstrelaDinamico = 0;
                                     tempoGlobalAEstrelaDinamico = 0;
-                                    g.alteraPesosArestasGrafoPublico(true, false);
-                                    for ( int l = 0; l < NUM_RODADAS; l++ )
+                                    tempoLocalAEstrelaDinamico = 0;
+                                    for ( int k = 0; k < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; k++ )
+                                    {
+                                        tempoLocalAEstrelaDinamico = 0;
+                                        porcentagemAtual /= 100;
+                                        int numeroVezes = (int) (g.getNumeroVertices() * porcentagemAtual);
+                                        for ( int n = 0; n < numeroVezes; n++ )
+                                            g.alteraPesosArestasGrafoPublico( false, false );
+                                        porcentagemAtual *= 100;
+                                        g.alteraPesosArestasGrafoPublico(true, false);
+                                        for ( int l = 0; l < NUM_RODADAS; l++ )
                                         {
                                             Instant startAEstrelaDinamico = Instant.now();
                                             g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
@@ -324,7 +345,7 @@ public class TesteDinamicos
                                             tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
                                         }
                                         tempoLocalAEstrelaDinamico /= NUM_RODADAS;
-                                        tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
+                                        tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
                                     
                                         // Para o caso do modo de aumentar o peso das Arestas, o valor da chave será multiplicado por 100 para diferenciar das chvaves de diminuir o peso
                                         double chaveRegistradora = porcentagemAtual * 100;
@@ -332,8 +353,22 @@ public class TesteDinamicos
                                             resultadosADinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
                                             resultadosADinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                    }                                        
+                                    g.recuperaGrafoOriginal( grafoOrignal );
+                                    
+                                    Instant startAD = Instant.now();
+                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, true, porcentagemAtual, false );
+                                    Instant endAD = Instant.now();
+                                    tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
+                                    tempoLocalAD -= tempoASerDebitadoAD;
+                                    
+                                    double chaveRegistradora = porcentagemAtual * 100;
+                                    if ( !temposADDinamico.containsKey( chaveRegistradora ) )
+                                        temposADDinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoLocalAD, 0) );
+                                    else
+                                        temposADDinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoLocalAD );
                                         
-                                        g.recuperaGrafoOriginal( grafoOrignal );
+                                    g.recuperaGrafoOriginal( grafoOrignal );
                                 }
                             }
                             g.recuperaGrafoOriginal( grafoOrignal );
