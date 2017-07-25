@@ -44,6 +44,7 @@ public class TesteDinamicos
     private static final Set<Integer> verticesSorteados = new HashSet<>();
     private static final Map<Double, GuardaTempo> resultadosAra = new HashMap<>();
     private static final Map<Double, GuardaTempo> resultadosADinamico = new HashMap<>();
+    private static final Map<Double, GuardaTempo> temposADDinamico = new HashMap<>(); // Troquei a forma dos nomes para não errar na hora de acionar a variável
     
     public static void openFileSolucao()
     {
@@ -189,6 +190,7 @@ public class TesteDinamicos
                 long tempoLocalARA = 0;
                 long tempoLocalAEstrela = 0;
                 long tempoLocalAEstrelaDinamico = 0;
+                long tempoLocalAD = 0;
                 
                 long tempoGlobalARA = 0;
                 long tempoGlobalAEstrela = 0;
@@ -225,29 +227,15 @@ public class TesteDinamicos
                             verticeEscolhido = randomNumbers.nextInt( g.getNumeroVertices() );
                         } while ( verticesSorteados.contains( verticeEscolhido ) || verticeEscolhido == 0 );
                         
-                        verticesSorteados.add(verticeEscolhido);
-                                                
-                        // Algortimo A*
-                        for ( int j = 0; j < NUM_RODADAS; j++ )
-                        {
-                            Instant startAEstrela = Instant.now();
-                            g.algoritmoAEstrela( 0 ,  verticeEscolhido, false, false );
-                            Instant endAEstrela = Instant.now();
-                            
-                            tempoLocalAEstrela += Duration.between(startAEstrela, endAEstrela).toNanos();
-                        }
-                        tempoLocalAEstrela /= NUM_RODADAS;
-                        tempoGlobalAEstrela += tempoLocalAEstrela;
+                        verticesSorteados.add(verticeEscolhido);                       
                         
-                        Grafo grafoOrignal = null;
+                        Grafo grafoOrignal = new Grafo( g );
                         // Algoritmo AD* e A*
                         for ( int j = 0; j < modosPossiveis.length; j++ )
                         {                            
                             modoAtual = modosPossiveis[ j ];
                             if ( modoAtual == ModosAD.NORMAL )
-                            {
-                                grafoOrignal = new Grafo( g );
-                                
+                            {                               
                                 // Parte A*
                                 for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
                                 {
@@ -263,7 +251,7 @@ public class TesteDinamicos
                                     tempoGlobalAEstrelaDinamico += tempoLocalAEstrelaDinamico;
                                     
                                     if ( !resultadosADinamico.containsKey( (double)0 ) )
-                                        resultadosADinamico.put( (double)0 , new GuardaTempo( 0, tempoGlobalAEstrelaDinamico, 0) );
+                                        resultadosADinamico.put( (double)0 , new GuardaTempo( (double)0, tempoGlobalAEstrelaDinamico, 0) );
                                     else
                                         resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
                                 }
@@ -271,8 +259,12 @@ public class TesteDinamicos
                                 Instant startAD = Instant.now();
                                 long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, false, true, 0.0, false );
                                 Instant endAD = Instant.now();
-                                tempoLocalAEstrelaDinamico = Duration.between(startAD, endAD).toNanos();
-                                tempoLocalAEstrelaDinamico -= tempoASerDebitadoAD;
+                                tempoLocalAD = Duration.between(startAD, endAD).toNanos();
+                                tempoLocalAD -= tempoASerDebitadoAD;
+                                if ( !temposADDinamico.containsKey( (double)0 ) )
+                                    temposADDinamico.put( (double)0, new GuardaTempo( (double)0, tempoLocalAD, 0) );
+                                else
+                                    temposADDinamico.get( (double)0 ).adicionaATempoExistente(tempoLocalAD);
                                 // Parte AD* Normal começa aqui
                             }
                             // Parte de diminuir o peso das arestas do grafo
@@ -346,6 +338,20 @@ public class TesteDinamicos
                             }
                             g.recuperaGrafoOriginal( grafoOrignal );
                         }
+                        
+                        // ------------- PARTE ARA*
+                        
+                        // Algortimo A*
+                        for ( int j = 0; j < NUM_RODADAS; j++ )
+                        {
+                            Instant startAEstrela = Instant.now();
+                            g.algoritmoAEstrela( 0 ,  verticeEscolhido, false, false );
+                            Instant endAEstrela = Instant.now();
+                            
+                            tempoLocalAEstrela += Duration.between(startAEstrela, endAEstrela).toNanos();
+                        }
+                        tempoLocalAEstrela /= NUM_RODADAS;
+                        tempoGlobalAEstrela += tempoLocalAEstrela;
                         
                         // Algortimo ARA*
                         while ( episolon >= 1 )
