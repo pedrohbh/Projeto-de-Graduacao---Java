@@ -334,9 +334,8 @@ public class TesteDinamicos
                                         porcentagemAtual /= 100;
                                         int numeroVezes = (int) (g.getNumeroVertices() * porcentagemAtual);
                                         for ( int n = 0; n < numeroVezes; n++ )
-                                            g.alteraPesosArestasGrafoPublico( false, false );
+                                            g.alteraPesosArestasGrafoPublico( true, false );
                                         porcentagemAtual *= 100;
-                                        g.alteraPesosArestasGrafoPublico(true, false);
                                         for ( int l = 0; l < NUM_RODADAS; l++ )
                                         {
                                             Instant startAEstrelaDinamico = Instant.now();
@@ -374,6 +373,8 @@ public class TesteDinamicos
                             }
                             g.recuperaGrafoOriginal( grafoOrignal );
                         }
+                        
+                        g.recuperaGrafoOriginal(grafoOrignal);
                         
                         // ------------- PARTE ARA*
                         
