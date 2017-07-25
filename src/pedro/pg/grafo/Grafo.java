@@ -58,6 +58,15 @@ public class Grafo
         this.verticesGrafo = novoGrafo.verticesGrafo;
     }
     
+    public void recuperaGrafoOriginal( Grafo grafoMolde )
+    {
+        this.cordenadasX = grafoMolde.cordenadasX;
+        this.cordenadasY = grafoMolde.cordenadasY;
+        this.numeroArestas = grafoMolde.numeroArestas;
+        this.numeroVertices = grafoMolde.numeroVertices;
+        this.verticesGrafo = grafoMolde.verticesGrafo;
+    }
+    
     public void buscaEmLargutaPorVertice( int idVertice )
     {
         List<Integer> verticesChegaveis = new LinkedList<>();

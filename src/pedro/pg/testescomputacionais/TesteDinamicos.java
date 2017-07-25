@@ -296,6 +296,8 @@ public class TesteDinamicos
                                             resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
                                             resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                        
+                                        g.recuperaGrafoOriginal( grafoOrignal );
                                 }
                             }
                             else if ( modoAtual == ModosAD.AUMENTAR )
@@ -325,9 +327,11 @@ public class TesteDinamicos
                                             resultadosADinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoGlobalAEstrelaDinamico, 0 ) );
                                         else
                                             resultadosADinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                        
+                                        g.recuperaGrafoOriginal( grafoOrignal );
                                 }
                             }
-                            g = grafoOrignal;
+                            g.recuperaGrafoOriginal( grafoOrignal );
                         }
                         
                         // Algortimo ARA*
