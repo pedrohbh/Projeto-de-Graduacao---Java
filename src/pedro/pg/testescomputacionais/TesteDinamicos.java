@@ -433,6 +433,25 @@ public class TesteDinamicos
                         escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), episolon, tempoGlobalARA, tempoGlobalAEstrela, verticesAbertosAEstrela, verticesAbertosARA);
                         episolon -= FATOR_DE_CORTE;
                     }
+                    
+                    Set<Double> chavesAD = temposADDinamico.keySet();
+                    for ( Double e: chavesAD )
+                    {
+                        long tempoTotalAD = temposADDinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                        long tempoTotalAEstrelaDinamico = resultadosADinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                        String modo;
+                        if ( e == 0 )
+                            modo = "Normal";
+                        else if ( e  < 100 )
+                            modo = "Diminui";
+                        else
+                            modo = "Aumenta";
+                        escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
+                    }
+                    
+                    
+                    temposADDinamico.clear();
+                    resultadosADinamico.clear();
                     resultadosAra.clear();
                     verticesSorteados.clear();
                 }
