@@ -103,13 +103,14 @@ public class TesteDinamicos
         }
     }
     
-    public static void escreveDadosTestesAD( String nomeInstancia, int numeroVertices, int numeroArestas, String modo, long tempoAEstrela, long nvaA, long tempoAD, long nvaAD )
+    public static void escreveDadosTestesAD( String nomeInstancia, int numeroVertices, int numeroArestas,double porcentagem, String modo, long tempoAEstrela, long nvaA, long tempoAD, long nvaAD )
     {
         try
         {
-            String porcentagem = NumberFormat.getPercentInstance().format( (double)(tempoAEstrela / tempoAD) );
+            String porcentagemTempo = NumberFormat.getPercentInstance().format( (double)(tempoAEstrela / tempoAD) );
+            String porcentagemModo = NumberFormat.getPercentInstance().format(porcentagem);
             //arquivoTestesAD.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
-            arquivoTestesAD.format("%s;%d;%d;%s;%d;%d;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, modo, porcentagem );
+            arquivoTestesAD.format("%s;%d;%d;%s;%d;%d;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, modo, porcentagemModo, tempoAEstrela, nvaA, tempoAD, nvaAD, porcentagemTempo );
         }
         catch ( FormatterClosedException e)
         {
@@ -446,7 +447,8 @@ public class TesteDinamicos
                             modo = "Diminui";
                         else
                             modo = "Aumenta";
-                        escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
+                        escreveDadosTestesAD(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e,  modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
+                        //escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
                     }
                     
                     
