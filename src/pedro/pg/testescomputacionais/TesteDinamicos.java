@@ -280,7 +280,7 @@ public class TesteDinamicos
                                     double porcentagemAtual = porcentagem[ m ];
                                     tempoLocalAEstrelaDinamico = 0;
                                     tempoGlobalAEstrelaDinamico = 0;
-                                    // FUNÇÂO DE ALTERAR PESOS
+                                    g.alteraPesosArestasGrafoPublico( false, false );
                                     for ( int l = 0; l < NUM_RODADAS; l++ )
                                         {
                                             Instant startAEstrelaDinamico = Instant.now();
@@ -307,7 +307,7 @@ public class TesteDinamicos
                                     double porcentagemAtual = porcentagem[ m ];
                                     tempoLocalAEstrelaDinamico = 0;
                                     tempoGlobalAEstrelaDinamico = 0;
-                                    // FUNÇÂO DE ALTERAR PESOS
+                                    g.alteraPesosArestasGrafoPublico(true, false);
                                     for ( int l = 0; l < NUM_RODADAS; l++ )
                                         {
                                             Instant startAEstrelaDinamico = Instant.now();
