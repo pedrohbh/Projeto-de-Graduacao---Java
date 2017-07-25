@@ -1200,7 +1200,7 @@ public class Grafo
             System.out.printf("Peso mudado com sucesso%n%n");
     }
     
-    public long dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, int numeroDeIteracoes, boolean aumentar, double porcentagem, boolean debug )
+    public long dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, int numeroDeIteracoes, boolean alterar, boolean aumentar, double porcentagem, boolean debug )
     {
         long tempoDeMudanca = 0;
         porcentagem /= 100;
@@ -1248,12 +1248,15 @@ public class Grafo
         
         for ( int i = 0; i < (numeroDeIteracoes - 1); i++ )
         {
-            Instant startTime = Instant.now();
-            int numeroVezes = (int) ((openHeap.getHeapSize() + 1 ) * porcentagem);
-            for ( int j = 0; j < numeroVezes; j++ )
-                alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, aumentar, false );
-            Instant endTime = Instant.now();
-            tempoDeMudanca += Duration.between(startTime, endTime).toNanos();
+            if ( alterar )
+            {
+                Instant startTime = Instant.now();
+                int numeroVezes = (int) ((openHeap.getHeapSize() + 1 ) * porcentagem);
+                for ( int j = 0; j < numeroVezes; j++ )
+                    alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, aumentar, false );
+                Instant endTime = Instant.now();
+                tempoDeMudanca += Duration.between(startTime, endTime).toNanos();
+            }
             if ( episolon > 1 )
             {
                 episolon -= fatorDeCorte;                
