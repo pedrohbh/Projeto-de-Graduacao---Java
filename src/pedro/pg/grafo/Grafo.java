@@ -1103,6 +1103,32 @@ public class Grafo
         
         return listaPredecessores[ idVertice ].get( minId );
     }
+    
+    public void alteraPesosArestasGrafoPublico( boolean aumenta, boolean depuracao )
+    {
+        SecureRandom random = new SecureRandom();
+        
+        int verticeInicialSorteado = random.nextInt( numeroVertices );
+        int nodoSorteado = random.nextInt( verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.size() );
+        nodoSorteado = verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes.get( nodoSorteado ).idVerticeDestino;
+        
+        int novoPeso;
+        if ( aumenta )
+            novoPeso = 80000;
+        else
+            novoPeso = 20;
+        
+        for ( Aresta a: verticesGrafo[ verticeInicialSorteado ].arestasAdjacentes )
+        {
+            if ( a.idVerticeDestino == nodoSorteado )
+            {
+                if ( depuracao )
+                    System.out.printf("Realizando alteração de peso.%nAresta: %d -> %d. Peso antigo: %d; Novo peso: %d%n", verticeInicialSorteado, a.idVerticeDestino, a.peso, novoPeso );
+                a.peso = novoPeso;
+                break;
+            }
+        }       
+    }
          
     private void alteraPesosArestasGrafo(Map<Integer, VerticeEspecialAD> []listaPredecessores, List<Aresta> arestasModificadas, final HeapBinario openHeap, boolean aumetarAresta, boolean depuracao )
     {
@@ -1110,7 +1136,7 @@ public class Grafo
         
         int verticeInicialSorteado = random.nextInt(openHeap.getHeapSize() + 1);
         verticeInicialSorteado = openHeap.getElementoPosicao( verticeInicialSorteado ).getIdVertice();
-        int moeda = 1; //random.nextInt( 2 );
+        int moeda = random.nextInt( 2 );
         int nodoSorteado = 0;
         if ( moeda == 1 && !listaPredecessores[ verticeInicialSorteado ].isEmpty() )
         {            
