@@ -1200,9 +1200,11 @@ public class Grafo
             System.out.printf("Peso mudado com sucesso%n%n");
     }
     
+
     public long dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, int numeroDeIteracoes, boolean alterar, boolean aumentar, double porcentagem, boolean debug )
     {
         long tempoDeMudanca = 0;
+        ResultadoAD resultadoAD = new ResultadoAD();
         porcentagem /= 100;
         // Definições de variáveis
         int []antecessores = new int[ getNumeroVertices() ];
@@ -1255,7 +1257,7 @@ public class Grafo
                 for ( int j = 0; j < numeroVezes; j++ )
                     alteraPesosArestasGrafo(listaPredecessores, arestasModificadas, openHeap, aumentar, false );
                 Instant endTime = Instant.now();
-                tempoDeMudanca += Duration.between(startTime, endTime).toNanos();
+                resultadoAD.adicionaATempoDebitado(Duration.between(startTime, endTime).toNanos());//tempoDeMudanca += Duration.between(startTime, endTime).toNanos();
             }
             if ( episolon > 1 )
             {
@@ -1285,6 +1287,47 @@ public class Grafo
             }
         }
         return tempoDeMudanca;
+    }
+    
+    public class ResultadoAD
+    {
+        private long tempoDebitado;
+        private long numeroDeVerticesAberto;
+        
+        public ResultadoAD()
+        {
+            this.tempoDebitado = 0;
+            this.numeroDeVerticesAberto = 0;
+        }
+
+        /**
+         * @return the tempoDebitado
+         */
+        public long getTempoDebitado() {
+            return tempoDebitado;
+        }
+
+        /**
+         * @return the numeroDeVerticesAberto
+         */
+        public long getNumeroDeVerticesAberto() {
+            return numeroDeVerticesAberto;
+        }
+
+        /**
+         * @param tempoDebitado the tempoDebitado to set
+         */
+        public void adicionaATempoDebitado(long tempoDebitado) 
+        {
+            this.tempoDebitado += tempoDebitado;
+        }
+
+        /**
+         * @param numeroDeVerticesAberto the numeroDeVerticesAberto to set
+         */
+        public void adicionaAVerticesAberto(long numeroDeVerticesAberto) {
+            this.numeroDeVerticesAberto += numeroDeVerticesAberto;
+        }
     }
     
     private void repassaInconsistentesParaAbertoAD( HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, Set< Integer> listaInconsistenstes, long []v, long []g, long []distanciaHeuristica, EstadosVertice []estadosVertices, double episolon )
