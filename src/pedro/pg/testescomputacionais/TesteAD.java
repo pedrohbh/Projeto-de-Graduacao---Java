@@ -37,9 +37,9 @@ public class TesteAD
     private static ModosAD modoAtual = ModosAD.NORMAL;
     private static final ModosAD []modosPossiveis = { ModosAD.NORMAL, ModosAD.DIMINUI, ModosAD.AUMENTAR };
     private static final double []porcentagem = { 2.5, 20.0, 50.0, 70.0 };
-    private static final int NUM_RODADAS = 1;//3;
-    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 1;//10;
-    private static final int NUM_INSTANCIAS_CALCULADAS = 1;//15;
+    private static final int NUM_RODADAS = 3;
+    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
+    private static final int NUM_INSTANCIAS_CALCULADAS = 15;
     private static final double EPISOLON_INICIAL = 2.0;
     private static final double FATOR_DE_CORTE = 0.5;
     private static final Set<Integer> verticesSorteados = new HashSet<>();
