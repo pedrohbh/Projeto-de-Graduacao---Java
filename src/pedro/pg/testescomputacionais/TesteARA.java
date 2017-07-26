@@ -28,7 +28,7 @@ import pedro.pg.grafo.Grafo;
  *
  * @author administrador
  */
-public class TesteDinamicos 
+public class TesteARA 
 {
     private static Formatter arquivoTestesARA;
     private static Formatter arquivoTestesAD;
@@ -37,9 +37,8 @@ public class TesteDinamicos
     private static final ModosAD []modosPossiveis = { ModosAD.NORMAL, ModosAD.DIMINUI, ModosAD.AUMENTAR };
     private static final double []porcentagem = { 2.5, 20.0, 50.0, 70.0 };
     private static final int NUM_RODADAS = 1;
-    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 1;
-    private static final int NUM_INSTANCIAS_CALCULADAS = 1;
-    private static final double EPISOLON_INICIAL = 2.0;
+    private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
+    private static final double EPISOLON_INICIAL = 4.0;
     private static final double FATOR_DE_CORTE = 0.5;
     private static final Set<Integer> verticesSorteados = new HashSet<>();
     private static final Map<Double, GuardaTempo> resultadosAra = new HashMap<>();
@@ -179,8 +178,7 @@ public class TesteDinamicos
     {
         SecureRandom randomNumbers = new SecureRandom();
         
-        openFileTestesARA();
-        openFileTestesAD();
+        openFileTestesARA();        
         
         try ( DirectoryStream<Path> paths = Files.newDirectoryStream(Paths.get("/home/administrador/Documentos/Trabalhos/Projeto de Graduação/PG-Codigo/Testes") ) )
         {
@@ -229,152 +227,6 @@ public class TesteDinamicos
                         } while ( verticesSorteados.contains( verticeEscolhido ) || verticeEscolhido == 0 );
                         
                         verticesSorteados.add(verticeEscolhido);                       
-                        
-                        Grafo grafoOrignal = new Grafo( g );
-                        // Algoritmo AD* e A*
-                        for ( int j = 0; j < modosPossiveis.length; j++ )
-                        {                            
-                            modoAtual = modosPossiveis[ j ];
-                            if ( modoAtual == ModosAD.NORMAL )
-                            {                               
-                                // Parte A*
-                                for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
-                                {
-                                    tempoLocalAEstrelaDinamico = 0;
-                                    for ( int l = 0; l < NUM_RODADAS; l++ )
-                                    {
-                                        Instant startAEstrelaDinamico = Instant.now();
-                                        g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
-                                        Instant endAEstrelaDinamico = Instant.now();
-                                        
-                                        tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
-                                    }
-                                    tempoLocalAEstrelaDinamico /= NUM_RODADAS;
-                                    tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
-                                    
-                                    if ( !resultadosADinamico.containsKey( (double)0 ) )
-                                        resultadosADinamico.put( (double)0 , new GuardaTempo( (double)0, tempoGlobalAEstrelaDinamico, 0) );
-                                    else
-                                        resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
-                                }
-                                
-                                Instant startAD = Instant.now();
-                                long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, false, true, 0.0, false );
-                                Instant endAD = Instant.now();
-                                tempoLocalAD = Duration.between(startAD, endAD).toNanos();
-                                tempoLocalAD -= tempoASerDebitadoAD;
-                                if ( !temposADDinamico.containsKey( (double)0 ) )
-                                    temposADDinamico.put( (double)0, new GuardaTempo( (double)0, tempoLocalAD, 0) );
-                                else
-                                    temposADDinamico.get( (double)0 ).adicionaATempoExistente(tempoLocalAD);
-                                // Parte AD* Normal começa aqui
-                            }
-                            // Parte de diminuir o peso das arestas do grafo
-                            else if ( modoAtual == ModosAD.DIMINUI )
-                            {
-                                tempoGlobalAEstrelaDinamico = 0;
-                                tempoLocalAEstrelaDinamico = 0;
-                                for ( int m = 0; m < porcentagem.length; m++ )
-                                {
-                                    double porcentagemAtual = porcentagem[ m ];
-                                    tempoLocalAEstrelaDinamico = 0;
-                                    tempoGlobalAEstrelaDinamico = 0;
-                                    for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
-                                    {
-                                        tempoLocalAEstrelaDinamico = 0;
-                                        porcentagemAtual /= 100;
-                                        int numeroVezes = (int) (g.getNumeroVertices() * porcentagemAtual);
-                                        for ( int n = 0; n < numeroVezes; n++ )
-                                            g.alteraPesosArestasGrafoPublico( false, false );
-                                        porcentagemAtual *= 100;
-                                        for ( int l = 0; l < NUM_RODADAS; l++ )
-                                        {
-                                            Instant startAEstrelaDinamico = Instant.now();
-                                            g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
-                                            Instant endAEstrelaDinamico = Instant.now();
-                                            tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
-                                        }
-                                        tempoLocalAEstrelaDinamico /= NUM_RODADAS;
-                                        tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
-                                        
-                                        if ( !resultadosADinamico.containsKey( porcentagemAtual ) )
-                                            resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
-                                        else
-                                            resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
-                                    }
-                                    g.recuperaGrafoOriginal( grafoOrignal );
-                                      
-                                    Instant startAD = Instant.now();
-                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, false, porcentagemAtual, false );
-                                    Instant endAD = Instant.now();
-                                    tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
-                                    tempoLocalAD -= tempoASerDebitadoAD;
-                                    
-                                    if ( !temposADDinamico.containsKey( porcentagemAtual ) )
-                                        temposADDinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoLocalAD, 0) );
-                                    else
-                                        temposADDinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoLocalAD );
-                                        
-                                    g.recuperaGrafoOriginal( grafoOrignal );
-                                }
-                            }
-                            else if ( modoAtual == ModosAD.AUMENTAR )
-                            {
-                                tempoGlobalAEstrelaDinamico = 0;
-                                tempoLocalAEstrelaDinamico = 0;
-                                for ( int m = 0; m < porcentagem.length; m++ )
-                                {
-                                    double porcentagemAtual = porcentagem[ m ];
-                                    tempoLocalAEstrelaDinamico = 0;
-                                    tempoGlobalAEstrelaDinamico = 0;
-                                    tempoLocalAEstrelaDinamico = 0;
-                                    for ( int k = 0; k < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; k++ )
-                                    {
-                                        tempoLocalAEstrelaDinamico = 0;
-                                        porcentagemAtual /= 100;
-                                        int numeroVezes = (int) (g.getNumeroVertices() * porcentagemAtual);
-                                        for ( int n = 0; n < numeroVezes; n++ )
-                                            g.alteraPesosArestasGrafoPublico( true, false );
-                                        porcentagemAtual *= 100;
-                                        for ( int l = 0; l < NUM_RODADAS; l++ )
-                                        {
-                                            Instant startAEstrelaDinamico = Instant.now();
-                                            g.algoritmoAEstrela( 0 , verticeEscolhido, false, false );
-                                            Instant endAEstrelaDinamico = Instant.now();
-                                        
-                                            tempoLocalAEstrelaDinamico += Duration.between(startAEstrelaDinamico, endAEstrelaDinamico).toNanos();
-                                        }
-                                        tempoLocalAEstrelaDinamico /= NUM_RODADAS;
-                                        tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
-                                    
-                                        // Para o caso do modo de aumentar o peso das Arestas, o valor da chave será multiplicado por 100 para diferenciar das chvaves de diminuir o peso
-                                        double chaveRegistradora = porcentagemAtual * 100;
-                                        if ( !resultadosADinamico.containsKey( chaveRegistradora ) )
-                                            resultadosADinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoGlobalAEstrelaDinamico, 0 ) );
-                                        else
-                                            resultadosADinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
-                                    }                                        
-                                    g.recuperaGrafoOriginal( grafoOrignal );
-                                    
-                                    Instant startAD = Instant.now();
-                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, true, porcentagemAtual, false );
-                                    Instant endAD = Instant.now();
-                                    tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
-                                    tempoLocalAD -= tempoASerDebitadoAD;
-                                    
-                                    double chaveRegistradora = porcentagemAtual * 100;
-                                    if ( !temposADDinamico.containsKey( chaveRegistradora ) )
-                                        temposADDinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoLocalAD, 0) );
-                                    else
-                                        temposADDinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoLocalAD );
-                                        
-                                    g.recuperaGrafoOriginal( grafoOrignal );
-                                }
-                            }
-                            g.recuperaGrafoOriginal( grafoOrignal );
-                        }
-                        
-                        g.recuperaGrafoOriginal(grafoOrignal);
                         
                         // ------------- PARTE ARA*
                         
@@ -434,28 +286,7 @@ public class TesteDinamicos
                         verticesAbertosARA = resultadosAra.get( episolon ).getVerticesAberto() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                         escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), episolon, tempoGlobalARA, tempoGlobalAEstrela, verticesAbertosAEstrela, verticesAbertosARA);
                         episolon -= FATOR_DE_CORTE;
-                    }
-                    
-                    Set<Double> chavesAD = temposADDinamico.keySet();
-                    for ( Double e: chavesAD )
-                    {
-                        long tempoTotalAD = temposADDinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                        long tempoTotalAEstrelaDinamico = resultadosADinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                        String modo;
-                        if ( e == 0 )
-                            modo = "Normal";
-                        else if ( e  < 100 )
-                            modo = "Diminui";
-                        else
-                        {
-                            modo = "Aumenta";
-                            e /= 100;
-                        }
-                        e /= 100;
-                        escreveDadosTestesAD(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e,  modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
-                        //escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
-                    }
-                    
+                    }                  
                     
                     temposADDinamico.clear();
                     resultadosADinamico.clear();
