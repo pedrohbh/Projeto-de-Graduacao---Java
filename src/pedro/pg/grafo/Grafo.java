@@ -1201,7 +1201,7 @@ public class Grafo
     }
     
 
-    public long dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, int numeroDeIteracoes, boolean alterar, boolean aumentar, double porcentagem, boolean debug )
+    public ResultadoAD dynamicSearchAEstrela( int idOrigem, int idDestino, double episolon, double fatorDeCorte, int numeroDeIteracoes, boolean alterar, boolean aumentar, double porcentagem, boolean debug )
     {
         long tempoDeMudanca = 0;
         ResultadoAD resultadoAD = new ResultadoAD();
@@ -1286,7 +1286,7 @@ public class Grafo
                 System.out.println("");
             }
         }
-        return tempoDeMudanca;
+        return resultadoAD;
     }
     
     public class ResultadoAD
