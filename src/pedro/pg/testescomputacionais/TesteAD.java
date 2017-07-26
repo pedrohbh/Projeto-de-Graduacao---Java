@@ -89,7 +89,7 @@ public class TesteAD
         try
         {
             arquivoTestesAD = new Formatter("ResultadosAD.csv");
-            arquivoTestesAD.format("Nome Instância;Número Vértices;Número Arestas;Porcentagem de mudança de vértices;Modo;Tempo A*;NVA A*;Tempo AD*;NVA AD*;Ganho em relação ao A*%n");
+            arquivoTestesAD.format("Nome Instância;Número Vértices;Número Arestas;Modo;Porcentagem de mudança de vértices;Tempo A*;NVA A*;Tempo AD*;NVA AD*;Ganho em relação ao A*%n");
         }
         catch ( FileNotFoundException e )
         {
@@ -110,7 +110,7 @@ public class TesteAD
             String porcentagemTempo = NumberFormat.getPercentInstance().format( (double)(tempoAEstrela / tempoAD) );
             String porcentagemModo = NumberFormat.getPercentInstance().format(porcentagem);
             //arquivoTestesAD.format("%s;%d;%d;%d;%d;%d%n", nomeInstancia, numeroVertices, numeroArestas, dijkstraAdptado, aEstrela, aManhattan );
-            arquivoTestesAD.format("%s;%d;%d;%s;%s;%d;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, modo, porcentagemModo, tempoAEstrela, nvaA, tempoAD, nvaAD, porcentagemTempo );
+            arquivoTestesAD.format("%s;%d;%d;%s;%s;%d;%d;%d;%d;%s%n", nomeInstancia, numeroVertices, numeroArestas, modo, porcentagemModo, tempoAEstrela, nvaA, tempoAD, nvaAD, porcentagemTempo );
         }
         catch ( FormatterClosedException e)
         {
@@ -237,10 +237,15 @@ public class TesteAD
                                     tempoLocalAEstrelaDinamico /= NUM_RODADAS;
                                     tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
                                     
+                                    long numeroVerticesAbertos = g.contaNumeroDeVerticesAbertosAEstrela( 0 , verticeEscolhido );
+                                    
                                     if ( !resultadosADinamico.containsKey( (double)0 ) )
-                                        resultadosADinamico.put( (double)0 , new GuardaTempo( (double)0, tempoGlobalAEstrelaDinamico, 0) );
+                                        resultadosADinamico.put( (double)0 , new GuardaTempo( (double)0, tempoGlobalAEstrelaDinamico, numeroVerticesAbertos) );
                                     else
+                                    {
                                         resultadosADinamico.get( (double)0 ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                        resultadosADinamico.get( (double)0 ).adicionaAVerticesAbertosExistentes(numeroVerticesAbertos);
+                                    }
                                 }
                                 
                                 Instant startAD = Instant.now();
@@ -282,10 +287,15 @@ public class TesteAD
                                         tempoLocalAEstrelaDinamico /= NUM_RODADAS;
                                         tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
                                         
+                                        long numeroVerticesAbertos = g.contaNumeroDeVerticesAbertosAEstrela( 0 , verticeEscolhido );
+                                        
                                         if ( !resultadosADinamico.containsKey( porcentagemAtual ) )
-                                            resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, 0 ) );
+                                            resultadosADinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoGlobalAEstrelaDinamico, numeroVerticesAbertos ) );
                                         else
+                                        {
                                             resultadosADinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                            resultadosADinamico.get( porcentagemAtual ).adicionaAVerticesAbertosExistentes( numeroVerticesAbertos );
+                                        }
                                     }
                                     g.recuperaGrafoOriginal( grafoOrignal );
                                       
@@ -331,12 +341,16 @@ public class TesteAD
                                         tempoLocalAEstrelaDinamico /= NUM_RODADAS;
                                         tempoGlobalAEstrelaDinamico = tempoLocalAEstrelaDinamico;
                                     
+                                        long numeroVerticesAbertos = g.contaNumeroDeVerticesAbertosAEstrela( 0 , verticeEscolhido );
                                         // Para o caso do modo de aumentar o peso das Arestas, o valor da chave será multiplicado por 100 para diferenciar das chvaves de diminuir o peso
                                         double chaveRegistradora = porcentagemAtual * 100;
                                         if ( !resultadosADinamico.containsKey( chaveRegistradora ) )
-                                            resultadosADinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoGlobalAEstrelaDinamico, 0 ) );
+                                            resultadosADinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoGlobalAEstrelaDinamico, numeroVerticesAbertos ) );
                                         else
+                                        {
                                             resultadosADinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoGlobalAEstrelaDinamico );
+                                            resultadosADinamico.get( chaveRegistradora ).adicionaAVerticesAbertosExistentes(numeroVerticesAbertos);
+                                        }
                                     }                                        
                                     g.recuperaGrafoOriginal( grafoOrignal );
                                     
@@ -366,6 +380,7 @@ public class TesteAD
                     {
                         long tempoTotalAD = temposADDinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                         long tempoTotalAEstrelaDinamico = resultadosADinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                        long nvaA = resultadosADinamico.get(e).getVerticesAberto() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                         String modo;
                         if ( e == 0 )
                             modo = "Normal";
@@ -377,8 +392,7 @@ public class TesteAD
                             e /= 100;
                         }
                         e /= 100;
-                        escreveDadosTestesAD(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e,  modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
-                        //escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
+                        escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e, modo, tempoTotalAEstrelaDinamico, nvaA, tempoTotalAD, 0);
                     }
                     
                     
