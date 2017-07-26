@@ -1239,7 +1239,7 @@ public class Grafo
         
         // 9
         rastreadorOpen[ idOrigem ] = openHeap.insertHeap(idOrigem, computeKeyAD(idOrigem, g, v, distanciaHeuristica, episolon) );
-        computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
+        computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon, resultadoAD );
         if ( debug )
         {
             System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
@@ -1270,14 +1270,14 @@ public class Grafo
                 {
                     bp[ a.idVerticeDestino ] = argmin( a.idVerticeDestino, listaPredecessores, v );
                     g[ a.idVerticeDestino ] = v[ bp[ a.idVerticeDestino ].idVertice ] + bp[ a.idVerticeDestino ].peso;
-                    updateSetMembership( a.idVerticeDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                    updateSetMembership( a.idVerticeDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon, resultadoAD );
                 }
             }
             arestasModificadas.clear();
             repassaInconsistentesParaAbertoAD(openHeap, rastreadorOpen, listaInconsistentes, v, g, distanciaHeuristica, estadosVertices, episolon);
             atualizaOpenAD(openHeap, g, v, distanciaHeuristica, episolon);
             limpaFechadoARA(listaFechado, estadosVertices);
-            computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon );
+            computePathAD(idDestino, antecessores, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, bp, listaFechado, listaInconsistentes, listaPredecessores, episolon, resultadoAD );
             if ( debug )
             {
                 System.out.println("Mostando caminho de AD* para o vértice: " + idDestino + ". eps = " + episolon );
@@ -1340,7 +1340,7 @@ public class Grafo
         listaInconsistenstes.clear();
     }
     
-    private void computePathAD( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, VerticeEspecialAD []bp, Set<Integer> listaFechado, Set<Integer> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, double episolon )
+    private void computePathAD( int idDestino, int []antecessores, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, VerticeEspecialAD []bp, Set<Integer> listaFechado, Set<Integer> listaInconsistentes, Map<Integer, VerticeEspecialAD> []listaPredecessores, double episolon, ResultadoAD resultadoAD )
     {
         while( computeKeyAD(idDestino, g, v, distanciaHeuristica, episolon ) > openHeap.getMin().getKey() || v[ idDestino ] < g[ idDestino ] )
         {
@@ -1386,7 +1386,7 @@ public class Grafo
                         bp[ idVerticeAdjacente ] = listaPredecessores[ idVerticeAdjacente ].get( idNodoAtual );
                         // 18
                         g[ idVerticeAdjacente ] = g[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
-                        updateSetMembership( idVerticeAdjacente, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                        updateSetMembership( idVerticeAdjacente, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon, resultadoAD );
                         antecessores[ idVerticeAdjacente ] = bp[ idVerticeAdjacente ].idVertice;
                     }                    
                 }               
@@ -1396,7 +1396,7 @@ public class Grafo
             {
                 // 30
                 v[ idNodoAtual ] = Long.MAX_VALUE;
-                updateSetMembership( idNodoAtual, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                updateSetMembership( idNodoAtual, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon, resultadoAD );
                 
                 // 21
                 for ( Aresta a: verticesGrafo[ idNodoAtual ].getArestasAdjacentes() )
@@ -1423,7 +1423,7 @@ public class Grafo
                     {
                         bp[ idVerticeAdjacente ] = argmin( idVerticeAdjacente, listaPredecessores, v );
                         g[ idVerticeAdjacente ] = v[ bp[ idVerticeAdjacente ].idVertice ] + bp[ idVerticeAdjacente ].peso;
-                        updateSetMembership(idDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon );
+                        updateSetMembership(idDestino, openHeap, rastreadorOpen, g, v, distanciaHeuristica, estadosVertices, listaFechado, listaInconsistentes, episolon, resultadoAD );
                         antecessores[ idVerticeAdjacente ] = bp[ idVerticeAdjacente ].idVertice;
                     }
                 }               
@@ -1431,7 +1431,7 @@ public class Grafo
         }       
     }
     
-    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Set< Integer > listaFechado, Set< Integer > listaInconsistens, double episolon )
+    private void updateSetMembership( int idVertice, HeapBinario openHeap, HeapBinario.HeapNode []rastreadorOpen, long []g, long []v, long []distanciaHeuristica, EstadosVertice []estadosVertices, Set< Integer > listaFechado, Set< Integer > listaInconsistens, double episolon, ResultadoAD resultadoAD )
     {
         // 2
         if ( v[ idVertice ] != g[ idVertice ] )
@@ -1458,6 +1458,7 @@ public class Grafo
                 }
                 
                 estadosVertices[ idVertice ] = EstadosVertice.ABERTO;
+                resultadoAD.adicionaAVerticesAberto( 1 );
             }
             else if ( estadosVertices[ idVertice ] != EstadosVertice.INCOSISTENTE )
             {
