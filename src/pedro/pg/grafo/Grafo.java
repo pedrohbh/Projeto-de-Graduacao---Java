@@ -1429,7 +1429,7 @@ public class Grafo
         {
             if ( estadosVertices[ idVertice ] == EstadosVertice.ABERTO )
             {
-                openHeap.removeElemento(idVertice);
+                openHeap.removeElemento( rastreadorOpen[ idVertice ].getIndiceAtual() );
                 rastreadorOpen[ idVertice ] = null;
                 estadosVertices[ idVertice ] = EstadosVertice.LIMBO;
             }
