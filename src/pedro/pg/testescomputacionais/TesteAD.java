@@ -254,9 +254,12 @@ public class TesteAD
                                 tempoLocalAD = Duration.between(startAD, endAD).toNanos();
                                 tempoLocalAD -= resultadoAD.getTempoDebitado();
                                 if ( !temposADDinamico.containsKey( (double)0 ) )
-                                    temposADDinamico.put( (double)0, new GuardaTempo( (double)0, tempoLocalAD, 0) );
+                                    temposADDinamico.put( (double)0, new GuardaTempo( (double)0, tempoLocalAD, resultadoAD.getNumeroDeVerticesAberto()) );
                                 else
+                                {
                                     temposADDinamico.get( (double)0 ).adicionaATempoExistente(tempoLocalAD);
+                                    temposADDinamico.get( (double)0 ).adicionaAVerticesAbertosExistentes( resultadoAD.getNumeroDeVerticesAberto() );
+                                }
                                 // Parte AD* Normal começa aqui
                             }
                             // Parte de diminuir o peso das arestas do grafo
@@ -306,9 +309,12 @@ public class TesteAD
                                     tempoLocalAD -= resultadoAD.getTempoDebitado();
                                     
                                     if ( !temposADDinamico.containsKey( porcentagemAtual ) )
-                                        temposADDinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoLocalAD, 0) );
+                                        temposADDinamico.put( porcentagemAtual, new GuardaTempo( porcentagemAtual, tempoLocalAD, resultadoAD.getNumeroDeVerticesAberto()) );
                                     else
+                                    {
                                         temposADDinamico.get( porcentagemAtual ).adicionaATempoExistente( tempoLocalAD );
+                                        temposADDinamico.get( porcentagemAtual ).adicionaAVerticesAbertosExistentes( resultadoAD.getNumeroDeVerticesAberto() );
+                                    }
                                         
                                     g.recuperaGrafoOriginal( grafoOrignal );
                                 }
@@ -359,12 +365,16 @@ public class TesteAD
                                     Instant endAD = Instant.now();
                                     tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
                                     tempoLocalAD -= resultadoAD.getTempoDebitado();
+                                                                 
                                     
                                     double chaveRegistradora = porcentagemAtual * 100;
                                     if ( !temposADDinamico.containsKey( chaveRegistradora ) )
-                                        temposADDinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoLocalAD, 0) );
+                                        temposADDinamico.put( chaveRegistradora, new GuardaTempo( chaveRegistradora, tempoLocalAD, resultadoAD.getNumeroDeVerticesAberto()) );
                                     else
+                                    {
                                         temposADDinamico.get( chaveRegistradora ).adicionaATempoExistente( tempoLocalAD );
+                                        temposADDinamico.get( chaveRegistradora ).adicionaAVerticesAbertosExistentes( resultadoAD.getNumeroDeVerticesAberto() );
+                                    }
                                         
                                     g.recuperaGrafoOriginal( grafoOrignal );
                                 }
