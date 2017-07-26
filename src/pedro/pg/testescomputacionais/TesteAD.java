@@ -391,6 +391,7 @@ public class TesteAD
                         long tempoTotalAD = temposADDinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                         long tempoTotalAEstrelaDinamico = resultadosADinamico.get(e).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                         long nvaA = resultadosADinamico.get(e).getVerticesAberto() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
+                        long nvaAD = temposADDinamico.get(e).getVerticesAberto() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
                         String modo;
                         if ( e == 0 )
                             modo = "Normal";
@@ -402,7 +403,7 @@ public class TesteAD
                             e /= 100;
                         }
                         e /= 100;
-                        escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e, modo, tempoTotalAEstrelaDinamico, nvaA, tempoTotalAD, 0);
+                        escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e, modo, tempoTotalAEstrelaDinamico, nvaA, tempoTotalAD, nvaAD);
                     }
                     
                     
