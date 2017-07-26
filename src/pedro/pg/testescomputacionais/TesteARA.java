@@ -36,7 +36,7 @@ public class TesteARA
     private static ModosAD modoAtual = ModosAD.NORMAL;
     private static final ModosAD []modosPossiveis = { ModosAD.NORMAL, ModosAD.DIMINUI, ModosAD.AUMENTAR };
     private static final double []porcentagem = { 2.5, 20.0, 50.0, 70.0 };
-    private static final int NUM_RODADAS = 1;
+    private static final int NUM_RODADAS = 5;
     private static final int NUM_VERTICES_ESCOLHIDOS_ALEATORIOS = 10;
     private static final double EPISOLON_INICIAL = 4.0;
     private static final double FATOR_DE_CORTE = 0.5;
