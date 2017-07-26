@@ -447,7 +447,11 @@ public class TesteDinamicos
                         else if ( e  < 100 )
                             modo = "Diminui";
                         else
+                        {
                             modo = "Aumenta";
+                            e /= 100;
+                        }
+                        e /= 100;
                         escreveDadosTestesAD(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), e,  modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
                         //escreveDadosTestesAD( filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), modo, tempoTotalAEstrelaDinamico, 0, tempoTotalAD, 0);
                     }
