@@ -244,7 +244,7 @@ public class TesteAD
                                 }
                                 
                                 Instant startAD = Instant.now();
-                                long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, false, true, 0.0, false );
+                                long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, false, false, 0.0, false );
                                 Instant endAD = Instant.now();
                                 tempoLocalAD = Duration.between(startAD, endAD).toNanos();
                                 tempoLocalAD -= tempoASerDebitadoAD;
@@ -290,7 +290,7 @@ public class TesteAD
                                     g.recuperaGrafoOriginal( grafoOrignal );
                                       
                                     Instant startAD = Instant.now();
-                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, false, porcentagemAtual, false );
+                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, true, false, porcentagemAtual, false );
                                     Instant endAD = Instant.now();
                                     tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
                                     tempoLocalAD -= tempoASerDebitadoAD;
@@ -312,8 +312,7 @@ public class TesteAD
                                     double porcentagemAtual = porcentagem[ m ];
                                     tempoLocalAEstrelaDinamico = 0;
                                     tempoGlobalAEstrelaDinamico = 0;
-                                    tempoLocalAEstrelaDinamico = 0;
-                                    for ( int k = 0; k < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; k++ )
+                                    for ( int k = 0; k < NUM_INSTANCIAS_CALCULADAS; k++ )
                                     {
                                         tempoLocalAEstrelaDinamico = 0;
                                         porcentagemAtual /= 100;
@@ -342,7 +341,7 @@ public class TesteAD
                                     g.recuperaGrafoOriginal( grafoOrignal );
                                     
                                     Instant startAD = Instant.now();
-                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_RODADAS, true, true, porcentagemAtual, false );
+                                    long tempoASerDebitadoAD = g.dynamicSearchAEstrela( 0, verticeEscolhido, EPISOLON_INICIAL, FATOR_DE_CORTE, NUM_INSTANCIAS_CALCULADAS, true, true, porcentagemAtual, false );
                                     Instant endAD = Instant.now();
                                     tempoLocalAD = Duration.between( startAD, endAD ).toNanos();
                                     tempoLocalAD -= tempoASerDebitadoAD;
