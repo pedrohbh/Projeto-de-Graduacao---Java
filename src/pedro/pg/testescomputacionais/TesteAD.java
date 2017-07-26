@@ -186,25 +186,12 @@ public class TesteAD
         {
             paths.forEach(filePath -> 
             {
-                long tempoDijsktra = 0;
-                
-                long tempoLocalARA = 0;
-                long tempoLocalAEstrela = 0;
+                              
                 long tempoLocalAEstrelaDinamico = 0;
                 long tempoLocalAD = 0;
                 
-                long tempoGlobalARA = 0;
-                long tempoGlobalAEstrela = 0;
-                long tempoGlobalAEstrelaDinamico = 0; 
-                
-                long verticesAbertosARA = 0;
-                long verticesAbertosAEstrela = 0;
-                long verticesAbertosAManhattan = 0;
-                
-                long custoNaoAdmissivel = 0;
-                long custoAdmissivel = 0;
-                double porcentagemCusto = 0;
-                
+                long tempoGlobalAEstrelaDinamico = 0;                
+                                
                 double episolon = EPISOLON_INICIAL;
                 
                 if ( !Files.isDirectory(filePath) )
@@ -218,8 +205,6 @@ public class TesteAD
                     
                     for ( int i = 0; i < NUM_VERTICES_ESCOLHIDOS_ALEATORIOS; i++ )
                     {
-                        tempoLocalARA = 0;
-                        tempoLocalAEstrela = 0;
                         tempoLocalAEstrelaDinamico = 0;
                         
                         int verticeEscolhido;
@@ -375,65 +360,6 @@ public class TesteAD
                         }
                         
                         g.recuperaGrafoOriginal(grafoOrignal);
-                        
-                        // ------------- PARTE ARA*
-                        
-                        // Algortimo A*
-                        for ( int j = 0; j < NUM_RODADAS; j++ )
-                        {
-                            Instant startAEstrela = Instant.now();
-                            g.algoritmoAEstrela( 0 ,  verticeEscolhido, false, false );
-                            Instant endAEstrela = Instant.now();
-                            
-                            tempoLocalAEstrela += Duration.between(startAEstrela, endAEstrela).toNanos();
-                        }
-                        tempoLocalAEstrela /= NUM_RODADAS;
-                        tempoGlobalAEstrela += tempoLocalAEstrela;
-                        
-                        // Algortimo ARA*
-                        while ( episolon >= 1 )
-                        {                            
-                            for ( int j = 0; j < NUM_RODADAS; j++ )
-                            {
-                                Instant startARA = Instant.now();
-                                g.medeTempoAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
-                                Instant endARA = Instant.now();
-                            
-                                tempoLocalARA += Duration.between(startARA, endARA).toNanos();
-                            }
-                            tempoLocalARA /= NUM_RODADAS;
-                                                
-                            // Contagem de vértices abertos ARA
-                            verticesAbertosARA = g.calculaVerticesAbertosAnytimeSearchAEstrela( 0, verticeEscolhido, episolon );
-                            if ( !resultadosAra.containsKey( episolon ) )
-                                resultadosAra.put(episolon, new GuardaTempo(episolon, tempoLocalARA, verticesAbertosARA ) );
-                            else
-                            {
-                                resultadosAra.get( episolon ).adicionaATempoExistente( tempoLocalARA );
-                                resultadosAra.get( episolon ).adicionaAVerticesAbertosExistentes(custoAdmissivel);
-                            }
-                            
-                            
-                            episolon -= FATOR_DE_CORTE;
-                            tempoLocalARA = 0;
-                        }
-                        // Contagem de vértices abertos AEstrela
-                        verticesAbertosAEstrela += g.contaNumeroDeVerticesAbertosAEstrela( 0, verticeEscolhido );
-                                                
-                    }                   
-                    // Tirando a média dos tempos globais
-                    tempoGlobalAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                                        
-                    // Tirando a média do número de vértices abertos
-                    verticesAbertosAEstrela /= NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                    
-                    episolon = EPISOLON_INICIAL;
-                    while ( episolon >= 1 )
-                    {
-                        tempoGlobalARA = resultadosAra.get( episolon ).getTempoAssociado() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                        verticesAbertosARA = resultadosAra.get( episolon ).getVerticesAberto() / NUM_VERTICES_ESCOLHIDOS_ALEATORIOS;
-                        escreveDadosTestesARA(filePath.getFileName().toString(), g.getNumeroVertices(), g.getNumeroArestas(), episolon, tempoGlobalARA, tempoGlobalAEstrela, verticesAbertosAEstrela, verticesAbertosARA);
-                        episolon -= FATOR_DE_CORTE;
                     }
                     
                     Set<Double> chavesAD = temposADDinamico.keySet();
